@@ -129,8 +129,8 @@ body{
 
 .scanner-ring{
     position: absolute;
-    width: 54%;
-    height: 37%;
+    width: 78%;
+    height: 39%;
     border-radius: 6px;
     border: 2px solid var(--primary);
     animation: radarPulse 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
