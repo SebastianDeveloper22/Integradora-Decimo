@@ -1,62 +1,77 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Sistema de Gestion de Bines</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <header name="top-nav">
-            <div class="logo-container">
-                <div class="logo-placeholder">LOGO EMPRESA</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSI | Sistema AS/RS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="top-nav">
+        <div class="logo-container">
+            <img src="DSI Logo.png" alt="DSI Logo" class="logo-img">
+        </div>
+        
+        <div class="system-title">
+            <h1>SISTEMA AS/RS</h1>
+        </div>
+        
+        <div class="status-container">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox-theme">
+                    <input type="checkbox" id="checkbox-theme" />
+                    <div class="slider round">
+                        <span class="icon-sun">☀</span>
+                        <span class="icon-moon">🌙</span>
+                    </div>
+                </label>
             </div>
-            <div class="system-title">
-                <h1>SISTEMA AS/RS</h1>
-            </div>
-            <div class="status-container">
+            
+            <div class="status-indicator">
                 <div class="status-dot"></div>
-                <span>Sistema en linea</span>
+                <span>En línea</span>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <main class="main-content">
+    <main class="main-content">
+        <section id="screen-login" class="screen active">
+            <div class="rfid-card-container">
+                <div class="scanner-ring"></div>
+                <div class="rfid-icon">💳</div>
+            </div>
+            <h2 class="title-glow">ESPERANDO IDENTIFICACIÓN</h2>
+            <p class="subtitle">Aproxime su credencial al lector RFID para acceder</p>
+            <div id="loader" class="hidden">
+                <span class="loading-bar"></span>
+                <p class="accent-text">Autenticando...</p>
+            </div>
+        </section>
 
-            <section id="screen-login" class="screen active">
-                <div class="rfid-card-container">
-                    <div class="scanner-ring"></div>
-                    <div class="rfid-icon">💳</div>
+        <section id="screen-dashboard" class="screen hidden">
+            <div class="user-panel">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <h2 id="lbl-nombre">Nombre Usuario</h2>
+                    <span id="lbl-area" class="badge-area">Área: ---</span>
                 </div>
-                <h2 class="title-glow">ESPERANDO IDENTIFICACIÓN</h2>
-                <p class="subtitle">Aproxime su credencial al lector RFID para acceder al inventario</p>
-                <div id="loader" class="hidden">
-                    <span class="loading-bar"></span>
-                    <p>Autenticando Usuario...</p>
-                </div>
-            </section>
-            <section id="screen-dashboard" class="screen hidden">
+                <button id="btn-logout" class="btn-outline" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
 
-                <div class="user-panel">
-                    <div class="user-avatar">👤</div>
-                    <div class="user-details">
-                        <h2 id="lbl-nombre">Nombre del Usuario</h2>
-                        <span id="lbl-area" class="badge-area">Area: ---</span>
+            <div class="inventory-section">
+                <div class="section-header">
+                    <h3>COMPONENTES AUTORIZADOS</h3>
+                    <div class="line-accent"></div>
+                </div>
+                <div class="buttons-grid">
                     </div>
-                    <button id="btn-logout" class="btn-outline" onclick="cerrarSesion()">Cerrar Sesión</button>
-                </div>
+            </div>
 
-                <div class="inventory-section">
-                    <div class="section-header">
-                        <h3>COMPONENTES AUTORIZADOS</h3>
-                        <div class="line-accent"></div>
-                    </div>
+            <button class="btn-emergency" onclick="pedirAyuda()">🚨 SOLICITAR ASISTENCIA TÉCNICA</button>
+        </section>
+    </main>
 
-                    <div class="buttons-grid"></div>
-                </div>
-
-                <button class="btn-emergency" onclick="pedirAyuda()">🚨 SOLICITAR ASISTENCIA TÉCNICA</button>
-            </section>
-        </main>
-        <script src="script.js"></script>
-    </body>
+    <script src="script.js"></script>
+</body>
 </html>

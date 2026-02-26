@@ -166,3 +166,31 @@ async function solicitarItem(codigoBin, nombreItem) {
 async function pedirAyuda() {
     alert("🚨 ALERTA ENVIADA: Aaron y el equipo de Almacén han sido notificados para brindar asistencia en ventanilla.");
 }
+
+// ==========================================
+// 5. CONTROL DEL SELECTOR DE TEMA (CLARO/OSCURO)
+// ==========================================
+const toggleSwitch = document.querySelector('#checkbox-theme');
+const currentTheme = localStorage.getItem('theme');
+
+// 1. Revisar si hay una preferencia guardada al cargar la página
+if (currentTheme) {
+    document.body.classList.add(currentTheme);
+    // Si el tema guardado es "light-theme", encendemos el interruptor
+    if (currentTheme === 'light-theme') {
+        toggleSwitch.checked = true;
+    }
+}
+
+// 2. Escuchar el cambio en el interruptor
+toggleSwitch.addEventListener('change', function(e) {
+    if (e.target.checked) {
+        // Si se activa, aplicamos el tema claro
+        document.body.classList.add('light-theme');
+        localStorage.setItem('theme', 'light-theme');
+    } else {
+        // Si se desactiva, quitamos la clase (vuelve al oscuro por defecto)
+        document.body.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark-theme');
+    }
+});
