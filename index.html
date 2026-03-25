@@ -3,60 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DSI - Sistema de Almacenamiento y Recuperación Automatizado (AS/RS)">
+    <link rel="icon" href="imgs/DSI Logo.png" type="image/png">
     <title>DSI | Sistema AS/RS</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="top-nav">
+    <header class="top-nav" role="banner">
         <div class="logo-container">
             <img src="imgs/DSI Logo.png" alt="DSI Logo" class="logo-img">
         </div>
-        
-        <div class="system-title">
-            <h1>SISTEMA AS/RS</h1>
-        </div>
-        
+        <div class="system-title"><h1>SISTEMA AS/RS</h1></div>
         <div class="status-container">
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="checkbox-theme">
-                    <input type="checkbox" id="checkbox-theme" />
-                    <div class="slider round">
-                        <span class="icon-sun">☀</span>
-                        <span class="icon-moon">🌙</span>
-                    </div>
+                    <input type="checkbox" id="checkbox-theme" aria-label="Cambiar tema claro/oscuro" />
+                    <div class="slider round"><span class="icon-sun">☀</span><span class="icon-moon">🌙</span></div>
                 </label>
             </div>
-            
-            <div class="status-indicator">
-                <div class="status-dot"></div>
-                <span>En línea</span>
+            <div class="status-indicator" aria-live="polite">
+                <div class="status-dot" aria-hidden="true"></div>
+                <span id="txt-modo">En línea</span>
             </div>
         </div>
     </header>
 
-    <main class="main-content">
-        <section id="screen-login" class="screen active">
-            <div class="rfid-card-container">
-                <div class="scanner-ring"></div>
-                <div class="rfid-icon">💳</div>
+    <main class="main-content" role="main">
+        <!-- PANTALLA LOGIN -->
+        <section id="screen-login" class="screen active" aria-label="Inicio de sesión">
+            <div class="login-card">
+                <h2 class="title-glow login-title">ACCESO AL SISTEMA</h2>
+                <form id="form-login" class="login-form" autocomplete="on">
+                    <div class="form-group">
+                        <label for="input-user" class="form-label">Usuario / No. Empleado</label>
+                        <input type="text" id="input-user" class="form-input" placeholder="Ingrese su usuario" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-pass" class="form-label">Contraseña</label>
+                        <input type="password" id="input-pass" class="form-input" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                    <button type="submit" id="btn-login" class="btn-login">Ingresar</button>
+                </form>
             </div>
-            <h2 class="title-glow">ESPERANDO IDENTIFICACIÓN</h2>
-            <p class="subtitle">Aproxime su credencial al lector RFID para acceder</p>
-            <div id="loader" class="hidden">
-                <span class="loading-bar"></span>
+            <div id="loader" class="hidden loader-container">
+                <div class="loading-bar"></div>
                 <p class="accent-text">Autenticando...</p>
             </div>
         </section>
 
-        <section id="screen-dashboard" class="screen hidden">
+        <!-- PANTALLA DASHBOARD -->
+        <section id="screen-dashboard" class="screen hidden" aria-label="Panel de control">
             <div class="user-panel">
-                <div class="user-avatar">👤</div>
+                <div class="user-avatar" aria-hidden="true">👤</div>
                 <div class="user-details">
                     <h2 id="lbl-nombre">Nombre Usuario</h2>
                     <span id="lbl-area" class="badge-area">Área: ---</span>
                 </div>
-                <button id="btn-logout" class="btn-outline" onclick="cerrarSesion()">Cerrar Sesión</button>
+                <button id="btn-logout" class="btn-outline">Cerrar Sesión</button>
             </div>
 
             <div class="inventory-section">
@@ -64,13 +68,40 @@
                     <h3>COMPONENTES AUTORIZADOS</h3>
                     <div class="line-accent"></div>
                 </div>
-                <div class="buttons-grid">
-                    </div>
+                <div class="buttons-grid" role="list" aria-label="Lista de componentes"></div>
             </div>
 
-            <button class="btn-emergency" onclick="pedirAyuda()">🚨 SOLICITAR ASISTENCIA TÉCNICA</button>
+            <button id="btn-emergency" class="btn-emergency">🚨 SOLICITAR ASISTENCIA TÉCNICA</button>
         </section>
     </main>
+
+    <!-- MODAL: Solicitar Asistencia -->
+    <div id="modal-ayuda" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-ayuda-titulo">
+        <div class="modal-box">
+            <h3 id="modal-ayuda-titulo" class="modal-title">Solicitar Asistencia</h3>
+            <p class="modal-description">Describa brevemente la situación para el Almacenista:</p>
+            <textarea id="txt-problema" class="modal-textarea" rows="4" placeholder="Ej. El robot no extrajo la pieza correctamente..." aria-label="Descripción del problema"></textarea>
+            <div class="modal-actions">
+                <button id="btn-enviar-alerta" class="btn-modal-primary">Enviar Alerta</button>
+                <button id="btn-cancelar-ayuda" class="btn-outline btn-modal-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Alerta Bloqueante (Andon) -->
+    <div id="alerta-bloqueante" class="modal-overlay hidden alerta-bloqueante-overlay" role="alertdialog" aria-modal="true" aria-labelledby="alerta-titulo">
+        <div class="modal-box alerta-bloqueante-box">
+            <div class="alerta-icono" aria-hidden="true">⚠️</div>
+            <h1 id="alerta-titulo" class="alerta-titulo">¡ATENCIÓN REQUERIDA!</h1>
+            <h3 id="alerta-quien" class="alerta-quien">Usuario en Área solicita ayuda</h3>
+            <div class="alerta-detalle">
+                <p class="alerta-detalle-label">Descripción del problema:</p>
+                <p id="alerta-mensaje" class="alerta-detalle-mensaje">---</p>
+            </div>
+            <p class="alerta-nota">El sistema está bloqueado hasta que se atienda la solicitud.</p>
+            <button id="btn-resolver-alerta" class="btn-resolver">Marcar como Atendido</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
