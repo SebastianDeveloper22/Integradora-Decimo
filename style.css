@@ -1249,3 +1249,119 @@ input:checked + .slider:before {
     background: rgba(185, 28, 28, 0.2);
     color: var(--primary);
 }
+
+/* ==========================================
+   SCROLL PARA EL INVENTARIO
+   ========================================== */
+
+/* 1. Le damos un límite de altura a la cuadrícula y habilitamos el scroll automático */
+.buttons-grid {
+    overflow-y: auto; /* Activa el scroll vertical solo cuando sea necesario */
+    padding-right: 10px; /* Un pequeño margen para que la barra no aplaste tus botones */
+}
+
+/* 2. MAGIA VISUAL: Personalizamos la barra de scroll (Solo para navegadores basados en Chrome/Edge) */
+
+/* El ancho de la barra */
+.buttons-grid::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* El fondo de la pista del scroll */
+.buttons-grid::-webkit-scrollbar-track {
+    background: var(--bg-surface, #1e1e1e); 
+    border-radius: 5px;
+}
+
+/* El "pulgar" (la barrita que se mueve) con tu color rojo DSI */
+.buttons-grid::-webkit-scrollbar-thumb {
+    background: var(--primary, #f03a47); 
+    border-radius: 5px;
+    border: 2px solid var(--bg-surface, #1e1e1e); /* Un bordecito para que no se vea tan gruesa */
+}
+
+/* Efecto al pasar el mouse sobre la barrita */
+.buttons-grid::-webkit-scrollbar-thumb:hover {
+    background: #d0303b; 
+}/* ==========================================
+   SCROLLBAR DEBAJO DEL ENCABEZADO NEGRO
+   ========================================== */
+
+/* 1. Congelamos la ventana completa para que no ruede entera */
+body {
+    height: 100vh !important;
+    overflow: hidden !important; /* Mata la barra gigante que llega hasta arriba */
+    display: flex;
+    flex-direction: column; /* Apila el header y el main uno sobre otro */
+}
+
+/* 2. El encabezado negro se queda naturalmente arriba. 
+      Le damos el scroll EXCLUSIVAMENTE al contenedor de abajo */
+main, .app-container, #screen-dashboard {
+    flex: 1; /* Absorbe todo el espacio que sobra debajo del header */
+    overflow-y: auto !important; /* ¡La barra nace a partir de aquí! */
+    overflow-x: hidden;
+    padding-bottom: 40px; /* Espacio para que el botón no pegue al fondo */
+}
+
+/* ==========================================
+   LA SOLUCIÓN MAESTRA: ENCABEZADO "STICKY"
+   ========================================== */
+
+/* 1. Limpiamos el desastre del flexbox y dejamos que el body fluya natural */
+body {
+    height: auto !important;
+    min-height: 100vh;
+    overflow-y: auto !important; 
+    display: block !important; /* Matamos el flexbox que causaba el borde negro */
+    margin: 0;
+}
+
+/* 2. MAGIA: Congelamos la barra negra arriba. 
+   (Puse varios nombres comunes. Si tu barra usa otra clase en el HTML, agrégala aquí) */
+header, .navbar, .top-bar, .topbar {
+    position: sticky !important;
+    top: 0;
+    z-index: 9999;
+}
+
+/* 3. La barra de desplazamiento anclada al extremo del navegador */
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-surface, #1e1e1e);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary, #f03a47);
+    border-radius: 6px;
+    border: 3px solid var(--bg-surface, #1e1e1e);
+}
+
+/* MODO CLARO (Barra negra elegante) */
+body.light-theme::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+}
+body.light-theme::-webkit-scrollbar-thumb {
+    background: #000000 !important;
+    border: 3px solid #f1f1f1 !important;
+}
+body.light-theme::-webkit-scrollbar-thumb:hover {
+    background: #555555 !important;
+}
+
+/* ==========================================
+   CENTRAR EL LOGIN (CORRECCIÓN DEFINITIVA)
+   ========================================== */
+#screen-login {
+    flex-direction: column;
+    justify-content: center; /* Centrado vertical */
+    align-items: center;     /* Centrado horizontal */
+    min-height: calc(100vh - 100px); 
+    width: 100%;
+}
+
+/* Solo lo hacemos caja flexible cuando JavaScript le ponga la clase 'active' */
+#screen-login.active {
+    display: flex !important;
+}

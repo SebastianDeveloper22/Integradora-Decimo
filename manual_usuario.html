@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual de Usuario — SIGAB</title>
+  <style>
+    :root {
+      --rojo: #b91c1c;
+      --rojo-claro: #ef4444;
+      --rojo-oscuro: #7f1d1d;
+      --fondo: #111827;
+      --fondo2: #1f2937;
+      --fondo3: #374151;
+      --texto: #f9fafb;
+      --texto-suave: #9ca3af;
+      --borde: #374151;
+      --acento: #dc2626;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--fondo);
+      color: var(--texto);
+      line-height: 1.7;
+    }
+
+    /* ── PORTADA ── */
+    .portada {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b1b 50%, #450a0a 100%);
+      text-align: center;
+      padding: 2rem;
+      page-break-after: always;
+    }
+    .portada .logo-circle {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: var(--rojo);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 40px rgba(185,28,28,0.5);
+    }
+    .portada .logo-circle img { width: 90px; height: 90px; object-fit: contain; }
+    .portada .logo-circle span { font-size: 3rem; font-weight: 900; color: #fff; }
+    .portada h1 { font-size: 3rem; font-weight: 900; letter-spacing: 2px; }
+    .portada h1 span { color: var(--rojo-claro); }
+    .portada .subtitulo {
+      font-size: 1.1rem; color: var(--texto-suave);
+      margin-top: 0.5rem; letter-spacing: 1px;
+    }
+    .portada .linea { width: 80px; height: 4px; background: var(--rojo); margin: 2rem auto; border-radius: 2px; }
+    .portada .version {
+      font-size: 0.9rem; color: var(--texto-suave);
+      margin-top: 1rem; border: 1px solid var(--borde);
+      padding: 0.4rem 1.2rem; border-radius: 999px;
+    }
+
+    /* ── LAYOUT ── */
+    .contenedor {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── ÍNDICE ── */
+    .indice {
+      background: var(--fondo2);
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      page-break-after: always;
+    }
+    .indice h2 { color: var(--rojo-claro); font-size: 1.4rem; margin-bottom: 1.2rem; }
+    .indice ol { padding-left: 1.2rem; }
+    .indice li { margin: 0.35rem 0; }
+    .indice a { color: var(--texto-suave); text-decoration: none; transition: color 0.2s; }
+    .indice a:hover { color: var(--rojo-claro); }
+    .indice .sub { padding-left: 1.2rem; list-style-type: lower-alpha; }
+
+    /* ── SECCIONES ── */
+    section { margin-bottom: 4rem; }
+    section:not(:last-child) { border-bottom: 1px solid var(--borde); padding-bottom: 3rem; }
+
+    h2.seccion-titulo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--rojo-claro);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    h2.seccion-titulo .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--rojo); color: #fff;
+      font-size: 1rem; font-weight: 900; flex-shrink: 0;
+    }
+
+    h3 {
+      font-size: 1.15rem; font-weight: 700;
+      color: #f87171;
+      margin: 1.8rem 0 0.7rem;
+    }
+
+    p { margin-bottom: 0.9rem; color: var(--texto); }
+
+    /* ── CAJAS INFORMATIVAS ── */
+    .caja {
+      border-radius: 10px;
+      padding: 1rem 1.3rem;
+      margin: 1.2rem 0;
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .caja .icono { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+    .caja-info  { background: #1e3a5f; border-left: 4px solid #3b82f6; }
+    .caja-warn  { background: #3b2a00; border-left: 4px solid #f59e0b; }
+    .caja-error { background: #3b0000; border-left: 4px solid #ef4444; }
+    .caja-ok    { background: #0d3322; border-left: 4px solid #22c55e; }
+
+    /* ── PASOS NUMERADOS ── */
+    .pasos { counter-reset: paso; list-style: none; padding: 0; }
+    .pasos li {
+      counter-increment: paso;
+      display: flex; gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: flex-start;
+    }
+    .pasos li::before {
+      content: counter(paso);
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 28px; height: 28px; border-radius: 50%;
+      background: var(--rojo); color: #fff;
+      font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── TABLA ── */
+    table {
+      width: 100%; border-collapse: collapse;
+      margin: 1.2rem 0; font-size: 0.92rem;
+    }
+    thead th {
+      background: var(--rojo-oscuro); color: #fff;
+      padding: 0.7rem 1rem; text-align: left;
+    }
+    tbody td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--borde);
+      vertical-align: top;
+    }
+    tbody tr:nth-child(even) { background: var(--fondo2); }
+    tbody tr:hover { background: var(--fondo3); }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-block; padding: 0.2rem 0.7rem;
+      border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+    }
+    .badge-verde  { background: #166534; color: #bbf7d0; }
+    .badge-amarillo { background: #713f12; color: #fef08a; }
+    .badge-rojo   { background: #7f1d1d; color: #fecaca; }
+    .badge-gris   { background: #374151; color: #e5e7eb; }
+    .badge-azul   { background: #1e3a5f; color: #bfdbfe; }
+
+    /* ── CÓDIGO ── */
+    code {
+      background: var(--fondo3); color: #fca5a5;
+      padding: 0.15rem 0.45rem; border-radius: 4px;
+      font-family: 'Courier New', monospace; font-size: 0.88rem;
+    }
+
+    /* ── MOCKUP UI ── */
+    .mockup {
+      background: var(--fondo2);
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .mockup-header {
+      background: var(--rojo-oscuro); border-radius: 8px 8px 0 0;
+      padding: 0.6rem 1rem;
+      font-weight: 700; font-size: 0.85rem;
+      margin: -1.5rem -1.5rem 1rem;
+      color: #fca5a5; letter-spacing: 1px;
+    }
+    .campo-form {
+      background: var(--fondo3); border: 1px solid var(--borde);
+      border-radius: 8px; padding: 0.6rem 1rem;
+      margin: 0.5rem 0; color: var(--texto-suave);
+      font-size: 0.9rem;
+    }
+    .btn-mock {
+      display: inline-block;
+      background: var(--rojo); color: #fff;
+      padding: 0.55rem 1.5rem; border-radius: 8px;
+      font-weight: 700; margin-top: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    /* ── GLOSARIO ── */
+    .termino { margin-bottom: 1rem; }
+    .termino dt { font-weight: 700; color: var(--rojo-claro); }
+    .termino dd { margin-left: 1rem; color: var(--texto-suave); }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: #fff; color: #111; }
+      .portada { background: #111 !important; color: #fff; }
+      a { color: inherit; }
+    }
+
+    /* ── DIVIDER ── */
+    .divider { height: 3px; background: linear-gradient(to right, var(--rojo), transparent); margin: 2.5rem 0; border-radius: 2px; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--texto-suave);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--borde);
+      margin-top: 4rem;
+    }
+
+    /* ── FLUJO ── */
+    .flujo {
+      display: flex; align-items: center; gap: 0.5rem;
+      flex-wrap: wrap; margin: 1.2rem 0;
+    }
+    .flujo-paso {
+      background: var(--fondo3); border: 1px solid var(--borde);
+      border-radius: 8px; padding: 0.5rem 1rem;
+      font-size: 0.88rem; font-weight: 600;
+    }
+    .flujo-arrow { color: var(--rojo); font-weight: 900; font-size: 1.2rem; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.2rem 0; }
+    @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--fondo2); border: 1px solid var(--borde);
+      border-radius: 10px; padding: 1.2rem;
+    }
+    .card h4 { color: var(--rojo-claro); margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     PORTADA
+═══════════════════════════════════════════════ -->
+<div class="portada">
+  <div class="logo-circle">
+    <span>DSI</span>
+  </div>
+  <h1>SIGAB</h1>
+  <p class="subtitulo">Sistema de Gestión y Almacenaje de Bienes</p>
+  <div class="linea"></div>
+  <p style="color:#d1d5db; max-width:480px; font-size:1rem;">
+    Manual de Usuario — Guía completa de operación para terminales de operador
+    y panel de administración del almacén automatizado.
+  </p>
+  <p class="version">Versión 1.0 &nbsp;·&nbsp; Marzo 2026</p>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CONTENIDO
+═══════════════════════════════════════════════ -->
+<div class="contenedor">
+
+  <!-- ÍNDICE -->
+  <div class="indice">
+    <h2>Tabla de Contenidos</h2>
+    <ol>
+      <li><a href="#intro">Introducción al Sistema</a></li>
+      <li>
+        <a href="#acceso">Acceso al Sistema (Inicio de Sesión)</a>
+        <ol class="sub">
+          <li><a href="#credenciales">Credenciales de acceso</a></li>
+          <li><a href="#errores-login">Errores de autenticación</a></li>
+        </ol>
+      </li>
+      <li>
+        <a href="#dashboard">Panel del Operador</a>
+        <ol class="sub">
+          <li><a href="#barra-superior">Barra superior</a></li>
+          <li><a href="#inventario-grid">Cuadrícula de inventario</a></li>
+          <li><a href="#stock-badges">Indicadores de existencias</a></li>
+        </ol>
+      </li>
+      <li>
+        <a href="#carrito">Lista de Extracción (Carrito)</a>
+        <ol class="sub">
+          <li><a href="#agregar">Agregar artículos</a></li>
+          <li><a href="#modificar">Modificar cantidades</a></li>
+          <li><a href="#confirmar">Confirmar pedido</a></li>
+        </ol>
+      </li>
+      <li><a href="#andon">Sistema de Alerta (Andon)</a></li>
+      <li>
+        <a href="#admin">Panel de Administración</a>
+        <ol class="sub">
+          <li><a href="#tab-inventario">Pestaña Inventario</a></li>
+          <li><a href="#tab-actividad">Pestaña Actividad</a></li>
+          <li><a href="#tab-cortes">Pestaña Cortes de Turno</a></li>
+        </ol>
+      </li>
+      <li><a href="#tema">Cambio de Tema (Oscuro / Claro)</a></li>
+      <li><a href="#roles">Roles de Usuario</a></li>
+      <li><a href="#faq">Preguntas Frecuentes</a></li>
+      <li><a href="#glosario">Glosario</a></li>
+    </ol>
+  </div>
+
+  <!-- ══ 1. INTRODUCCIÓN ══ -->
+  <section id="intro">
+    <h2 class="seccion-titulo"><span class="num">1</span> Introducción al Sistema</h2>
+
+    <p>
+      <strong>SIGAB</strong> (Sistema de Gestión y Almacenaje de Bienes) es una plataforma web
+      diseñada para administrar el almacén automatizado de DSI. Permite a los operadores de
+      planta solicitar componentes directamente desde su terminal, y al personal de almacén
+      gestionar el inventario y monitorear la actividad del turno.
+    </p>
+
+    <div class="caja caja-info">
+      <span class="icono">ℹ️</span>
+      <div>
+        El sistema se comunica en tiempo real con el robot automatizado de almacén
+        (<em>Carlitos</em>) para ejecutar las extracciones de manera física.
+        No es necesario ningún conocimiento técnico para operar el sistema.
+      </div>
+    </div>
+
+    <h3>Componentes del sistema</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Terminal de Operador</h4>
+        <p>Accedida desde cualquier equipo de la red local. Permite solicitar componentes y enviar alertas de emergencia.</p>
+      </div>
+      <div class="card">
+        <h4>Servidor / Almacén</h4>
+        <p>Terminal principal en <code>localhost</code>. Recibe alertas, genera cortes de turno y tiene acceso al panel de administración.</p>
+      </div>
+      <div class="card">
+        <h4>Robot Automatizado</h4>
+        <p>Dispositivo físico (<em>ESP32</em>) que recibe las coordenadas del pedido y ejecuta la extracción en el almacén.</p>
+      </div>
+      <div class="card">
+        <h4>Base de Datos (Strapi)</h4>
+        <p>Sistema backend que almacena inventario, usuarios, órdenes y registros de actividad.</p>
+      </div>
+    </div>
+
+    <h3>Flujo general de operación</h3>
+    <div class="flujo">
+      <div class="flujo-paso">Iniciar sesión</div>
+      <div class="flujo-arrow">→</div>
+      <div class="flujo-paso">Seleccionar componentes</div>
+      <div class="flujo-arrow">→</div>
+      <div class="flujo-paso">Confirmar extracción</div>
+      <div class="flujo-arrow">→</div>
+      <div class="flujo-paso">Robot extrae piezas</div>
+      <div class="flujo-arrow">→</div>
+      <div class="flujo-paso">Inventario actualizado</div>
+    </div>
+  </section>
+
+  <!-- ══ 2. ACCESO ══ -->
+  <section id="acceso">
+    <h2 class="seccion-titulo"><span class="num">2</span> Acceso al Sistema</h2>
+
+    <p>
+      Al abrir la aplicación en el navegador, se mostrará la pantalla de inicio de sesión.
+      Aquí deberá ingresar sus credenciales de empleado para acceder al sistema.
+    </p>
+
+    <div class="mockup">
+      <div class="mockup-header">PANTALLA DE INICIO DE SESIÓN</div>
+      <p style="color:var(--texto-suave); font-size:0.85rem; margin-bottom:1rem;">DSI | SIGAB — Ingrese sus credenciales</p>
+      <div class="campo-form">🆔 &nbsp; ID de Empleado</div>
+      <div class="campo-form">🔒 &nbsp; Contraseña</div>
+      <div class="btn-mock">INGRESAR</div>
+    </div>
+
+    <h3 id="credenciales">Credenciales de acceso</h3>
+    <p>
+      Su <strong>ID de Empleado</strong> y <strong>contraseña</strong> son asignados
+      por el administrador del sistema. Si no los tiene, contacte al encargado de almacén.
+    </p>
+
+    <ol class="pasos">
+      <li>Abra el navegador web en la terminal asignada.</li>
+      <li>Ingrese su <strong>ID de empleado</strong> en el primer campo.</li>
+      <li>Ingrese su <strong>contraseña</strong> en el segundo campo.</li>
+      <li>Haga clic en el botón <strong>INGRESAR</strong>.</li>
+      <li>Espere mientras el sistema verifica sus credenciales.</li>
+    </ol>
+
+    <div class="caja caja-ok">
+      <span class="icono">✅</span>
+      <div>
+        Una vez autenticado correctamente, el sistema recordará su sesión aunque
+        cierre o recargue la página, hasta que haga clic en <strong>Cerrar Sesión</strong>.
+      </div>
+    </div>
+
+    <h3 id="errores-login">Errores de autenticación</h3>
+    <table>
+      <thead>
+        <tr><th>Mensaje de error</th><th>Causa probable</th><th>Solución</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Credenciales inválidas</td>
+          <td>ID o contraseña incorrectos</td>
+          <td>Verifique mayúsculas/minúsculas y vuelva a intentarlo</td>
+        </tr>
+        <tr>
+          <td>Campos requeridos</td>
+          <td>Se dejó un campo en blanco</td>
+          <td>Complete ambos campos antes de hacer clic en Ingresar</td>
+        </tr>
+        <tr>
+          <td>Error de conexión</td>
+          <td>Sin acceso a la red local</td>
+          <td>Verifique la conexión de red o contacte al administrador</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 3. PANEL DEL OPERADOR ══ -->
+  <section id="dashboard">
+    <h2 class="seccion-titulo"><span class="num">3</span> Panel del Operador</h2>
+
+    <p>
+      Al iniciar sesión correctamente, verá el <strong>Panel del Operador</strong>.
+      Esta es la pantalla principal desde la cual solicitará componentes del almacén.
+    </p>
+
+    <h3 id="barra-superior">Barra superior</h3>
+    <p>La parte superior de la pantalla muestra la siguiente información:</p>
+
+    <table>
+      <thead><tr><th>Elemento</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Logo DSI</td><td>Logotipo de la empresa</td></tr>
+        <tr><td>Nombre del usuario</td><td>Su nombre completo registrado en el sistema</td></tr>
+        <tr><td>Área asignada</td><td>El área de planta a la que pertenece (ej. Ensamble, Almacén)</td></tr>
+        <tr><td>Tipo de terminal</td><td>Indica si es <em>Terminal Remota</em> o <em>Servidor Almacén</em></td></tr>
+        <tr><td>Botón Cerrar Sesión</td><td>Cierra la sesión activa del usuario</td></tr>
+        <tr><td>Botón Panel Admin</td><td>Solo visible para el encargado de almacén (rol Almacén)</td></tr>
+        <tr><td>Interruptor de tema</td><td>Alterna entre tema oscuro y claro</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="inventario-grid">Cuadrícula de inventario</h3>
+    <p>
+      La sección central muestra los componentes disponibles para su área.
+      Cada tarjeta representa un artículo del inventario y contiene:
+    </p>
+    <ul style="margin-left:1.5rem; margin-bottom:1rem;">
+      <li>Imagen o icono del componente</li>
+      <li>Nombre del artículo</li>
+      <li>Código <strong>BIN</strong> (ubicación física en el almacén)</li>
+      <li>Indicador de existencias (badge de color)</li>
+    </ul>
+
+    <div class="caja caja-info">
+      <span class="icono">ℹ️</span>
+      <div>
+        Solo verá los componentes autorizados para su área de trabajo. Si necesita
+        acceso a un componente que no aparece en su lista, contacte al encargado de almacén.
+      </div>
+    </div>
+
+    <h3 id="stock-badges">Indicadores de existencias (Badges)</h3>
+    <p>Cada tarjeta de componente muestra un indicador de color que señala el nivel de inventario:</p>
+    <table>
+      <thead><tr><th>Color</th><th>Significado</th><th>Acción disponible</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-verde">Verde</span></td>
+          <td>Stock suficiente (más de 3 unidades)</td>
+          <td>Puede agregar al carrito</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amarillo">Amarillo</span></td>
+          <td>Stock bajo (3 o menos unidades)</td>
+          <td>Puede agregar al carrito (con precaución)</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-rojo">Rojo · Agotado</span></td>
+          <td>Sin existencias</td>
+          <td>Botón deshabilitado — no se puede solicitar</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 4. LISTA DE EXTRACCIÓN ══ -->
+  <section id="carrito">
+    <h2 class="seccion-titulo"><span class="num">4</span> Lista de Extracción</h2>
+
+    <p>
+      La <strong>Lista de Extracción</strong> (identificada con el ícono 🛒) funciona
+      como un carrito de pedido. Aquí acumula los componentes que desea solicitar
+      antes de confirmar la extracción al almacén.
+    </p>
+
+    <h3 id="agregar">Agregar artículos</h3>
+    <ol class="pasos">
+      <li>Localice el componente deseado en la cuadrícula de inventario.</li>
+      <li>Haga clic sobre la tarjeta del componente (si está disponible).</li>
+      <li>El artículo se agregará automáticamente a la lista de extracción con cantidad 1.</li>
+      <li>Si el artículo ya estaba en la lista, la cantidad se incrementará en 1.</li>
+    </ol>
+
+    <div class="caja caja-warn">
+      <span class="icono">⚠️</span>
+      <div>
+        No puede agregar un artículo con <span class="badge badge-rojo">stock agotado</span>.
+        El botón de dicho artículo aparecerá deshabilitado (opaco).
+      </div>
+    </div>
+
+    <h3 id="modificar">Modificar cantidades</h3>
+    <p>Dentro de la lista de extracción, para cada artículo puede:</p>
+    <table>
+      <thead><tr><th>Control</th><th>Función</th></tr></thead>
+      <tbody>
+        <tr><td>Botón <code>−</code></td><td>Reduce la cantidad en 1 (mínimo: 1)</td></tr>
+        <tr><td>Campo numérico</td><td>Ingrese directamente la cantidad deseada</td></tr>
+        <tr><td>Botón <code>+</code></td><td>Aumenta la cantidad en 1</td></tr>
+        <tr><td>Botón <code>❌</code></td><td>Elimina el artículo de la lista</td></tr>
+      </tbody>
+    </table>
+
+    <div class="caja caja-info">
+      <span class="icono">ℹ️</span>
+      <div>
+        La cantidad máxima que puede solicitar de un artículo está limitada al stock
+        disponible en ese momento.
+      </div>
+    </div>
+
+    <h3 id="confirmar">Confirmar pedido</h3>
+    <ol class="pasos">
+      <li>Verifique que todos los artículos y cantidades en la lista sean correctos.</li>
+      <li>Haga clic en el botón <strong>"CONFIRMAR PEDIDO Y EXTRAER"</strong>.</li>
+      <li>El sistema enviará las coordenadas al robot automatizado.</li>
+      <li>Espere a que el robot ejecute la extracción físicamente.</li>
+      <li>El inventario se actualizará automáticamente.</li>
+      <li>La lista de extracción se vaciará al completarse el pedido.</li>
+    </ol>
+
+    <div class="caja caja-ok">
+      <span class="icono">✅</span>
+      <div>
+        Cada pedido queda registrado en el historial de actividad del sistema con la
+        fecha, hora, usuario y artículos solicitados.
+      </div>
+    </div>
+
+    <div class="caja caja-warn">
+      <span class="icono">⚠️</span>
+      <div>
+        No confirme el pedido si la lista está vacía. Asegúrese de tener al menos
+        un artículo antes de presionar el botón de confirmación.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 5. SISTEMA ANDON ══ -->
+  <section id="andon">
+    <h2 class="seccion-titulo"><span class="num">5</span> Sistema de Alerta (Andon)</h2>
+
+    <p>
+      El <strong>Sistema Andon</strong> permite a cualquier operador solicitar asistencia
+      técnica o reportar un problema urgente al personal del almacén. Se activa mediante
+      el botón rojo de emergencia (<strong>🚨</strong>) visible en el panel principal.
+    </p>
+
+    <div class="caja caja-error">
+      <span class="icono">🚨</span>
+      <div>
+        <strong>Úselo solo cuando sea necesario.</strong> Al enviar una alerta,
+        el sistema bloquea operaciones adicionales hasta que el encargado de almacén
+        atienda y cierre la alerta.
+      </div>
+    </div>
+
+    <h3>¿Cómo enviar una alerta?</h3>
+    <ol class="pasos">
+      <li>Haga clic en el botón de emergencia <strong>🚨</strong>.</li>
+      <li>Se abrirá un formulario de alerta.</li>
+      <li>Describa brevemente el problema o la asistencia que requiere.</li>
+      <li>Haga clic en <strong>Enviar Alerta</strong>.</li>
+      <li>El sistema notificará al personal de almacén de forma inmediata.</li>
+    </ol>
+
+    <h3>¿Qué sucede después de enviar la alerta?</h3>
+    <ol class="pasos">
+      <li>La alerta aparece en la terminal del almacén con su nombre, área y descripción.</li>
+      <li>En su terminal, el sistema mostrará un aviso de "Alerta en espera".</li>
+      <li>El encargado de almacén acudirá a atender su solicitud.</li>
+      <li>Una vez atendida, el encargado marcará la alerta como resuelta.</li>
+      <li>El sistema se desbloqueará y podrá continuar operando normalmente.</li>
+    </ol>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4>Vista del Operador</h4>
+        <p>Ve un aviso de que su alerta fue enviada y debe esperar a ser atendido. Las operaciones quedan en espera.</p>
+      </div>
+      <div class="card">
+        <h4>Vista del Almacén</h4>
+        <p>Recibe un modal de alerta con el nombre del operador, su área y el problema descrito. Debe presionar "Atendido" para cerrar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 6. PANEL DE ADMINISTRACIÓN ══ -->
+  <section id="admin">
+    <h2 class="seccion-titulo"><span class="num">6</span> Panel de Administración</h2>
+
+    <div class="caja caja-warn">
+      <span class="icono">🔐</span>
+      <div>
+        El Panel de Administración es <strong>exclusivo para el Encargado de Almacén</strong>.
+        Solo está disponible en la terminal principal del almacén (<em>localhost</em>)
+        y para usuarios con área asignada "Almacén".
+      </div>
+    </div>
+
+    <p>Para acceder, haga clic en el botón <strong>"Panel Admin"</strong> ubicado en la barra superior.
+    El panel contiene tres pestañas:</p>
+
+    <div class="flujo">
+      <div class="flujo-paso">📦 Inventario</div>
+      <div class="flujo-arrow">|</div>
+      <div class="flujo-paso">📋 Actividad</div>
+      <div class="flujo-arrow">|</div>
+      <div class="flujo-paso">🕐 Cortes de Turno</div>
+    </div>
+
+    <h3 id="tab-inventario">Pestaña: Inventario</h3>
+    <p>
+      Muestra una tabla con todos los artículos registrados en el sistema,
+      incluyendo su nombre, código BIN, área asignada y stock actual.
+    </p>
+
+    <h4 style="color:#9ca3af; font-size:1rem; margin-top:1rem;">Actualizar existencias</h4>
+    <ol class="pasos">
+      <li>Localice el artículo a actualizar en la tabla.</li>
+      <li>En la columna <strong>"Nueva Cantidad"</strong>, ingrese el valor deseado.</li>
+      <li>Haga clic en el botón <strong>Actualizar</strong> de esa fila.</li>
+      <li>La celda parpadeará en verde para confirmar la actualización exitosa.</li>
+    </ol>
+
+    <div class="caja caja-info">
+      <span class="icono">ℹ️</span>
+      <div>
+        Solo puede <strong>aumentar</strong> el stock desde este panel, no reducirlo.
+        La cantidad mínima permitida es siempre igual al stock actual.
+        Las reducciones ocurren automáticamente al confirmar pedidos de extracción.
+      </div>
+    </div>
+
+    <h3 id="tab-actividad">Pestaña: Actividad</h3>
+    <p>
+      Muestra un registro cronológico de las últimas <strong>50 acciones</strong>
+      realizadas en el sistema, ordenadas de la más reciente a la más antigua.
+    </p>
+
+    <table>
+      <thead><tr><th>Columna</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Fecha / Hora</td><td>Momento exacto en que ocurrió la acción</td></tr>
+        <tr><td>Usuario</td><td>Nombre o ID del empleado que realizó la acción</td></tr>
+        <tr><td>Acción</td><td>Descripción del evento (inicio de sesión, pedido, actualización, etc.)</td></tr>
+      </tbody>
+    </table>
+
+    <p>Tipos de acciones registradas:</p>
+    <ul style="margin-left:1.5rem; margin-bottom:1rem;">
+      <li>Inicio y cierre de sesión</li>
+      <li>Confirmación de pedidos (con detalle de artículos y cantidades)</li>
+      <li>Actualizaciones de stock</li>
+      <li>Alertas Andon enviadas y atendidas</li>
+      <li>Cortes de turno generados</li>
+      <li>Accesos al panel de administración</li>
+    </ul>
+
+    <h3 id="tab-cortes">Pestaña: Cortes de Turno</h3>
+    <p>
+      Muestra los <strong>cortes automáticos de turno</strong>: resúmenes de todos los
+      pedidos procesados durante cada período del día.
+    </p>
+
+    <table>
+      <thead><tr><th>Turno</th><th>Hora de corte</th><th>Período cubierto</th></tr></thead>
+      <tbody>
+        <tr><td>Matutino</td><td>8:00 AM</td><td>Desde las 6:00 PM del día anterior hasta las 8:00 AM</td></tr>
+        <tr><td>Vespertino</td><td>2:00 PM</td><td>De 8:00 AM a 2:00 PM</td></tr>
+        <tr><td>Nocturno</td><td>6:00 PM</td><td>De 2:00 PM a 6:00 PM</td></tr>
+      </tbody>
+    </table>
+
+    <div class="caja caja-info">
+      <span class="icono">ℹ️</span>
+      <div>
+        Los cortes se generan <strong>automáticamente</strong> en la terminal del almacén
+        (servidor) a las horas indicadas. No es necesario generarlos manualmente.
+        Se muestran los últimos 50 cortes registrados.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 7. TEMA ══ -->
+  <section id="tema">
+    <h2 class="seccion-titulo"><span class="num">7</span> Cambio de Tema</h2>
+
+    <p>
+      El sistema ofrece dos temas visuales: <strong>Oscuro</strong> (predeterminado)
+      y <strong>Claro</strong>. El interruptor de tema está ubicado en la esquina
+      superior derecha de la barra de navegación.
+    </p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4>🌙 Tema Oscuro</h4>
+        <p>Fondo gris oscuro con acentos en rojo. Ideal para ambientes con poca iluminación o uso prolongado.</p>
+      </div>
+      <div class="card" style="background:#f3f4f6; color:#111; border-color:#d1d5db;">
+        <h4 style="color:#b91c1c;">☀️ Tema Claro</h4>
+        <p style="color:#374151;">Fondo blanco/gris claro. Ideal para ambientes muy iluminados.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:1rem;">
+      La preferencia de tema se guarda localmente en el navegador y se mantendrá
+      la próxima vez que abra el sistema en la misma terminal.
+    </p>
+  </section>
+
+  <!-- ══ 8. ROLES ══ -->
+  <section id="roles">
+    <h2 class="seccion-titulo"><span class="num">8</span> Roles de Usuario</h2>
+
+    <p>El sistema maneja dos roles principales:</p>
+
+    <table>
+      <thead>
+        <tr><th>Característica</th><th><span class="badge badge-azul">Operador</span></th><th><span class="badge badge-rojo">Encargado de Almacén</span></th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Ver inventario de su área</td><td>✅</td><td>✅ (Todos los artículos)</td></tr>
+        <tr><td>Solicitar extracciones</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Enviar alertas Andon</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Recibir alertas Andon</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Panel de administración</td><td>❌</td><td>✅ (solo en terminal del almacén)</td></tr>
+        <tr><td>Actualizar stock</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Ver registros de actividad</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Ver cortes de turno</td><td>❌</td><td>✅</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 9. FAQ ══ -->
+  <section id="faq">
+    <h2 class="seccion-titulo"><span class="num">9</span> Preguntas Frecuentes</h2>
+
+    <h3>¿Por qué no puedo ver algunos componentes?</h3>
+    <p>
+      Solo se muestran los componentes asignados a su área. Si necesita acceder a un
+      componente de otra área, solicítelo al encargado de almacén.
+    </p>
+
+    <h3>¿Qué hago si el robot no responde después de confirmar el pedido?</h3>
+    <p>
+      Si el pedido fue aceptado por el sistema pero el robot no realizó la extracción,
+      use el botón de alerta <strong>🚨</strong> para notificar al encargado de almacén.
+    </p>
+
+    <h3>¿Puedo cancelar un pedido ya confirmado?</h3>
+    <p>
+      No es posible cancelar un pedido una vez confirmado desde la interfaz.
+      Contacte de inmediato al encargado de almacén si necesita revertirlo.
+    </p>
+
+    <h3>¿Por qué el botón "Panel Admin" no aparece en mi sesión?</h3>
+    <p>
+      El Panel de Administración está disponible únicamente para usuarios con área
+      <em>"Almacén"</em> y solo cuando se accede desde la terminal del almacén
+      (dirección <code>localhost</code>).
+    </p>
+
+    <h3>¿Qué significa "Terminal Remota" vs "Servidor Almacén"?</h3>
+    <p>
+      <strong>Terminal Remota</strong> indica que está accediendo desde una computadora
+      diferente a la del almacén. <strong>Servidor Almacén</strong> aparece solo en la
+      terminal principal del almacén y habilita funciones adicionales como recepción de
+      alertas y generación de cortes.
+    </p>
+
+    <h3>¿Qué hago si olvidé mi contraseña?</h3>
+    <p>
+      Contacte al encargado de almacén o al administrador del sistema para que
+      restablezca sus credenciales de acceso.
+    </p>
+
+    <h3>¿El sistema guarda mi sesión si cierro el navegador?</h3>
+    <p>
+      Sí. La sesión se mantiene activa mientras no presione <strong>Cerrar Sesión</strong>.
+      Al abrir el navegador nuevamente, su sesión se restaurará automáticamente.
+    </p>
+
+    <h3>¿Por qué el artículo que solicité bajó de stock más de lo que pedí?</h3>
+    <p>
+      El stock se descuenta en tiempo real para todos los usuarios. Es posible que otro
+      operador haya confirmado un pedido del mismo artículo al mismo tiempo. Si detecta
+      una discrepancia, notifique al encargado de almacén.
+    </p>
+  </section>
+
+  <!-- ══ 10. GLOSARIO ══ -->
+  <section id="glosario">
+    <h2 class="seccion-titulo"><span class="num">10</span> Glosario</h2>
+    <dl>
+      <div class="termino"><dt>SIGAB</dt><dd>Sistema de Gestión y Almacenaje de Bienes. Nombre del sistema.</dd></div>
+      <div class="termino"><dt>BIN</dt><dd>Código alfanumérico que identifica la ubicación física de un artículo dentro del almacén automatizado.</dd></div>
+      <div class="termino"><dt>Andon</dt><dd>Sistema de alerta de origen japonés (manufactura esbelta) que permite a los operadores señalar problemas de forma visual o digital para detener y corregir el proceso.</dd></div>
+      <div class="termino"><dt>Extracción</dt><dd>Proceso por el cual el robot automatizado recupera físicamente uno o más componentes del almacén tras recibir un pedido confirmado.</dd></div>
+      <div class="termino"><dt>Corte de Turno</dt><dd>Resumen automático generado al final de cada turno de trabajo, que contiene el detalle de todos los pedidos procesados durante ese período.</dd></div>
+      <div class="termino"><dt>Stock</dt><dd>Cantidad de unidades disponibles de un artículo en el inventario del almacén.</dd></div>
+      <div class="termino"><dt>ESP32 / Carlitos</dt><dd>Nombre del controlador de hardware del robot automatizado de almacén, que recibe y ejecuta las órdenes de extracción.</dd></div>
+      <div class="termino"><dt>Strapi</dt><dd>Sistema de gestión de contenidos utilizado como base de datos y API del sistema SIGAB.</dd></div>
+      <div class="termino"><dt>JWT</dt><dd>JSON Web Token. Credencial cifrada que autentica al usuario en el sistema.</dd></div>
+      <div class="termino"><dt>Servidor (localhost)</dt><dd>Terminal principal del almacén, desde donde se administra el sistema y se escuchan las alertas de los operadores.</dd></div>
+    </dl>
+  </section>
+
+</div><!-- /contenedor -->
+
+<footer>
+  <p><strong>DSI | SIGAB</strong> — Manual de Usuario v1.0</p>
+  <p>Departamento de Sistemas e Informática &nbsp;·&nbsp; Marzo 2026</p>
+  <p style="margin-top:0.5rem; font-size:0.78rem; color:#6b7280;">
+    Este documento es de uso interno. Para soporte técnico, contacte al administrador del sistema.
+  </p>
+</footer>
+
+</body>
+</html>

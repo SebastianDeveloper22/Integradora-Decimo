@@ -6,7 +6,7 @@
 
     const STRAPI_BASE = "http://192.168.1.32:1337";
     const STRAPI_URL  = STRAPI_BASE + "/api";
-    const Carlitos    = "http://192.168.1.71/";
+    const Carlitos    = "http://192.168.1.74/";
 
     // --- Estado ---
     let usuarioActual     = null;
