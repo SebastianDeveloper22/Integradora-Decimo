@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="DSI - Sistema de Almacenamiento y Recuperación Automatizado (AS/RS)">
     <link rel="icon" href="imgs/DSI Logo.png" type="image/png">
-    <title>DSI | Sistema AS/RS</title>
+    <title>DSI | SIGAB</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,7 +14,7 @@
         <div class="logo-container">
             <img src="imgs/DSI Logo.png" alt="DSI Logo" class="logo-img">
         </div>
-        <div class="system-title"><h1>SISTEMA AS/RS</h1></div>
+        <div class="system-title"><h1>SISTEMA DE GESTION Y ALMACENAJE DE BINES</h1></div>
         <div class="status-container">
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="checkbox-theme">
@@ -30,6 +30,7 @@
     </header>
 
     <main class="main-content" role="main">
+
         <!-- PANTALLA LOGIN -->
         <section id="screen-login" class="screen active" aria-label="Inicio de sesión">
             <div class="login-card">
@@ -60,7 +61,10 @@
                     <h2 id="lbl-nombre">Nombre Usuario</h2>
                     <span id="lbl-area" class="badge-area">Área: ---</span>
                 </div>
-                <button id="btn-logout" class="btn-outline">Cerrar Sesión</button>
+                <div class="user-panel-actions">
+                    <button id="btn-ir-admin" class="btn-outline btn-admin-access hidden">⚙ Panel Admin</button>
+                    <button id="btn-logout" class="btn-outline">Cerrar Sesión</button>
+                </div>
             </div>
 
             <div class="inventory-section">
@@ -73,6 +77,58 @@
 
             <button id="btn-emergency" class="btn-emergency">🚨 SOLICITAR ASISTENCIA TÉCNICA</button>
         </section>
+
+        <!-- PANTALLA ADMIN -->
+        <section id="screen-admin" class="screen hidden" aria-label="Panel de administrador">
+            <div class="admin-header">
+                <div class="admin-header-info">
+                    <h2 class="admin-header-titulo">⚙ PANEL DE ADMINISTRADOR</h2>
+                    <span id="admin-lbl-usuario" class="badge-area"></span>
+                </div>
+                <button id="btn-admin-volver" class="btn-outline">← Volver al Dashboard</button>
+            </div>
+
+            <!-- Tabs de navegación -->
+            <nav class="admin-tabs" role="tablist" aria-label="Secciones del panel">
+                <button class="admin-tab active" id="tab-inventario" role="tab" aria-selected="true"  aria-controls="admin-inventario">📦 Inventario</button>
+                <button class="admin-tab"        id="tab-actividad"  role="tab" aria-selected="false" aria-controls="admin-actividad">📋 Actividad</button>
+                <button class="admin-tab"        id="tab-cortes"     role="tab" aria-selected="false" aria-controls="admin-cortes">🕐 Cortes de Turno</button>
+            </nav>
+
+            <!-- Tab: Inventario -->
+            <div id="admin-inventario" class="admin-tab-content" role="tabpanel" aria-labelledby="tab-inventario">
+                <div class="admin-section-header">
+                    <p class="admin-section-desc">Modifica las cantidades del inventario. Solo puedes <strong>aumentar</strong> el stock, no reducirlo.</p>
+                    <button id="btn-admin-reload-inv" class="btn-outline">↺ Recargar</button>
+                </div>
+                <div id="admin-inv-container">
+                    <p class="accent-text">Cargando inventario...</p>
+                </div>
+            </div>
+
+            <!-- Tab: Log de Actividad -->
+            <div id="admin-actividad" class="admin-tab-content hidden" role="tabpanel" aria-labelledby="tab-actividad">
+                <div class="admin-section-header">
+                    <p class="admin-section-desc">Registro de las últimas 50 acciones realizadas en el sistema.</p>
+                    <button id="btn-admin-reload-act" class="btn-outline">↺ Recargar</button>
+                </div>
+                <div id="admin-act-container">
+                    <p class="accent-text">Cargando registros...</p>
+                </div>
+            </div>
+
+            <!-- Tab: Cortes de Turno -->
+            <div id="admin-cortes" class="admin-tab-content hidden" role="tabpanel" aria-labelledby="tab-cortes">
+                <div class="admin-section-header">
+                    <p class="admin-section-desc">Resúmenes generados automáticamente a las 8:00 AM, 2:00 PM y 6:00 PM.</p>
+                    <button id="btn-admin-reload-cor" class="btn-outline">↺ Recargar</button>
+                </div>
+                <div id="admin-cor-container">
+                    <p class="accent-text">Cargando cortes...</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- MODAL: Solicitar Asistencia -->
@@ -100,6 +156,18 @@
             </div>
             <p class="alerta-nota">El sistema está bloqueado hasta que se atienda la solicitud.</p>
             <button id="btn-resolver-alerta" class="btn-resolver">Marcar como Atendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL: Dialogo custom (alert / confirm) -->
+    <div id="custom-modal-overlay" class="hidden">
+        <div class="custom-modal-box">
+            <h3 id="custom-modal-title">Título</h3>
+            <p id="custom-modal-message">Mensaje de la alerta aquí.</p>
+            <div class="custom-modal-buttons">
+                <button id="btn-custom-cancel" class="btn-modal btn-modal-secondary hidden">Cancelar</button>
+                <button id="btn-custom-ok" class="btn-modal btn-modal-primary">Aceptar</button>
+            </div>
         </div>
     </div>
 

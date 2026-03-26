@@ -666,3 +666,586 @@ input:checked + .slider:before {
 .btn-resolver:active {
     transform: scale(0.98);
 }
+
+
+/* ==========================================
+   ESTILOS DEL MODAL CUSTOM
+   ========================================== */
+#custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#custom-modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.custom-modal-box {
+    background: var(--bg-surface, #1e1e1e);
+    border: 2px solid var(--primary, #f03a47);
+    border-radius: 8px;
+    padding: 30px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+#custom-modal-overlay.active .custom-modal-box {
+    transform: translateY(0);
+}
+
+#custom-modal-title {
+    color: var(--primary, #f03a47);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#custom-modal-message {
+    color: var(--text-main, #ffffff);
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.custom-modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-modal {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.btn-modal:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+}
+
+.btn-modal-primary {
+    background: var(--primary, #f03a47);
+    color: white;
+}
+
+.btn-modal-secondary {
+    background: #444;
+    color: white;
+}
+
+/* ==========================================
+   NUEVOS ESTILOS PARA BOTONES CON IMÁGENES
+   ========================================== */
+
+/* Ajuste general del botón de inventario */
+.btn-item.has-image {
+    display: flex;
+    flex-direction: column; /* Imagen arriba, texto abajo */
+    align-items: center;
+    justify-content: flex-start; /* Imagen pegada arriba */
+    padding: 0; /* Dejamos que los hijos manejen su relleno */
+    overflow: hidden; /* Para que la imagen respete las esquinas redondeadas del botón */
+    text-align: center;
+    border: 1px solid var(--border-color, #444); /* Un borde sutil si no tienes uno global */
+}
+
+/* Estilo para la imagen del inventario */
+.item-img {
+    width: 100%;
+    height: 210px; /* Altura uniforme para todas las imágenes. Ajusta si las quieres más grandes */
+    object-fit: cover; /* Truco de diseño: la imagen llena el espacio sin deformarse (como las portadas de Netflix) */
+    border-bottom: 1px solid var(--border-color, #444); /* Separa la imagen del texto */
+    background: rgba(255,255,255,0.02); /* Un fondo sutil por si la imagen tiene transparencia */
+}
+
+/* Estilo por si no hay imagen (Fallback) */
+.item-img-fallback {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--accent, #f03a47); /* O un color de acento tuyo */
+}
+
+/* Contenedor del texto abajo de la imagen */
+.item-text {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Ocupa todo el espacio restante */
+    justify-content: center; /* Centra el texto verticalmente */
+    width: 100%;
+}
+
+/* El nombre de la pieza */
+.item-name {
+    font-size: 1rem;
+    color: var(--text-main, #ffffff);
+    margin-bottom: 2px;
+    display: block;
+}
+
+/* El código bin */
+.item-bin {
+    color: var(--accent, #f03a47);
+    font-size: 0.8rem;
+    display: block;
+}
+
+/* ==========================================
+   BADGE DE STOCK
+   ========================================== */
+.stock-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 6px;
+    border-radius: 13px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 2;
+    line-height: 1;
+}
+
+.stock-badge--ok {
+    background: #10b981;
+    color: #fff;
+}
+
+.stock-badge--bajo {
+    background: #f59e0b;
+    color: #000;
+}
+
+.stock-badge--vacio {
+    background: #6b7280;
+    color: #fff;
+    font-size: 0.65rem;
+    min-width: 52px;
+    border-radius: 4px;
+}
+
+/* Para que el badge quede bien posicionado dentro del boton */
+.btn-item.has-image {
+    position: relative;
+}
+
+/* Estado sin stock: boton deshabilitado */
+.btn-item.sin-stock {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: grayscale(60%);
+}
+
+.btn-item.sin-stock:hover {
+    transform: none;
+    border-color: var(--border-color);
+    background: var(--bg-surface);
+}
+
+/* ==========================================
+   PANEL CARRITO DE EXTRACCIÓN
+   ========================================== */
+.panel-carrito {
+    margin: 0 0 20px 0;
+    padding: 20px;
+    background: var(--bg-surface);
+    border: 2px dashed var(--primary);
+    border-radius: 8px;
+}
+
+.carrito-titulo {
+    color: var(--primary);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.carrito-lista {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.carrito-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-main);
+}
+
+.carrito-item:last-child {
+    border-bottom: none;
+}
+
+.carrito-item-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.carrito-item-bin {
+    color: var(--primary);
+    font-size: 0.85rem;
+}
+
+/* --- Control de cantidad [−] [input] [+] --- */
+.carrito-item-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.carrito-cantidad-btn {
+    background: var(--bg-surface-hover);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    width: 28px;
+    height: 28px;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.carrito-cantidad-btn:hover:not(:disabled) {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.carrito-cantidad-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.carrito-cantidad-input {
+    width: 54px;
+    height: 28px;
+    text-align: center;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 4px;
+    /* Ocultar flechas nativas del input number */
+    -moz-appearance: textfield;
+}
+
+.carrito-cantidad-input::-webkit-outer-spin-button,
+.carrito-cantidad-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.carrito-cantidad-input:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+.carrito-btn-quitar {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.15s;
+    flex-shrink: 0;
+}
+
+.carrito-btn-quitar:hover {
+    background: rgba(185, 28, 28, 0.15);
+}
+
+.btn-confirmar-orden {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s, transform 0.1s;
+    letter-spacing: 0.5px;
+}
+
+.btn-confirmar-orden:hover {
+    background: #991b1b;
+    transform: translateY(-1px);
+}
+
+.btn-confirmar-orden:active {
+    transform: translateY(0);
+}
+
+/* ==========================================
+   PANEL DE ADMINISTRADOR
+   ========================================== */
+
+/* La pantalla admin ocupa todo el espacio disponible con scroll */
+#screen-admin {
+    overflow-y: auto;
+    align-items: stretch !important;
+    padding-bottom: 2rem;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary);
+    padding: 1.2rem 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-header-titulo {
+    color: var(--primary);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Botón de acceso al panel desde el dashboard */
+.user-panel-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-admin-access {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-admin-access:hover {
+    background: var(--primary);
+    color: var(--text-inverse);
+    border-color: var(--primary);
+}
+
+/* --- Tabs de navegación --- */
+.admin-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0;
+}
+
+.admin-tab {
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom: none;
+    color: var(--text-muted);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.2s;
+    position: relative;
+    bottom: -2px;
+}
+
+.admin-tab:hover {
+    color: var(--text-main);
+    background: var(--bg-surface-hover);
+}
+
+.admin-tab.active {
+    color: var(--primary);
+    background: var(--bg-surface);
+    border-color: var(--border-color);
+    border-bottom-color: var(--bg-surface);
+}
+
+/* --- Contenido de cada tab --- */
+.admin-tab-content {
+    animation: fadeIn 0.2s ease-out;
+}
+
+.admin-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.admin-section-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.admin-section-desc strong {
+    color: var(--text-main);
+}
+
+/* --- Tabla admin --- */
+.admin-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.admin-tabla th {
+    background: var(--bg-surface-hover);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--border-color);
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.admin-tabla td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    vertical-align: middle;
+}
+
+.admin-tabla tbody tr:hover {
+    background: var(--bg-surface-hover);
+}
+
+.admin-tabla tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Flash verde al actualizar una fila */
+.admin-fila-ok td {
+    background: rgba(16, 185, 129, 0.12) !important;
+    transition: background 0.3s;
+}
+
+.admin-td-muted {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.admin-td-resumen {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    word-break: break-word;
+}
+
+/* --- Input de cantidad en tabla admin --- */
+.admin-input-cantidad {
+    width: 90px;
+    padding: 6px 10px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    border-radius: 4px;
+    text-align: center;
+    -moz-appearance: textfield;
+}
+
+.admin-input-cantidad::-webkit-outer-spin-button,
+.admin-input-cantidad::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.admin-input-cantidad:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+/* --- Botón actualizar por fila --- */
+.btn-admin-actualizar {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-admin-actualizar:hover {
+    background: var(--primary);
+    color: var(--text-inverse);
+}
+
+/* --- Badges de tipo log --- */
+.log-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.log-tag--actividad {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+.log-tag--corte {
+    background: rgba(185, 28, 28, 0.2);
+    color: var(--primary);
+}
