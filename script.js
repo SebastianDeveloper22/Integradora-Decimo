@@ -6,7 +6,7 @@
 
     const STRAPI_BASE = "http://192.168.1.32:1337";
     const STRAPI_URL  = STRAPI_BASE + "/api";
-    const Carlitos    = "http://192.168.1.74/";
+    const Carlitos    = "http://192.168.1.140/";
 
     // --- Estado ---
     let usuarioActual     = null;
@@ -234,7 +234,7 @@
         window.location.hostname === "127.0.0.1";
 
     if (esKioscoLocal) {
-        txtModo.textContent = "Servidor Almacén (Escuchando Alertas)";
+        txtModo.textContent = "Servidor Almacén";
         iniciarPollingAlertas();
         iniciarSistemaCortes();
     } else {

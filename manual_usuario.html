@@ -4,256 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Manual de Usuario — SIGAB</title>
-  <style>
-    :root {
-      --rojo: #b91c1c;
-      --rojo-claro: #ef4444;
-      --rojo-oscuro: #7f1d1d;
-      --fondo: #111827;
-      --fondo2: #1f2937;
-      --fondo3: #374151;
-      --texto: #f9fafb;
-      --texto-suave: #9ca3af;
-      --borde: #374151;
-      --acento: #dc2626;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--fondo);
-      color: var(--texto);
-      line-height: 1.7;
-    }
-
-    /* ── PORTADA ── */
-    .portada {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b1b 50%, #450a0a 100%);
-      text-align: center;
-      padding: 2rem;
-      page-break-after: always;
-    }
-    .portada .logo-circle {
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      background: var(--rojo);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 2rem;
-      box-shadow: 0 0 40px rgba(185,28,28,0.5);
-    }
-    .portada .logo-circle img { width: 90px; height: 90px; object-fit: contain; }
-    .portada .logo-circle span { font-size: 3rem; font-weight: 900; color: #fff; }
-    .portada h1 { font-size: 3rem; font-weight: 900; letter-spacing: 2px; }
-    .portada h1 span { color: var(--rojo-claro); }
-    .portada .subtitulo {
-      font-size: 1.1rem; color: var(--texto-suave);
-      margin-top: 0.5rem; letter-spacing: 1px;
-    }
-    .portada .linea { width: 80px; height: 4px; background: var(--rojo); margin: 2rem auto; border-radius: 2px; }
-    .portada .version {
-      font-size: 0.9rem; color: var(--texto-suave);
-      margin-top: 1rem; border: 1px solid var(--borde);
-      padding: 0.4rem 1.2rem; border-radius: 999px;
-    }
-
-    /* ── LAYOUT ── */
-    .contenedor {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-    }
-
-    /* ── ÍNDICE ── */
-    .indice {
-      background: var(--fondo2);
-      border: 1px solid var(--borde);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 3rem;
-      page-break-after: always;
-    }
-    .indice h2 { color: var(--rojo-claro); font-size: 1.4rem; margin-bottom: 1.2rem; }
-    .indice ol { padding-left: 1.2rem; }
-    .indice li { margin: 0.35rem 0; }
-    .indice a { color: var(--texto-suave); text-decoration: none; transition: color 0.2s; }
-    .indice a:hover { color: var(--rojo-claro); }
-    .indice .sub { padding-left: 1.2rem; list-style-type: lower-alpha; }
-
-    /* ── SECCIONES ── */
-    section { margin-bottom: 4rem; }
-    section:not(:last-child) { border-bottom: 1px solid var(--borde); padding-bottom: 3rem; }
-
-    h2.seccion-titulo {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--rojo-claro);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    h2.seccion-titulo .num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 36px; height: 36px; border-radius: 50%;
-      background: var(--rojo); color: #fff;
-      font-size: 1rem; font-weight: 900; flex-shrink: 0;
-    }
-
-    h3 {
-      font-size: 1.15rem; font-weight: 700;
-      color: #f87171;
-      margin: 1.8rem 0 0.7rem;
-    }
-
-    p { margin-bottom: 0.9rem; color: var(--texto); }
-
-    /* ── CAJAS INFORMATIVAS ── */
-    .caja {
-      border-radius: 10px;
-      padding: 1rem 1.3rem;
-      margin: 1.2rem 0;
-      display: flex;
-      gap: 0.8rem;
-      align-items: flex-start;
-    }
-    .caja .icono { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
-    .caja-info  { background: #1e3a5f; border-left: 4px solid #3b82f6; }
-    .caja-warn  { background: #3b2a00; border-left: 4px solid #f59e0b; }
-    .caja-error { background: #3b0000; border-left: 4px solid #ef4444; }
-    .caja-ok    { background: #0d3322; border-left: 4px solid #22c55e; }
-
-    /* ── PASOS NUMERADOS ── */
-    .pasos { counter-reset: paso; list-style: none; padding: 0; }
-    .pasos li {
-      counter-increment: paso;
-      display: flex; gap: 1rem;
-      margin-bottom: 1rem;
-      align-items: flex-start;
-    }
-    .pasos li::before {
-      content: counter(paso);
-      display: inline-flex; align-items: center; justify-content: center;
-      min-width: 28px; height: 28px; border-radius: 50%;
-      background: var(--rojo); color: #fff;
-      font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    /* ── TABLA ── */
-    table {
-      width: 100%; border-collapse: collapse;
-      margin: 1.2rem 0; font-size: 0.92rem;
-    }
-    thead th {
-      background: var(--rojo-oscuro); color: #fff;
-      padding: 0.7rem 1rem; text-align: left;
-    }
-    tbody td {
-      padding: 0.65rem 1rem;
-      border-bottom: 1px solid var(--borde);
-      vertical-align: top;
-    }
-    tbody tr:nth-child(even) { background: var(--fondo2); }
-    tbody tr:hover { background: var(--fondo3); }
-
-    /* ── BADGES ── */
-    .badge {
-      display: inline-block; padding: 0.2rem 0.7rem;
-      border-radius: 999px; font-size: 0.8rem; font-weight: 700;
-    }
-    .badge-verde  { background: #166534; color: #bbf7d0; }
-    .badge-amarillo { background: #713f12; color: #fef08a; }
-    .badge-rojo   { background: #7f1d1d; color: #fecaca; }
-    .badge-gris   { background: #374151; color: #e5e7eb; }
-    .badge-azul   { background: #1e3a5f; color: #bfdbfe; }
-
-    /* ── CÓDIGO ── */
-    code {
-      background: var(--fondo3); color: #fca5a5;
-      padding: 0.15rem 0.45rem; border-radius: 4px;
-      font-family: 'Courier New', monospace; font-size: 0.88rem;
-    }
-
-    /* ── MOCKUP UI ── */
-    .mockup {
-      background: var(--fondo2);
-      border: 1px solid var(--borde);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-    }
-    .mockup-header {
-      background: var(--rojo-oscuro); border-radius: 8px 8px 0 0;
-      padding: 0.6rem 1rem;
-      font-weight: 700; font-size: 0.85rem;
-      margin: -1.5rem -1.5rem 1rem;
-      color: #fca5a5; letter-spacing: 1px;
-    }
-    .campo-form {
-      background: var(--fondo3); border: 1px solid var(--borde);
-      border-radius: 8px; padding: 0.6rem 1rem;
-      margin: 0.5rem 0; color: var(--texto-suave);
-      font-size: 0.9rem;
-    }
-    .btn-mock {
-      display: inline-block;
-      background: var(--rojo); color: #fff;
-      padding: 0.55rem 1.5rem; border-radius: 8px;
-      font-weight: 700; margin-top: 0.8rem;
-      font-size: 0.9rem;
-    }
-
-    /* ── GLOSARIO ── */
-    .termino { margin-bottom: 1rem; }
-    .termino dt { font-weight: 700; color: var(--rojo-claro); }
-    .termino dd { margin-left: 1rem; color: var(--texto-suave); }
-
-    /* ── PRINT ── */
-    @media print {
-      body { background: #fff; color: #111; }
-      .portada { background: #111 !important; color: #fff; }
-      a { color: inherit; }
-    }
-
-    /* ── DIVIDER ── */
-    .divider { height: 3px; background: linear-gradient(to right, var(--rojo), transparent); margin: 2.5rem 0; border-radius: 2px; }
-
-    /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      color: var(--texto-suave);
-      font-size: 0.85rem;
-      border-top: 1px solid var(--borde);
-      margin-top: 4rem;
-    }
-
-    /* ── FLUJO ── */
-    .flujo {
-      display: flex; align-items: center; gap: 0.5rem;
-      flex-wrap: wrap; margin: 1.2rem 0;
-    }
-    .flujo-paso {
-      background: var(--fondo3); border: 1px solid var(--borde);
-      border-radius: 8px; padding: 0.5rem 1rem;
-      font-size: 0.88rem; font-weight: 600;
-    }
-    .flujo-arrow { color: var(--rojo); font-weight: 900; font-size: 1.2rem; }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.2rem 0; }
-    @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
-    .card {
-      background: var(--fondo2); border: 1px solid var(--borde);
-      border-radius: 10px; padding: 1.2rem;
-    }
-    .card h4 { color: var(--rojo-claro); margin-bottom: 0.5rem; }
-  </style>
+  <link rel="stylesheet" href="manual_usuario.css" />
 </head>
 <body>
 
@@ -284,6 +35,14 @@
     <h2>Tabla de Contenidos</h2>
     <ol>
       <li><a href="#intro">Introducción al Sistema</a></li>
+      <li>
+        <a href="#skr">Subsistema SKR — Control de Motores</a>
+        <ol class="sub">
+          <li><a href="#skr-rol">Rol en el sistema</a></li>
+          <li><a href="#skr-flujo">Flujo de comunicación</a></li>
+          <li><a href="#skr-ejes">Ejes de movimiento (X / Z)</a></li>
+        </ol>
+      </li>
       <li>
         <a href="#acceso">Acceso al Sistema (Inicio de Sesión)</a>
         <ol class="sub">
@@ -338,7 +97,7 @@
       <span class="icono">ℹ️</span>
       <div>
         El sistema se comunica en tiempo real con el robot automatizado de almacén
-        (<em>Carlitos</em>) para ejecutar las extracciones de manera física.
+        (<em>ESP32</em>) para ejecutar las extracciones de manera física.
         No es necesario ningún conocimiento técnico para operar el sistema.
       </div>
     </div>
@@ -354,8 +113,8 @@
         <p>Terminal principal en <code>localhost</code>. Recibe alertas, genera cortes de turno y tiene acceso al panel de administración.</p>
       </div>
       <div class="card">
-        <h4>Robot Automatizado</h4>
-        <p>Dispositivo físico (<em>ESP32</em>) que recibe las coordenadas del pedido y ejecuta la extracción en el almacén.</p>
+        <h4>ESP32 + SKR (Robot)</h4>
+        <p>El <em>ESP32</em> recibe las coordenadas del sistema web, las retransmite a la <em>SKR</em> para el movimiento de los motores y activa la <strong>pinza</strong> que recoge físicamente el BIN una vez el robot está posicionado.</p>
       </div>
       <div class="card">
         <h4>Base de Datos (Strapi)</h4>
@@ -377,9 +136,122 @@
     </div>
   </section>
 
-  <!-- ══ 2. ACCESO ══ -->
+  <!-- ══ 2. SKR ══ -->
+  <section id="skr">
+    <h2 class="seccion-titulo"><span class="num">2</span> Subsistema SKR — Control de Motores</h2>
+
+    <p>
+      La <strong>SKR</strong> es la placa controladora de motores paso a paso (<em>stepper drivers</em>)
+      que gobierna el movimiento físico del robot de almacén. Es el núcleo de actuación del sistema:
+      sin ella, las órdenes generadas en la interfaz web no se traducirían en movimiento real.
+    </p>
+
+    <div class="caja caja-info">
+      <span class="icono">⚙️</span>
+      <div>
+        La SKR opera de forma <strong>transparente al usuario</strong>. Usted no interactúa
+        directamente con ella; el sistema SIGAB y el módulo ESP32 se encargan de comunicarle
+        las instrucciones de movimiento automáticamente al confirmar una extracción.
+      </div>
+    </div>
+
+    <h3 id="skr-rol">Rol en el sistema</h3>
+    <p>
+      Dentro de la arquitectura de SIGAB, la SKR ocupa la capa de <strong>control de hardware</strong>.
+      Su función es recibir coordenadas de destino y traducirlas en pulsos precisos para los
+      motores paso a paso que desplazan el mecanismo de extracción hasta el BIN solicitado.
+    </p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4>Lo que recibe</h4>
+        <p>Instrucciones de posición en los ejes <strong>X</strong> y <strong>Z</strong>
+        enviadas por el ESP32, expresadas como coordenadas numéricas mapeadas a los BINs del almacén.</p>
+      </div>
+      <div class="card">
+        <h4>Lo que ejecuta</h4>
+        <p>Genera los pulsos de paso y dirección para cada motor, moviendo el cabezal del robot
+        a la posición exacta del componente solicitado con precisión milimétrica.</p>
+      </div>
+    </div>
+
+    <h3 id="skr-flujo">Flujo de comunicación</h3>
+    <p>
+      Cuando un operador confirma una extracción, la cadena de comunicación es la siguiente:
+    </p>
+
+    <div class="flujo" style="flex-direction:column; align-items:flex-start; gap:0;">
+      <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.3rem;">
+        <div class="flujo-paso" style="min-width:220px;">🖥️ SIGAB (Interfaz Web)</div>
+        <span style="color:var(--texto-suave); font-size:0.82rem;">Genera lista de coordenadas {x, z} por BIN</span>
+      </div>
+      <div style="padding-left:1rem; color:var(--rojo); font-size:1.3rem; line-height:1;">↓</div>
+      <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.3rem;">
+        <div class="flujo-paso" style="min-width:220px;">📡 ESP32</div>
+        <span style="color:var(--texto-suave); font-size:0.82rem;">Recibe el JSON de coordenadas vía HTTP POST, lo retransmite a la SKR y activa la pinza al llegar al BIN</span>
+      </div>
+      <div style="padding-left:1rem; color:var(--rojo); font-size:1.3rem; line-height:1;">↓</div>
+      <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.3rem;">
+        <div class="flujo-paso" style="min-width:220px; background:var(--rojo-oscuro); border-color:var(--rojo);">⚡ SKR (Controladora)</div>
+        <span style="color:var(--texto-suave); font-size:0.82rem;">Interpreta las coordenadas y controla los drivers de los steppers</span>
+      </div>
+      <div style="padding-left:1rem; color:var(--rojo); font-size:1.3rem; line-height:1;">↓</div>
+      <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.3rem;">
+        <div class="flujo-paso" style="min-width:220px;">🦾 Motores paso a paso</div>
+        <span style="color:var(--texto-suave); font-size:0.82rem;">Se desplazan a la posición exacta del BIN (ejes X y Z)</span>
+      </div>
+      <div style="padding-left:1rem; color:var(--rojo); font-size:1.3rem; line-height:1;">↓</div>
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <div class="flujo-paso" style="min-width:220px; background:#14532d; border-color:#16a34a;">🤏 Pinza (ESP32)</div>
+        <span style="color:var(--texto-suave); font-size:0.82rem;">El ESP32 activa la pinza para recoger el BIN una vez el robot está posicionado</span>
+      </div>
+    </div>
+
+    <h3 id="skr-ejes">Ejes de movimiento (X / Z)</h3>
+    <p>
+      El robot de almacén opera en <strong>dos ejes</strong>, cada uno controlado por su
+      respectivo motor paso a paso a través de la SKR:
+    </p>
+
+    <table>
+      <thead>
+        <tr><th>Eje</th><th>Dirección</th><th>Función</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-azul">Eje X</span></td>
+          <td>Horizontal</td>
+          <td>Desplazamiento lateral entre columnas de BINs (izquierda / derecha)</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-verde">Eje Z</span></td>
+          <td>Vertical</td>
+          <td>Desplazamiento en altura entre filas de BINs (arriba / abajo)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      Cada código BIN registrado en la base de datos tiene asociadas sus coordenadas
+      <code>X</code> y <code>Z</code> exactas. Al confirmar un pedido, el sistema
+      consulta esas coordenadas y las envía a la SKR a través del ESP32, que posiciona
+      el mecanismo y ejecuta la extracción.
+    </p>
+
+    <div class="caja caja-warn">
+      <span class="icono">⚠️</span>
+      <div>
+        Si la SKR o el ESP32 no responden al momento de confirmar un pedido, el sistema
+        mostrará un mensaje de <strong>"Fallo de Comunicación"</strong>. En ese caso,
+        utilice el botón <strong>🚨 Solicitar Asistencia Técnica</strong> para notificar
+        al encargado de almacén.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3. ACCESO ══ -->
   <section id="acceso">
-    <h2 class="seccion-titulo"><span class="num">2</span> Acceso al Sistema</h2>
+    <h2 class="seccion-titulo"><span class="num">3</span> Acceso al Sistema</h2>
 
     <p>
       Al abrir la aplicación en el navegador, se mostrará la pantalla de inicio de sesión.
@@ -443,7 +315,7 @@
 
   <!-- ══ 3. PANEL DEL OPERADOR ══ -->
   <section id="dashboard">
-    <h2 class="seccion-titulo"><span class="num">3</span> Panel del Operador</h2>
+    <h2 class="seccion-titulo"><span class="num">4</span> Panel del Operador</h2>
 
     <p>
       Al iniciar sesión correctamente, verá el <strong>Panel del Operador</strong>.
@@ -512,7 +384,7 @@
 
   <!-- ══ 4. LISTA DE EXTRACCIÓN ══ -->
   <section id="carrito">
-    <h2 class="seccion-titulo"><span class="num">4</span> Lista de Extracción</h2>
+    <h2 class="seccion-titulo"><span class="num">5</span> Lista de Extracción</h2>
 
     <p>
       La <strong>Lista de Extracción</strong> (identificada con el ícono 🛒) funciona
@@ -585,7 +457,7 @@
 
   <!-- ══ 5. SISTEMA ANDON ══ -->
   <section id="andon">
-    <h2 class="seccion-titulo"><span class="num">5</span> Sistema de Alerta (Andon)</h2>
+    <h2 class="seccion-titulo"><span class="num">6</span> Sistema de Alerta (Andon)</h2>
 
     <p>
       El <strong>Sistema Andon</strong> permite a cualquier operador solicitar asistencia
@@ -634,7 +506,7 @@
 
   <!-- ══ 6. PANEL DE ADMINISTRACIÓN ══ -->
   <section id="admin">
-    <h2 class="seccion-titulo"><span class="num">6</span> Panel de Administración</h2>
+    <h2 class="seccion-titulo"><span class="num">7</span> Panel de Administración</h2>
 
     <div class="caja caja-warn">
       <span class="icono">🔐</span>
@@ -731,7 +603,7 @@
 
   <!-- ══ 7. TEMA ══ -->
   <section id="tema">
-    <h2 class="seccion-titulo"><span class="num">7</span> Cambio de Tema</h2>
+    <h2 class="seccion-titulo"><span class="num">8</span> Cambio de Tema</h2>
 
     <p>
       El sistema ofrece dos temas visuales: <strong>Oscuro</strong> (predeterminado)
@@ -758,7 +630,7 @@
 
   <!-- ══ 8. ROLES ══ -->
   <section id="roles">
-    <h2 class="seccion-titulo"><span class="num">8</span> Roles de Usuario</h2>
+    <h2 class="seccion-titulo"><span class="num">9</span> Roles de Usuario</h2>
 
     <p>El sistema maneja dos roles principales:</p>
 
@@ -781,7 +653,7 @@
 
   <!-- ══ 9. FAQ ══ -->
   <section id="faq">
-    <h2 class="seccion-titulo"><span class="num">9</span> Preguntas Frecuentes</h2>
+    <h2 class="seccion-titulo"><span class="num">10</span> Preguntas Frecuentes</h2>
 
     <h3>¿Por qué no puedo ver algunos componentes?</h3>
     <p>
@@ -838,7 +710,7 @@
 
   <!-- ══ 10. GLOSARIO ══ -->
   <section id="glosario">
-    <h2 class="seccion-titulo"><span class="num">10</span> Glosario</h2>
+    <h2 class="seccion-titulo"><span class="num">11</span> Glosario</h2>
     <dl>
       <div class="termino"><dt>SIGAB</dt><dd>Sistema de Gestión y Almacenaje de Bienes. Nombre del sistema.</dd></div>
       <div class="termino"><dt>BIN</dt><dd>Código alfanumérico que identifica la ubicación física de un artículo dentro del almacén automatizado.</dd></div>
@@ -846,7 +718,10 @@
       <div class="termino"><dt>Extracción</dt><dd>Proceso por el cual el robot automatizado recupera físicamente uno o más componentes del almacén tras recibir un pedido confirmado.</dd></div>
       <div class="termino"><dt>Corte de Turno</dt><dd>Resumen automático generado al final de cada turno de trabajo, que contiene el detalle de todos los pedidos procesados durante ese período.</dd></div>
       <div class="termino"><dt>Stock</dt><dd>Cantidad de unidades disponibles de un artículo en el inventario del almacén.</dd></div>
-      <div class="termino"><dt>ESP32 / Carlitos</dt><dd>Nombre del controlador de hardware del robot automatizado de almacén, que recibe y ejecuta las órdenes de extracción.</dd></div>
+      <div class="termino"><dt>SKR</dt><dd>Placa controladora de motores paso a paso (stepper drivers). Recibe las coordenadas de destino desde el ESP32 y genera los pulsos eléctricos precisos para mover el robot en los ejes X y Z hasta el BIN solicitado.</dd></div>
+      <div class="termino"><dt>ESP32</dt><dd>Microcontrolador con conectividad WiFi que actúa como puente entre la interfaz web (SIGAB) y la placa SKR. Recibe las órdenes de extracción vía HTTP POST, las retransmite a la SKR para el movimiento y, una vez posicionado el robot, activa la pinza que recoge físicamente el BIN solicitado.</dd></div>
+      <div class="termino"><dt>Pinza</dt><dd>Mecanismo de agarre controlado por el ESP32 que se activa al final del recorrido del robot. Es el componente que toma físicamente el BIN del estante y lo extrae para entregarlo al operador.</dd></div>
+      <div class="termino"><dt>Motor paso a paso (Stepper)</dt><dd>Motor de precisión que se desplaza en incrementos fijos (pasos). La SKR controla dos: uno para el eje X (horizontal) y otro para el eje Z (vertical) del robot de almacén.</dd></div>
       <div class="termino"><dt>Strapi</dt><dd>Sistema de gestión de contenidos utilizado como base de datos y API del sistema SIGAB.</dd></div>
       <div class="termino"><dt>JWT</dt><dd>JSON Web Token. Credencial cifrada que autentica al usuario en el sistema.</dd></div>
       <div class="termino"><dt>Servidor (localhost)</dt><dd>Terminal principal del almacén, desde donde se administra el sistema y se escuchan las alertas de los operadores.</dd></div>

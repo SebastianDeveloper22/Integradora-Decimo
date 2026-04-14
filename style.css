@@ -401,12 +401,16 @@ input:checked + .slider:before {
 
 .badge-area {
     display: inline-block;
-    background: var(--primary);
-    color: var(--text-inverse);
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--primary);
+    border-left: 3px solid var(--primary);
     padding: 4px 12px;
     font-size: 0.85rem;
     margin-top: 5px;
-    font-weight: bold;
+    font-weight: 600;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
 }
 
 /* --- BOTONES DE INVENTARIO --- */
