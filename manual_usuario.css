@@ -246,3 +246,384 @@ footer {
   border-radius: 10px; padding: 1.2rem;
 }
 .card h4 { color: var(--rojo-claro); margin-bottom: 0.5rem; }
+
+
+/* ══════════════════════════════════════════════
+   MANUAL DE ENSAMBLE — Estilo LEGO
+═══════════════════════════════════════════════ */
+
+/* ── PASO: contenedor principal ── */
+.paso-ensamble {
+  min-height: 90vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 2.5rem 1.5rem 2rem;
+  border-bottom: 2px solid var(--rojo-oscuro);
+  page-break-after: always;
+  position: relative;
+  gap: 1.5rem;
+}
+
+/* ── PASO: cabecera (número + título) ── */
+.paso-header {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+.paso-numero {
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--rojo);
+  line-height: 1;
+  min-width: 90px;
+  text-align: center;
+  border-right: 3px solid var(--rojo);
+  padding-right: 1.4rem;
+  flex-shrink: 0;
+}
+.paso-titulo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--texto);
+  margin: 0;
+}
+.paso-subtitulo {
+  font-size: 0.92rem;
+  color: var(--texto-suave);
+  margin-top: 0.25rem;
+}
+
+/* ── PASO: cuerpo (BOM + imagen) ── */
+.paso-body {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 700px) {
+  .paso-body { grid-template-columns: 1fr; }
+}
+
+/* ── BOM GENERAL: grid de tarjetas grandes (página de resumen) ── */
+.bom-general {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+.bom-general-card {
+  background: var(--fondo2);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 1rem 0.75rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.bom-general-card:hover { border-color: var(--rojo); }
+.bom-general-img {
+  width: 150px;
+  height: 150px;
+  background: var(--fondo3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 12px;
+  flex-shrink: 0;
+}
+.bom-general-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0.93) contrast(1.04);
+}
+.bom-general-img .bom-emoji { font-size: 4rem; line-height: 1; }
+.bom-general-qty {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--rojo);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 900;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  min-width: 26px;
+  text-align: center;
+  line-height: 1.5;
+  border: 2px solid var(--fondo2);
+}
+.bom-general-name {
+  font-size: 0.82rem;
+  color: var(--texto);
+  line-height: 1.3;
+  font-weight: 500;
+}
+.bom-general-step {
+  font-size: 0.72rem;
+  color: var(--rojo-claro);
+  font-weight: 700;
+}
+
+/* ── BOM: contenedor ── */
+.bom {
+  background: var(--fondo2);
+  border: 1px solid var(--borde);
+  border-top: 3px solid var(--rojo);
+  border-radius: 10px;
+  padding: 0.9rem;
+  position: sticky;
+  top: 1rem;
+}
+.bom-titulo {
+  font-weight: 800;
+  color: var(--rojo-claro);
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ── BOM: Grid de iconos estilo LEGO ── */
+.bom-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.45rem;
+}
+.bom-card {
+  background: var(--fondo3);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 0.5rem 0.35rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: default;
+  transition: border-color 0.15s;
+}
+.bom-card.activo {
+  border-color: var(--rojo);
+  background: rgba(185, 28, 28, 0.12);
+}
+.bom-card.ghost {
+  opacity: 0.3;
+  filter: grayscale(60%);
+}
+.bom-card-img {
+  width: 72px;
+  height: 72px;
+  background: var(--fondo2);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 6px;
+  flex-shrink: 0;
+}
+.bom-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0.93) contrast(1.04);
+}
+.bom-card-img .bom-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+.bom-card-qty {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  background: var(--rojo);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 0.1rem 0.3rem;
+  border-radius: 999px;
+  min-width: 22px;
+  text-align: center;
+  line-height: 1.4;
+  border: 1.5px solid var(--fondo2);
+}
+.bom-card-name {
+  font-size: 0.68rem;
+  color: var(--texto-suave);
+  line-height: 1.25;
+  text-align: center;
+  max-width: 84px;
+  word-break: break-word;
+}
+.bom-card.activo .bom-card-name {
+  color: var(--texto);
+}
+/* separador "Ya montado" dentro del grid */
+.bom-separator {
+  grid-column: 1 / -1;
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  opacity: 0.55;
+  text-align: center;
+  padding: 0.3rem 0 0.1rem;
+  border-top: 1px solid var(--borde);
+  margin-top: 0.15rem;
+}
+
+/* ── IMAGEN CENTRAL ── */
+.imagen-paso {
+  background: var(--fondo2);
+  border: 1px dashed var(--borde);
+  border-radius: 16px;
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.imagen-paso img {
+  max-width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+.imagen-paso .placeholder-img {
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+.imagen-paso .placeholder-img span { font-size: 3rem; opacity: 0.4; }
+
+/* ── NOTAS DEL PASO ── */
+.paso-notas {
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+  padding-top: 0.5rem;
+}
+
+/* ── ALERTA DE ENSAMBLE ── */
+.alerta-ensamble {
+  background: var(--fondo2);
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--rojo);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  font-size: 0.88rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin: 0.8rem 0;
+}
+
+/* ══ UTILIDADES ══ */
+
+/* ── GHOSTING: piezas ya montadas en pasos anteriores ── */
+.ghost {
+  opacity: 0.18;
+  filter: grayscale(85%);
+  transition: opacity 0.2s;
+}
+.ghost-suave {
+  opacity: 0.42;
+  filter: grayscale(45%);
+  transition: opacity 0.2s;
+}
+
+/* ── HIGHLIGHT: pieza que se instala en este paso ── */
+.highlight {
+  filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.75)) saturate(1.6);
+  outline: 2px solid var(--rojo-claro);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+/* Tag inline para nombrar la pieza en texto o BOM */
+.highlight-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.12rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: var(--rojo-oscuro);
+  color: #fca5a5;
+  border: 1px solid var(--rojo);
+}
+/* BOM item marcado como activo (paso actual) */
+.bom-item.activo {
+  background: rgba(185, 28, 28, 0.15);
+  border-radius: 6px;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.bom-item.activo .bom-qty { color: #f87171; }
+
+/* ── CABLES: etiquetas inline ── */
+.cable {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 2px solid transparent;
+}
+.cable::before {
+  content: '';
+  display: inline-block;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.cable-rojo     { color: #ff5555; background: #3b0000; border-color: #ff5555; }
+.cable-negro    { color: #9ca3af; background: #1a1a1a; border-color: #6b7280; }
+.cable-azul     { color: #60a5fa; background: #1e3a5f; border-color: #3b82f6; }
+.cable-verde    { color: #4ade80; background: #0d3322; border-color: #22c55e; }
+.cable-amarillo { color: #fbbf24; background: #3b2a00; border-color: #f59e0b; }
+.cable-blanco   { color: #f9fafb; background: #1f2937; border-color: #e5e7eb; }
+.cable-naranja  { color: #fb923c; background: #3b1500; border-color: #f97316; }
+
+/* ── CABLES: líneas de ruteo sobre imagen (posición absoluta) ── */
+.ruta-cable {
+  position: absolute;
+  height: 4px;
+  border-radius: 2px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.ruta-rojo     { background: #ff5555; box-shadow: 0 0 8px #ff5555; }
+.ruta-azul     { background: #60a5fa; box-shadow: 0 0 8px #3b82f6; }
+.ruta-verde    { background: #4ade80; box-shadow: 0 0 8px #22c55e; }
+.ruta-amarillo { background: #fbbf24; box-shadow: 0 0 8px #f59e0b; }
+.ruta-blanco   { background: #f9fafb; box-shadow: 0 0 6px #e5e7eb; }
+.ruta-naranja  { background: #fb923c; box-shadow: 0 0 8px #f97316; }
+.ruta-negro    { background: #6b7280; box-shadow: 0 0 4px #374151; }
+
+/* ── CABLES: leyenda agrupada ── */
+.leyenda-cables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
