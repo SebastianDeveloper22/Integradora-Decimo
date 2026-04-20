@@ -627,3 +627,53 @@ footer {
   gap: 0.5rem;
   margin-top: 1rem;
 }
+
+/* ══════════════════════════════════════════════
+   MACRO SECCIONES — Cabeceras de sección mayor
+═══════════════════════════════════════════════ */
+.macro-seccion-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, var(--fondo2) 0%, rgba(185,28,28,0.08) 100%);
+  border: 1px solid var(--borde);
+  border-left: 5px solid var(--rojo);
+  border-radius: 14px;
+  padding: 1.5rem 2rem;
+  margin: 2rem 0 1rem;
+}
+.macro-seccion-num {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--rojo);
+  line-height: 1;
+  min-width: 72px;
+  text-align: center;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+.macro-seccion-titulo {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--texto);
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.3px;
+}
+.macro-seccion-sub {
+  font-size: 0.88rem;
+  color: var(--texto-suave);
+  margin: 0;
+}
+
+/* ── Paso finale: borde verde en lugar de rojo ── */
+.paso-finale {
+  border-bottom-color: #166534;
+}
+
+/* ── Imagen paso: más alta para fotos reales ── */
+.imagen-paso {
+  min-height: 420px;
+}
+.imagen-paso img {
+  max-height: 560px;
+}

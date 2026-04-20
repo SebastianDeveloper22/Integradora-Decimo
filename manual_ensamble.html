@@ -22,7 +22,7 @@
     Manual de Ensamble Mecánico — Guía paso a paso para el montaje
     del robot de almacén automatizado.
   </p>
-  <p class="version">Versión 1.0 &nbsp;·&nbsp; Abril 2026</p>
+  <p class="version">Versión 2.0 &nbsp;·&nbsp; Abril 2026</p>
 </div>
 
 <div class="contenedor">
@@ -45,13 +45,34 @@
   ═══════════════════════════════════════════════ -->
   <div class="indice">
     <h2>Secuencia de Ensamble</h2>
+
+    <h3 style="color:var(--rojo-claro); font-size:0.95rem; margin:0.9rem 0 0.5rem; letter-spacing:0.5px;">
+      Sección 1 — Ensamblaje del Gantry
+    </h3>
     <ol>
-      <li><a href="#paso-1">Estructura Base — Frame de Aluminio</a></li>
-      <li><a href="#paso-2">Carros de Rodamiento — Guías Lineales</a></li>
-      <li><a href="#paso-3">Sistema de Transmisión — Poleas y Bandas GT2</a></li>
-      <li><a href="#paso-4">Instalación de Motores a Pasos</a></li>
-      <li><a href="#paso-5">Mecanismo de Pinza (Gripper)</a></li>
-      <li><a href="#paso-6">Sensores de Límite y Verificación Final</a></li>
+      <li><a href="#gantry-01">G01 — Inicio del Frame Base</a></li>
+      <li><a href="#gantry-02">G02 — Extensión del Frame Lateral</a></li>
+      <li><a href="#gantry-03">G03 — Cierre del Chasis</a></li>
+      <li><a href="#gantry-04">G04 — Carros y Guías Lineales</a></li>
+      <li><a href="#gantry-05">G05 — Montaje de Llantas V-Slot</a></li>
+      <li><a href="#gantry-06">G06 — Sistema de Poleas GT2</a></li>
+      <li><a href="#gantry-07">G07 — Tendido de Bandas GT2</a></li>
+      <li><a href="#gantry-08">G08 — Motores NEMA 17 Estándar</a></li>
+      <li><a href="#gantry-09">G09 — Motores NEMA 17 Cake</a></li>
+      <li><a href="#gantry-10">G10 — Mecanismo de Pinza (Gripper)</a></li>
+      <li><a href="#gantry-11">G11 — Sensores de Límite</a></li>
+      <li><a href="#gantry-finale">G★ — Gantry Completo — Verificación</a></li>
+    </ol>
+
+    <h3 style="color:var(--rojo-claro); font-size:0.95rem; margin:1.3rem 0 0.5rem; letter-spacing:0.5px;">
+      Sección 2 — Ensamblaje General
+    </h3>
+    <ol start="13">
+      <li><a href="#full-01">A01 — Integración del Gantry al Sistema</a></li>
+      <li><a href="#full-02">A02 — Montaje de Componentes Externos</a></li>
+      <li><a href="#full-03">A03 — Fijación de Subconjuntos</a></li>
+      <li><a href="#full-04">A04 — Ajuste y Verificación de Conjuntos</a></li>
+      <li><a href="#full-finale">A★ — Ensamble Completo SIGAB</a></li>
     </ol>
   </div>
 
@@ -66,202 +87,208 @@
 
     <div class="bom-general">
 
-      <a href="#paso-1" class="bom-general-card">
+      <!-- ── Frame ── -->
+      <a href="#gantry-01" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/perfil2020.png" alt="Perfil 2020">
           <span class="bom-general-qty">1×</span>
         </div>
         <span class="bom-general-name">Perfil 2020<br>1.45 m</span>
-        <span class="bom-general-step">Paso 1</span>
+        <span class="bom-general-step">G01</span>
       </a>
 
-      <a href="#paso-1" class="bom-general-card">
+      <a href="#gantry-01" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/perfil2020.png" alt="Perfil 2020">
           <span class="bom-general-qty">2×</span>
         </div>
         <span class="bom-general-name">Perfil 2020<br>1.50 m</span>
-        <span class="bom-general-step">Paso 1</span>
+        <span class="bom-general-step">G01</span>
       </a>
 
-      <a href="#paso-1" class="bom-general-card">
+      <a href="#gantry-01" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/T_Nut.png" alt="Tuerca T M4">
           <span class="bom-general-qty">14×</span>
         </div>
         <span class="bom-general-name">Tuerca M4<br>Tipo T</span>
-        <span class="bom-general-step">Paso 1</span>
+        <span class="bom-general-step">G01</span>
       </a>
 
-      <a href="#paso-1" class="bom-general-card">
+      <a href="#gantry-02" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/Nut.png" alt="Tuerca M4">
           <span class="bom-general-qty">12×</span>
         </div>
         <span class="bom-general-name">Tuerca M4</span>
-        <span class="bom-general-step">Paso 1</span>
+        <span class="bom-general-step">G02</span>
       </a>
 
-      <a href="#paso-2" class="bom-general-card">
+      <!-- ── Guías lineales ── -->
+      <a href="#gantry-04" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/vslot_wheel.png" alt="Llanta V-Slot">
           <span class="bom-general-qty">10×</span>
         </div>
         <span class="bom-general-name">Llanta V-Slot</span>
-        <span class="bom-general-step">Paso 2</span>
+        <span class="bom-general-step">G04</span>
       </a>
 
-      <a href="#paso-2" class="bom-general-card">
+      <a href="#gantry-04" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/bearing.png" alt="Rodamiento 3RS">
           <span class="bom-general-qty">8×</span>
         </div>
         <span class="bom-general-name">Rodamiento<br>3RS</span>
-        <span class="bom-general-step">Paso 2</span>
+        <span class="bom-general-step">G04</span>
       </a>
 
-      <a href="#paso-2" class="bom-general-card">
+      <a href="#gantry-05" class="bom-general-card">
         <div class="bom-general-img">
           <span class="bom-emoji">🔩</span>
           <span class="bom-general-qty">10×</span>
         </div>
         <span class="bom-general-name">Tornillo M5<br>(ruedas)</span>
-        <span class="bom-general-step">Paso 2</span>
+        <span class="bom-general-step">G05</span>
       </a>
 
-      <a href="#paso-3" class="bom-general-card">
+      <!-- ── Transmisión ── -->
+      <a href="#gantry-06" class="bom-general-card">
         <div class="bom-general-img">
           <span class="bom-emoji">🖨️</span>
           <span class="bom-general-qty">3×</span>
         </div>
         <span class="bom-general-name">Polea 3D<br>20 Dientes</span>
-        <span class="bom-general-step">Paso 3</span>
+        <span class="bom-general-step">G06</span>
       </a>
 
-      <a href="#paso-3" class="bom-general-card">
-        <div class="bom-general-img">
-          <img src="imgs/gt2Belt.png" alt="Banda GT2">
-          <span class="bom-general-qty">3×</span>
-        </div>
-        <span class="bom-general-name">Banda GT2<br>3 m</span>
-        <span class="bom-general-step">Paso 3</span>
-      </a>
-
-      <a href="#paso-3" class="bom-general-card">
+      <a href="#gantry-06" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/bearing.png" alt="Rodamiento 4RS">
           <span class="bom-general-qty">6×</span>
         </div>
         <span class="bom-general-name">Rodamiento<br>4RS</span>
-        <span class="bom-general-step">Paso 3</span>
+        <span class="bom-general-step">G06</span>
       </a>
 
-      <a href="#paso-3" class="bom-general-card">
+      <a href="#gantry-06" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/threeeigth_bolt.png" alt="Tornillo 3/8">
           <span class="bom-general-qty">3×</span>
         </div>
         <span class="bom-general-name">Tornillo 3/8<br>(4RS)</span>
-        <span class="bom-general-step">Paso 3</span>
+        <span class="bom-general-step">G06</span>
       </a>
 
-      <a href="#paso-3" class="bom-general-card">
+      <a href="#gantry-06" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/Inserts.png" alt="Insert M4">
           <span class="bom-general-qty">4×</span>
         </div>
         <span class="bom-general-name">Insert<br>dorado M4</span>
-        <span class="bom-general-step">Paso 3</span>
+        <span class="bom-general-step">G06</span>
       </a>
 
-      <a href="#paso-3" class="bom-general-card">
+      <a href="#gantry-07" class="bom-general-card">
+        <div class="bom-general-img">
+          <img src="imgs/gt2Belt.png" alt="Banda GT2">
+          <span class="bom-general-qty">3×</span>
+        </div>
+        <span class="bom-general-name">Banda GT2<br>3 m</span>
+        <span class="bom-general-step">G07</span>
+      </a>
+
+      <a href="#gantry-07" class="bom-general-card">
         <div class="bom-general-img">
           <span class="bom-emoji">🔩</span>
           <span class="bom-general-qty">20×</span>
         </div>
         <span class="bom-general-name">Tornillo M4<br>(3D)</span>
-        <span class="bom-general-step">Paso 3</span>
+        <span class="bom-general-step">G07</span>
       </a>
 
-      <a href="#paso-4" class="bom-general-card">
+      <!-- ── Motores ── -->
+      <a href="#gantry-08" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/nema17.png" alt="Nema 17">
           <span class="bom-general-qty">3×</span>
         </div>
         <span class="bom-general-name">Nema 17<br>Estándar</span>
-        <span class="bom-general-step">Paso 4</span>
+        <span class="bom-general-step">G08</span>
       </a>
 
-      <a href="#paso-4" class="bom-general-card">
-        <div class="bom-general-img">
-          <img src="imgs/nema17p.png" alt="Nema 17 Cake">
-          <span class="bom-general-qty">2×</span>
-        </div>
-        <span class="bom-general-name">Nema 17<br>Cake</span>
-        <span class="bom-general-step">Paso 4</span>
-      </a>
-
-      <a href="#paso-4" class="bom-general-card">
+      <a href="#gantry-08" class="bom-general-card">
         <div class="bom-general-img">
           <span class="bom-emoji">🔩</span>
           <span class="bom-general-qty">20×</span>
         </div>
         <span class="bom-general-name">Tornillo M3<br>(motores)</span>
-        <span class="bom-general-step">Paso 4</span>
+        <span class="bom-general-step">G08</span>
       </a>
 
-      <a href="#paso-4" class="bom-general-card">
+      <a href="#gantry-08" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/Inserts.png" alt="Insert M3">
           <span class="bom-general-qty">6×</span>
         </div>
         <span class="bom-general-name">Insert<br>dorado M3</span>
-        <span class="bom-general-step">Paso 4</span>
+        <span class="bom-general-step">G08</span>
       </a>
 
-      <a href="#paso-4" class="bom-general-card">
+      <a href="#gantry-09" class="bom-general-card">
+        <div class="bom-general-img">
+          <img src="imgs/nema17p.png" alt="Nema 17 Cake">
+          <span class="bom-general-qty">2×</span>
+        </div>
+        <span class="bom-general-name">Nema 17<br>Cake</span>
+        <span class="bom-general-step">G09</span>
+      </a>
+
+      <a href="#gantry-09" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/T_Nut.png" alt="Tuerca T M3">
           <span class="bom-general-qty">2×</span>
         </div>
         <span class="bom-general-name">Tuerca T M3</span>
-        <span class="bom-general-step">Paso 4</span>
+        <span class="bom-general-step">G09</span>
       </a>
 
-      <a href="#paso-5" class="bom-general-card">
+      <!-- ── Gripper ── -->
+      <a href="#gantry-10" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/mg996r.png" alt="MG996R">
           <span class="bom-general-qty">2×</span>
         </div>
         <span class="bom-general-name">Servo<br>MG996R</span>
-        <span class="bom-general-step">Paso 5</span>
+        <span class="bom-general-step">G10</span>
       </a>
 
-      <a href="#paso-5" class="bom-general-card">
+      <a href="#gantry-10" class="bom-general-card">
         <div class="bom-general-img">
           <img src="imgs/threesix_bolt.png" alt="Tornillo 3/16">
           <span class="bom-general-qty">4×</span>
         </div>
         <span class="bom-general-name">Tornillo 3/16<br>(joints)</span>
-        <span class="bom-general-step">Paso 5</span>
+        <span class="bom-general-step">G10</span>
       </a>
 
-      <a href="#paso-5" class="bom-general-card">
+      <a href="#gantry-10" class="bom-general-card">
         <div class="bom-general-img">
           <span class="bom-emoji">🔩</span>
           <span class="bom-general-qty">20×</span>
         </div>
         <span class="bom-general-name">Tornillo M4<br>(pinza 3D)</span>
-        <span class="bom-general-step">Paso 5</span>
+        <span class="bom-general-step">G10</span>
       </a>
 
-      <a href="#paso-6" class="bom-general-card">
+      <!-- ── Sensores ── -->
+      <a href="#gantry-11" class="bom-general-card">
         <div class="bom-general-img">
           <span class="bom-emoji">🔘</span>
           <span class="bom-general-qty">2×</span>
         </div>
         <span class="bom-general-name">Limit Switch</span>
-        <span class="bom-general-step">Paso 6</span>
+        <span class="bom-general-step">G11</span>
       </a>
 
     </div>
@@ -270,51 +297,86 @@
   <div class="divider"></div>
 
   <!-- ══════════════════════════════════════════════
-       PASO 1 — ESTRUCTURA BASE
+       MACRO SECCIÓN 1: ENSAMBLAJE DEL GANTRY
   ═══════════════════════════════════════════════ -->
-  <section class="paso-ensamble" id="paso-1">
+  <div class="macro-seccion-header" id="seccion-gantry">
+    <div class="macro-seccion-num">01</div>
+    <div>
+      <h2 class="macro-seccion-titulo">Ensamblaje del Gantry</h2>
+      <p class="macro-seccion-sub">12 pasos · Estructura 2020, guías lineales, transmisión GT2, motores y gripper</p>
+    </div>
+  </div>
 
+  <!-- ══════════════════════════════════════════
+       G01 — Inicio del Frame Base
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-01">
     <div class="paso-header">
-      <span class="paso-numero">01</span>
+      <span class="paso-numero">G01</span>
       <div>
-        <h2 class="paso-titulo">Estructura Base — Frame de Aluminio</h2>
-        <p class="paso-subtitulo">
-          Ensamble el chasis principal uniendo los perfiles 2020 T-Slot.
-          Este frame es la base a la que se ancla todo el sistema.
-        </p>
+        <h2 class="paso-titulo">Inicio del Frame Base</h2>
+        <p class="paso-subtitulo">Ensamble inicial de los perfiles 2020 con tuercas T pre-cargadas en las ranuras.</p>
       </div>
     </div>
 
     <div class="paso-body">
-
       <aside class="bom">
-        <div class="bom-titulo">📦 Piezas — Paso 1</div>
+        <div class="bom-titulo">📦 Piezas — G01</div>
         <div class="bom-grid">
-
           <div class="bom-card activo">
             <div class="bom-card-img">
-              <img src="imgs/perfil2020.png" alt="Perfil 2020">
+              <img src="imgs/perfil2020.png" alt="Perfil 2020 1.45m">
               <span class="bom-card-qty">1×</span>
             </div>
             <span class="bom-card-name">Perfil 2020<br>1.45 m</span>
           </div>
-
           <div class="bom-card activo">
             <div class="bom-card-img">
-              <img src="imgs/perfil2020.png" alt="Perfil 2020">
+              <img src="imgs/perfil2020.png" alt="Perfil 2020 1.50m">
               <span class="bom-card-qty">2×</span>
             </div>
             <span class="bom-card-name">Perfil 2020<br>1.50 m</span>
           </div>
-
           <div class="bom-card activo">
             <div class="bom-card-img">
               <img src="imgs/T_Nut.png" alt="Tuerca T M4">
               <span class="bom-card-qty">14×</span>
             </div>
-            <span class="bom-card-name">Tuerca M4<br>Tipo T</span>
+            <span class="bom-card-name">Tuerca T<br>M4</span>
           </div>
+        </div>
+      </aside>
 
+      <div class="imagen-paso">
+        <img src="imgs/Gantry_Steps/First_Step.png" alt="G01 — Inicio del frame base">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Inserte las <span class="highlight-tag">14× Tuercas T M4</span> en las ranuras de los perfiles <em>antes</em> de unirlos. Una vez ensamblados no podrá agregarlas sin desmontar.</div></li>
+        <li><div>Alinee los tres perfiles formando el chasis base: 1× perfil de 1.45 m (horizontal) flanqueado por 2× perfiles de 1.50 m (laterales).</div></li>
+        <li><div>Verifique que las tuercas T queden distribuidas uniformemente para los pasos de fijación posteriores.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       G02 — Extensión del Frame Lateral
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-02">
+    <div class="paso-header">
+      <span class="paso-numero">G02</span>
+      <div>
+        <h2 class="paso-titulo">Extensión del Frame Lateral</h2>
+        <p class="paso-subtitulo">Incorporación de perfiles adicionales y fijación inicial con tuercas M4 estándar.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — G02</div>
+        <div class="bom-grid">
           <div class="bom-card activo">
             <div class="bom-card-img">
               <img src="imgs/Nut.png" alt="Tuerca M4">
@@ -322,87 +384,14 @@
             </div>
             <span class="bom-card-name">Tuerca M4</span>
           </div>
-
-        </div>
-      </aside>
-
-      <div class="imagen-paso">
-        <div class="placeholder-img">
-          <span>🖼️</span>
-          <strong style="color:var(--texto);">Vista isométrica — Frame 2020 T-Slot</strong>
-          <span style="font-size:0.8rem;">1× perfil 1.45 m · 2× perfiles 1.50 m<br>con tuercas T pre-cargadas</span>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="paso-notas">
-      <ol class="pasos">
-        <li><div>Inserte las <span class="highlight-tag">14× Tuercas M4 Tipo T</span> en las ranuras de los perfiles <em>antes</em> de unirlos. Una vez ensamblados no podrá agregarlas sin desmontar.</div></li>
-        <li><div>Una los tres perfiles usando las <span class="highlight-tag">12× Tuercas M4</span> en los extremos para crear las uniones de escuadra.</div></li>
-        <li><div>Verifique ángulo de 90° en cada esquina con escuadra antes de apretar definitivamente. Torque recomendado: <strong>1.5 N·m</strong>.</div></li>
-        <li><div>Asegure que el frame esté nivelado. Una base torcida propagará el error a todos los pasos siguientes.</div></li>
-      </ol>
-    </div>
-
-  </section>
-
-  <!-- ══════════════════════════════════════════════
-       PASO 2 — CARROS DE RODAMIENTO
-  ═══════════════════════════════════════════════ -->
-  <section class="paso-ensamble" id="paso-2">
-
-    <div class="paso-header">
-      <span class="paso-numero">02</span>
-      <div>
-        <h2 class="paso-titulo">Carros de Rodamiento — Guías Lineales</h2>
-        <p class="paso-subtitulo">
-          Instale las llantas V-Slot y los rodamientos 3RS para que los carros
-          deslicen con precisión a lo largo de los perfiles.
-        </p>
-      </div>
-    </div>
-
-    <div class="paso-body">
-
-      <aside class="bom">
-        <div class="bom-titulo">📦 Piezas — Paso 2</div>
-        <div class="bom-grid">
-
-          <div class="bom-card activo">
-            <div class="bom-card-img">
-              <img src="imgs/vslot_wheel.png" alt="Llanta V-Slot">
-              <span class="bom-card-qty">10×</span>
-            </div>
-            <span class="bom-card-name">Llanta V-Slot</span>
-          </div>
-
-          <div class="bom-card activo">
-            <div class="bom-card-img">
-              <img src="imgs/bearing.png" alt="Rodamiento 3RS">
-              <span class="bom-card-qty">8×</span>
-            </div>
-            <span class="bom-card-name">Rodamiento<br>3RS</span>
-          </div>
-
-          <div class="bom-card activo">
-            <div class="bom-card-img">
-              <span class="bom-emoji">🔩</span>
-              <span class="bom-card-qty">10×</span>
-            </div>
-            <span class="bom-card-name">Tornillo M5<br>(ruedas)</span>
-          </div>
-
           <div class="bom-separator">Ya montado</div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
-              <img src="imgs/perfil2020.png" alt="Perfil">
+              <img src="imgs/perfil2020.png" alt="Perfiles">
               <span class="bom-card-qty">3×</span>
             </div>
             <span class="bom-card-name">Perfiles<br>2020</span>
           </div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
               <img src="imgs/T_Nut.png" alt="Tuerca T">
@@ -410,110 +399,161 @@
             </div>
             <span class="bom-card-name">Tuercas T<br>M4</span>
           </div>
-
         </div>
       </aside>
 
       <div class="imagen-paso">
-        <div class="placeholder-img">
-          <span>🖼️</span>
-          <strong style="color:var(--texto);">Vista isométrica — Carro + llantas V-Slot</strong>
-          <span style="font-size:0.8rem; max-width:260px;">
-            Frame <span class="highlight-tag ghost-suave">ghost</span> ·
-            Llantas y rodamientos <span class="highlight-tag">highlight</span>
-          </span>
-        </div>
+        <img src="imgs/Gantry_Steps/Second_Step.png" alt="G02 — Extensión del frame lateral">
       </div>
-
     </div>
 
     <div class="paso-notas">
       <ol class="pasos">
-        <li><div>Presione un <span class="highlight-tag">Rodamiento 3RS</span> en el interior de cada <span class="highlight-tag">Llanta V-Slot</span> hasta que quede al ras. Use un punzón — nunca golpee directamente sobre la pista del rodamiento.</div></li>
-        <li><div>Coloque la llanta en la ranura en V del perfil y asegure con el <span class="highlight-tag">Tornillo M5</span>. No apriete todavía.</div></li>
-        <li><div>Distribuya las 10 llantas según el diseño del carro: 4 en eje X, 3 en cada sección del eje Z.</div></li>
-        <li><div>Ajuste la excentricidad de las llantas hasta eliminar el juego lateral sin crear fricción excesiva. Apriete M5 al final.</div></li>
+        <li><div>Fije los perfiles usando las <span class="highlight-tag">12× Tuercas M4</span> en las uniones de esquina. No apriete definitivamente aún.</div></li>
+        <li><div>Verifique ángulo de <strong>90°</strong> en cada esquina con escuadra metálica antes de apretar. Torque final: <strong>1.5 N·m</strong>.</div></li>
+        <li><div>La escuadra del frame es crítica: un error aquí se propaga a todos los ejes de movimiento.</div></li>
       </ol>
-      <div class="alerta-ensamble">
-        <span>⚠️</span>
-        <div>Los rodamientos 3RS deben girar libremente tras el montaje. Si hay rugosidad o resistencia, revise la alineación del tornillo M5.</div>
-      </div>
     </div>
-
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       PASO 3 — TRANSMISIÓN: POLEAS Y BANDAS GT2
-  ═══════════════════════════════════════════════ -->
-  <section class="paso-ensamble" id="paso-3">
-
+  <!-- ══════════════════════════════════════════
+       G03 — Cierre del Chasis
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-03">
     <div class="paso-header">
-      <span class="paso-numero">03</span>
+      <span class="paso-numero">G03</span>
       <div>
-        <h2 class="paso-titulo">Sistema de Transmisión — Poleas y Bandas GT2</h2>
-        <p class="paso-subtitulo">
-          Monte las poleas impresas, los rodamientos tensor (4RS) y tienda las bandas GT2
-          que transmiten el movimiento desde los motores a los carros.
-        </p>
+        <h2 class="paso-titulo">Cierre del Chasis</h2>
+        <p class="paso-subtitulo">Completar el chasis, nivelar el frame y realizar apriete definitivo de todas las uniones.</p>
       </div>
     </div>
 
     <div class="paso-body">
-
       <aside class="bom">
-        <div class="bom-titulo">📦 Piezas — Paso 3</div>
+        <div class="bom-titulo">📦 Piezas — G03</div>
         <div class="bom-grid">
-
-          <div class="bom-card activo">
+          <div class="bom-separator">Ya montado</div>
+          <div class="bom-card ghost">
             <div class="bom-card-img">
-              <span class="bom-emoji">🖨️</span>
+              <img src="imgs/perfil2020.png" alt="Perfiles">
               <span class="bom-card-qty">3×</span>
             </div>
-            <span class="bom-card-name">Polea 3D<br>20 Dientes</span>
+            <span class="bom-card-name">Perfiles<br>2020</span>
           </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/T_Nut.png" alt="Tuerca T">
+              <span class="bom-card-qty">14×</span>
+            </div>
+            <span class="bom-card-name">Tuercas T<br>M4</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/Nut.png" alt="Tuerca M4">
+              <span class="bom-card-qty">12×</span>
+            </div>
+            <span class="bom-card-name">Tuercas<br>M4</span>
+          </div>
+        </div>
+      </aside>
 
+      <div class="imagen-paso">
+        <img src="imgs/Gantry_Steps/Third_Step.png" alt="G03 — Cierre del chasis">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Apriete definitivamente todos los tornillos del frame con torque <strong>1.5 N·m</strong>.</div></li>
+        <li><div>Compruebe que el frame no tiene torsión: apóyelo sobre superficie plana y verifique que no balancea en ningún vértice.</div></li>
+        <li><div>El frame está listo para recibir los carros de rodamiento. No lo mueva bruscamente a partir de este punto.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       G04 — Carros y Guías Lineales
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-04">
+    <div class="paso-header">
+      <span class="paso-numero">G04</span>
+      <div>
+        <h2 class="paso-titulo">Carros y Guías Lineales</h2>
+        <p class="paso-subtitulo">Instalación de llantas V-Slot con rodamientos 3RS pre-montados sobre los perfiles del frame.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — G04</div>
+        <div class="bom-grid">
           <div class="bom-card activo">
             <div class="bom-card-img">
-              <img src="imgs/gt2Belt.png" alt="Banda GT2">
+              <img src="imgs/vslot_wheel.png" alt="Llanta V-Slot">
+              <span class="bom-card-qty">10×</span>
+            </div>
+            <span class="bom-card-name">Llanta<br>V-Slot</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/bearing.png" alt="Rodamiento 3RS">
+              <span class="bom-card-qty">8×</span>
+            </div>
+            <span class="bom-card-name">Rodamiento<br>3RS</span>
+          </div>
+          <div class="bom-separator">Ya montado</div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/perfil2020.png" alt="Frame">
               <span class="bom-card-qty">3×</span>
             </div>
-            <span class="bom-card-name">Banda GT2<br>3 m</span>
+            <span class="bom-card-name">Frame<br>2020</span>
           </div>
+        </div>
+      </aside>
 
-          <div class="bom-card activo">
-            <div class="bom-card-img">
-              <img src="imgs/bearing.png" alt="Rodamiento 4RS">
-              <span class="bom-card-qty">6×</span>
-            </div>
-            <span class="bom-card-name">Rodamiento<br>4RS</span>
-          </div>
+      <div class="imagen-paso">
+        <img src="imgs/Gantry_Steps/Fourth_Step.png" alt="G04 — Carros y guías lineales">
+      </div>
+    </div>
 
-          <div class="bom-card activo">
-            <div class="bom-card-img">
-              <img src="imgs/threeeigth_bolt.png" alt="Tornillo 3/8">
-              <span class="bom-card-qty">3×</span>
-            </div>
-            <span class="bom-card-name">Tornillo<br>3/8</span>
-          </div>
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Presione un <span class="highlight-tag">Rodamiento 3RS</span> en el interior de cada <span class="highlight-tag">Llanta V-Slot</span> hasta quedar al ras. Use un punzón — nunca golpee sobre la pista del rodamiento.</div></li>
+        <li><div>Coloque las llantas en la ranura en V del perfil correspondiente. Distribución: 4 en eje X, 3 por sección en eje Z.</div></li>
+        <li><div>No apriete los tornillos todavía; el ajuste excéntrico se realiza en el siguiente paso.</div></li>
+      </ol>
+      <div class="alerta-ensamble">
+        <span>⚠️</span>
+        <div>Los rodamientos 3RS deben girar libremente tras el montaje. Si hay rugosidad, revise la alineación.</div>
+      </div>
+    </div>
+  </section>
 
-          <div class="bom-card activo">
-            <div class="bom-card-img">
-              <img src="imgs/Inserts.png" alt="Insert M4">
-              <span class="bom-card-qty">4×</span>
-            </div>
-            <span class="bom-card-name">Insert<br>dorado M4</span>
-          </div>
+  <!-- ══════════════════════════════════════════
+       G05 — Montaje de Llantas V-Slot
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-05">
+    <div class="paso-header">
+      <span class="paso-numero">G05</span>
+      <div>
+        <h2 class="paso-titulo">Montaje de Llantas V-Slot</h2>
+        <p class="paso-subtitulo">Ajuste excéntrico de las llantas y fijación final con tornillos M5.</p>
+      </div>
+    </div>
 
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — G05</div>
+        <div class="bom-grid">
           <div class="bom-card activo">
             <div class="bom-card-img">
               <span class="bom-emoji">🔩</span>
-              <span class="bom-card-qty">20×</span>
+              <span class="bom-card-qty">10×</span>
             </div>
-            <span class="bom-card-name">Tornillo M4<br>(3D)</span>
+            <span class="bom-card-name">Tornillo M5<br>(ruedas)</span>
           </div>
-
           <div class="bom-separator">Ya montado</div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
               <img src="imgs/vslot_wheel.png" alt="Llanta">
@@ -521,7 +561,6 @@
             </div>
             <span class="bom-card-name">Llantas<br>V-Slot</span>
           </div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
               <img src="imgs/bearing.png" alt="Rodamiento 3RS">
@@ -529,77 +568,188 @@
             </div>
             <span class="bom-card-name">Rodamientos<br>3RS</span>
           </div>
-
         </div>
       </aside>
 
       <div class="imagen-paso">
-        <div class="placeholder-img">
-          <span>🖼️</span>
-          <strong style="color:var(--texto);">Vista isométrica — Poleas GT2 + bandas</strong>
-          <span style="font-size:0.8rem; max-width:280px;">
-            Carros <span class="highlight-tag ghost-suave">ghost</span> ·
-            Poleas, rodamientos y bandas <span class="highlight-tag">highlight</span>
-          </span>
-        </div>
+        <img src="imgs/Gantry_Steps/Fifth_Step.png" alt="G05 — Fijación llantas V-Slot">
       </div>
+    </div>
 
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Inserte cada <span class="highlight-tag">Tornillo M5</span> a través de la montura excéntrica de la llanta.</div></li>
+        <li><div>Gire la excentricidad hasta que la llanta toque la ranura en V sin crear fricción excesiva. Elimine todo juego lateral.</div></li>
+        <li><div>Apriete el tornillo M5 manteniendo la posición excéntrica. Verifique que el carro desliza suavemente en toda la longitud.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       G06 — Sistema de Poleas GT2
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-06">
+    <div class="paso-header">
+      <span class="paso-numero">G06</span>
+      <div>
+        <h2 class="paso-titulo">Sistema de Poleas GT2</h2>
+        <p class="paso-subtitulo">Montaje de poleas impresas 3D con rodamientos tensores 4RS e inserts dorados M4.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — G06</div>
+        <div class="bom-grid">
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <span class="bom-emoji">🖨️</span>
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Polea 3D<br>20 Dientes</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/bearing.png" alt="Rodamiento 4RS">
+              <span class="bom-card-qty">6×</span>
+            </div>
+            <span class="bom-card-name">Rodamiento<br>4RS</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/threeeigth_bolt.png" alt="Tornillo 3/8">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Tornillo<br>3/8</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/Inserts.png" alt="Insert M4">
+              <span class="bom-card-qty">4×</span>
+            </div>
+            <span class="bom-card-name">Insert<br>dorado M4</span>
+          </div>
+          <div class="bom-separator">Ya montado</div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/vslot_wheel.png" alt="Llantas">
+              <span class="bom-card-qty">10×</span>
+            </div>
+            <span class="bom-card-name">Llantas<br>V-Slot</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/perfil2020.png" alt="Frame">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Frame<br>2020</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="imagen-paso">
+        <img src="imgs/Gantry_Steps/Sixth_Step.png" alt="G06 — Sistema de poleas GT2">
+      </div>
     </div>
 
     <div class="paso-notas">
       <ol class="pasos">
         <li><div>Instale los <span class="highlight-tag">4× Inserts dorados M4</span> en las poleas impresas con soldador a <strong>220 °C</strong>. Presione perpendicular hasta quedar al ras.</div></li>
         <li><div>Monte los <span class="highlight-tag">6× Rodamientos 4RS</span> en sus soportes usando los <span class="highlight-tag">Tornillos 3/8</span> como eje (2 rodamientos por tornillo).</div></li>
-        <li><div>Fije las <span class="highlight-tag">3× Poleas 3D</span> con <span class="highlight-tag">Tornillos M4</span> a través de los inserts instalados.</div></li>
-        <li><div>Pase la <span class="highlight-tag">Banda GT2</span> por la polea y los rodamientos tensor. Corte la longitud precisa y fije los extremos. Repita para los 3 ejes.</div></li>
-        <li><div>Ajuste la tensión: la banda debe ceder ≈ 2 mm al aplicar 1 N a la mitad del recorrido.</div></li>
+        <li><div>Fije las <span class="highlight-tag">3× Poleas 3D</span> en sus posiciones en el frame. Cada polea corresponde a un eje de movimiento.</div></li>
       </ol>
       <div class="alerta-ensamble">
         <span>🟡</span>
         <div><strong>Inserts por calor:</strong> Si el insert queda inclinado, extráigalo con alicates mientras aún está caliente y repita.</div>
       </div>
     </div>
-
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       PASO 4 — MOTORES A PASOS
-  ═══════════════════════════════════════════════ -->
-  <section class="paso-ensamble" id="paso-4">
-
+  <!-- ══════════════════════════════════════════
+       G07 — Tendido de Bandas GT2
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-07">
     <div class="paso-header">
-      <span class="paso-numero">04</span>
+      <span class="paso-numero">G07</span>
       <div>
-        <h2 class="paso-titulo">Instalación de Motores a Pasos</h2>
-        <p class="paso-subtitulo">
-          Fije los motores NEMA 17 estándar y NEMA 17 Cake en sus soportes,
-          alineando el eje con las poleas GT2 ya montadas.
-        </p>
+        <h2 class="paso-titulo">Tendido de Bandas GT2</h2>
+        <p class="paso-subtitulo">Instalación y tensado de las tres bandas GT2 en los ejes de movimiento.</p>
       </div>
     </div>
 
     <div class="paso-body">
-
       <aside class="bom">
-        <div class="bom-titulo">📦 Piezas — Paso 4</div>
+        <div class="bom-titulo">📦 Piezas — G07</div>
         <div class="bom-grid">
-
           <div class="bom-card activo">
             <div class="bom-card-img">
-              <img src="imgs/nema17.png" alt="Nema 17">
+              <img src="imgs/gt2Belt.png" alt="Banda GT2">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Banda GT2<br>3 m</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <span class="bom-emoji">🔩</span>
+              <span class="bom-card-qty">20×</span>
+            </div>
+            <span class="bom-card-name">Tornillo M4<br>(fijación 3D)</span>
+          </div>
+          <div class="bom-separator">Ya montado</div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <span class="bom-emoji">🖨️</span>
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Poleas<br>3D</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/bearing.png" alt="Rodamientos 4RS">
+              <span class="bom-card-qty">6×</span>
+            </div>
+            <span class="bom-card-name">Rodamientos<br>4RS</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="imagen-paso">
+        <img src="imgs/Gantry_Steps/Seventh_Step.png" alt="G07 — Tendido de bandas GT2">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Pase cada <span class="highlight-tag">Banda GT2</span> por la polea y los rodamientos tensores. Corte a la longitud exacta del recorrido.</div></li>
+        <li><div>Fije los extremos de la banda al carro con los <span class="highlight-tag">Tornillos M4</span> en la pieza impresa de sujeción.</div></li>
+        <li><div>Ajuste la tensión: la banda debe ceder ≈ <strong>2 mm</strong> al aplicar 1 N en el punto medio. Repita para los 3 ejes.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       G08 — Motores NEMA 17 Estándar
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-08">
+    <div class="paso-header">
+      <span class="paso-numero">G08</span>
+      <div>
+        <h2 class="paso-titulo">Motores NEMA 17 Estándar</h2>
+        <p class="paso-subtitulo">Instalación de los 3 motores NEMA 17 estándar en sus soportes impresos con inserts M3.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — G08</div>
+        <div class="bom-grid">
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/nema17.png" alt="Nema 17 Estándar">
               <span class="bom-card-qty">3×</span>
             </div>
             <span class="bom-card-name">Nema 17<br>Estándar</span>
           </div>
-
-          <div class="bom-card activo">
-            <div class="bom-card-img">
-              <img src="imgs/nema17p.png" alt="Nema 17 Cake">
-              <span class="bom-card-qty">2×</span>
-            </div>
-            <span class="bom-card-name">Nema 17<br>Cake</span>
-          </div>
-
           <div class="bom-card activo">
             <div class="bom-card-img">
               <span class="bom-emoji">🔩</span>
@@ -607,7 +757,6 @@
             </div>
             <span class="bom-card-name">Tornillo M3<br>(motores)</span>
           </div>
-
           <div class="bom-card activo">
             <div class="bom-card-img">
               <img src="imgs/Inserts.png" alt="Insert M3">
@@ -615,7 +764,63 @@
             </div>
             <span class="bom-card-name">Insert<br>dorado M3</span>
           </div>
+          <div class="bom-separator">Ya montado</div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/gt2Belt.png" alt="Bandas">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Bandas<br>GT2</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <span class="bom-emoji">🖨️</span>
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Poleas<br>3D</span>
+          </div>
+        </div>
+      </aside>
 
+      <div class="imagen-paso">
+        <img src="imgs/Gantry_Steps/Eight_Step.png" alt="G08 — Motores NEMA 17 estándar">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Instale los <span class="highlight-tag">6× Inserts dorados M3</span> en los soportes impresos con soldador a 220 °C.</div></li>
+        <li><div>Posicione cada <span class="highlight-tag">Motor NEMA 17</span> sobre su soporte alineando el eje con el centro de la polea GT2.</div></li>
+        <li><div>Fije con <span class="highlight-tag">4× Tornillos M3</span> por motor en patrón cruzado. Torque: <strong>0.8 N·m</strong>.</div></li>
+        <li><div>Verifique coplanaridad entre eje del motor y polea. Desalineamiento máximo tolerable: <strong>0.5 mm</strong>.</div></li>
+        <li><div><strong>No conecte cables en este paso.</strong> El cableado se documenta en el Manual de Ensamble Electrónico.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       G09 — Motores NEMA 17 Cake
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-09">
+    <div class="paso-header">
+      <span class="paso-numero">G09</span>
+      <div>
+        <h2 class="paso-titulo">Motores NEMA 17 Cake</h2>
+        <p class="paso-subtitulo">Instalación de los 2 motores NEMA 17 Cake (pancake) en posiciones con espacio restringido.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — G09</div>
+        <div class="bom-grid">
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/nema17p.png" alt="Nema 17 Cake">
+              <span class="bom-card-qty">2×</span>
+            </div>
+            <span class="bom-card-name">Nema 17<br>Cake</span>
+          </div>
           <div class="bom-card activo">
             <div class="bom-card-img">
               <img src="imgs/T_Nut.png" alt="Tuerca T M3">
@@ -623,181 +828,138 @@
             </div>
             <span class="bom-card-name">Tuerca T<br>M3</span>
           </div>
-
           <div class="bom-separator">Ya montado</div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
-              <img src="imgs/gt2Belt.png" alt="Banda GT2">
+              <img src="imgs/nema17.png" alt="Nema 17 Estándar">
               <span class="bom-card-qty">3×</span>
             </div>
-            <span class="bom-card-name">Bandas GT2<br>+ Poleas</span>
+            <span class="bom-card-name">Nema 17<br>Estándar</span>
           </div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
-              <img src="imgs/vslot_wheel.png" alt="Llanta">
-              <span class="bom-card-qty">10×</span>
+              <img src="imgs/gt2Belt.png" alt="Bandas">
+              <span class="bom-card-qty">3×</span>
             </div>
-            <span class="bom-card-name">Llantas<br>V-Slot</span>
+            <span class="bom-card-name">Bandas<br>+ Poleas</span>
           </div>
-
         </div>
       </aside>
 
       <div class="imagen-paso">
-        <div class="placeholder-img">
-          <span>🖼️</span>
-          <strong style="color:var(--texto);">Vista isométrica — 5 motores montados</strong>
-          <span style="font-size:0.8rem; max-width:280px;">
-            Transmisión <span class="highlight-tag ghost-suave">ghost</span> ·
-            Motores NEMA 17 / Cake <span class="highlight-tag">highlight</span>
-          </span>
-        </div>
+        <img src="imgs/Gantry_Steps/Ninth_Step.png" alt="G09 — Motores NEMA 17 Cake">
       </div>
-
     </div>
 
     <div class="paso-notas">
-      <div class="grid-2" style="margin-bottom:1.2rem;">
-        <div class="card">
-          <h4>NEMA 17 Estándar (×3)</h4>
-          <p style="font-size:0.88rem;">Axiales — controlan los ejes principales X y Z. 4× tornillos M3 por motor.</p>
-        </div>
+      <div class="grid-2" style="margin-bottom:1rem;">
         <div class="card">
           <h4>NEMA 17 Cake (×2)</h4>
-          <p style="font-size:0.88rem;">Perfil delgado (pancake) — posiciones con restricción de profundidad. Misma interfaz M3.</p>
+          <p style="font-size:0.88rem;">Perfil delgado (pancake) — para posiciones con restricción de profundidad. Misma interfaz M3 que el estándar.</p>
+        </div>
+        <div class="card">
+          <h4>Tuercas T M3</h4>
+          <p style="font-size:0.88rem;">Pre-cargue 2× tuercas T M3 en el canal del perfil para el soporte de tensión del Cake antes de montar.</p>
         </div>
       </div>
       <ol class="pasos">
-        <li><div>Instale los <span class="highlight-tag">6× Inserts dorados M3</span> en los soportes impresos con soldador a 220 °C.</div></li>
         <li><div>Coloque las <span class="highlight-tag">2× Tuercas T M3</span> en el canal del perfil para el soporte de tensión.</div></li>
-        <li><div>Posicione cada motor sobre su soporte, alineando el eje con el centro de la polea GT2. Fije con <span class="highlight-tag">4× Tornillos M3</span> por motor en patrón cruzado.</div></li>
-        <li><div>Verifique coplanaridad entre eje del motor y polea. Un desalineamiento mayor a 0.5 mm causará desgaste prematuro de la banda.</div></li>
-        <li><div><strong>No conecte los cables del motor en este paso.</strong> El cableado se documenta en el Manual de Ensamble Electrónico.</div></li>
+        <li><div>Monte cada <span class="highlight-tag">NEMA 17 Cake</span> con los mismos tornillos M3 del paso anterior (4 por motor).</div></li>
+        <li><div>Verifique que la banda GT2 no quede sobreteñida en la posición del Cake — menor torque que el estándar.</div></li>
       </ol>
     </div>
-
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       PASO 5 — MECANISMO DE PINZA
-  ═══════════════════════════════════════════════ -->
-  <section class="paso-ensamble" id="paso-5">
-
+  <!-- ══════════════════════════════════════════
+       G10 — Mecanismo de Pinza
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-10">
     <div class="paso-header">
-      <span class="paso-numero">05</span>
+      <span class="paso-numero">G10</span>
       <div>
         <h2 class="paso-titulo">Mecanismo de Pinza (Gripper)</h2>
-        <p class="paso-subtitulo">
-          Ensamble el mecanismo de agarre impreso 3D con los servomotores MG996R
-          y los joints de articulación.
-        </p>
+        <p class="paso-subtitulo">Ensamble del gripper con servomotores MG996R y joints de articulación impresos 3D.</p>
       </div>
     </div>
 
     <div class="paso-body">
-
       <aside class="bom">
-        <div class="bom-titulo">📦 Piezas — Paso 5</div>
+        <div class="bom-titulo">📦 Piezas — G10</div>
         <div class="bom-grid">
-
           <div class="bom-card activo">
             <div class="bom-card-img">
-              <img src="imgs/mg996r.png" alt="MG996R">
+              <img src="imgs/mg996r.png" alt="Servo MG996R">
               <span class="bom-card-qty">2×</span>
             </div>
             <span class="bom-card-name">Servo<br>MG996R</span>
           </div>
-
           <div class="bom-card activo">
             <div class="bom-card-img">
               <img src="imgs/threesix_bolt.png" alt="Tornillo 3/16">
               <span class="bom-card-qty">4×</span>
             </div>
-            <span class="bom-card-name">Tornillo<br>3/16 (joints)</span>
+            <span class="bom-card-name">Tornillo<br>3/16 joints</span>
           </div>
-
           <div class="bom-card activo">
             <div class="bom-card-img">
               <span class="bom-emoji">🔩</span>
               <span class="bom-card-qty">20×</span>
             </div>
-            <span class="bom-card-name">Tornillo M4<br>(pinza 3D)</span>
+            <span class="bom-card-name">Tornillo M4<br>(pinza)</span>
           </div>
-
           <div class="bom-separator">Ya montado</div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
-              <img src="imgs/nema17.png" alt="Motor">
+              <img src="imgs/nema17.png" alt="Motores">
               <span class="bom-card-qty">5×</span>
             </div>
             <span class="bom-card-name">Motores<br>Nema 17</span>
           </div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
-              <img src="imgs/gt2Belt.png" alt="Banda GT2">
+              <img src="imgs/gt2Belt.png" alt="Bandas">
               <span class="bom-card-qty">3×</span>
             </div>
-            <span class="bom-card-name">Bandas<br>+ Poleas</span>
+            <span class="bom-card-name">Bandas<br>GT2</span>
           </div>
-
         </div>
       </aside>
 
       <div class="imagen-paso">
-        <div class="placeholder-img">
-          <span>🖼️</span>
-          <strong style="color:var(--texto);">Vista isométrica — Gripper ensamblado</strong>
-          <span style="font-size:0.8rem; max-width:280px;">
-            Sistema de desplazamiento <span class="highlight-tag ghost-suave">ghost</span> ·
-            Servos + joints <span class="highlight-tag">highlight</span>
-          </span>
-        </div>
+        <img src="imgs/Gantry_Steps/Tenth_Step.png" alt="G10 — Mecanismo de pinza">
       </div>
-
     </div>
 
     <div class="paso-notas">
       <div class="caja caja-info">
         <span class="icono">ℹ️</span>
-        <div>El mecanismo consta de dos garras simétricas. Cada <strong>MG996R</strong> acciona una garra. Los <strong>Tornillos 3/16</strong> actúan como pivotes en los joints impresos 3D.</div>
+        <div>Dos garras simétricas. Cada <strong>MG996R</strong> acciona una garra. Los <strong>Tornillos 3/16</strong> actúan como pivotes en los joints impresos.</div>
       </div>
       <ol class="pasos">
-        <li><div>Identifique las partes (cuerpo central, 2 garras, 2 soportes servo) y verifique que todos los inserts M4 del Paso 3 estén instalados.</div></li>
         <li><div>Inserte los <span class="highlight-tag">Servos MG996R</span> en sus soportes y fije con <span class="highlight-tag">4× Tornillos M4</span> en el flange.</div></li>
-        <li><div>Articule cada garra al cuerpo central pasando un <span class="highlight-tag">Tornillo 3/16</span> a través del joint impreso. La garra debe girar con suavidad sin juego axial.</div></li>
-        <li><div>Conecte el brazo del servo a la garra con los <span class="highlight-tag">Tornillos M4</span> restantes. Ajuste el servo a 90° (posición media de apertura).</div></li>
-        <li><div>Monte el gripper al cabezal del carro y confirme que las garras no colisionan con el frame al moverse entre 0° y 180°.</div></li>
+        <li><div>Articule cada garra al cuerpo central pasando un <span class="highlight-tag">Tornillo 3/16</span> a través del joint. La garra debe girar suavemente sin juego axial.</div></li>
+        <li><div>Ajuste el servo a <strong>90°</strong> (posición media de apertura) antes de montar el brazo.</div></li>
+        <li><div>Confirme que las garras no colisionan con el frame al moverse entre 0° y 180°.</div></li>
       </ol>
     </div>
-
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       PASO 6 — LIMIT SWITCHES Y VERIFICACIÓN FINAL
-  ═══════════════════════════════════════════════ -->
-  <section class="paso-ensamble" id="paso-6">
-
+  <!-- ══════════════════════════════════════════
+       G11 — Sensores de Límite
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="gantry-11">
     <div class="paso-header">
-      <span class="paso-numero">06</span>
+      <span class="paso-numero">G11</span>
       <div>
-        <h2 class="paso-titulo">Sensores de Límite y Verificación Final</h2>
-        <p class="paso-subtitulo">
-          Instale los limit switches de homing en los extremos de cada eje y
-          realice una inspección completa del ensamble mecánico.
-        </p>
+        <h2 class="paso-titulo">Sensores de Límite (Limit Switches)</h2>
+        <p class="paso-subtitulo">Instalación de los limit switches de homing en los extremos de cada eje del gantry.</p>
       </div>
     </div>
 
     <div class="paso-body">
-
       <aside class="bom">
-        <div class="bom-titulo">📦 Piezas — Paso 6</div>
+        <div class="bom-titulo">📦 Piezas — G11</div>
         <div class="bom-grid">
-
           <div class="bom-card activo">
             <div class="bom-card-img">
               <span class="bom-emoji">🔘</span>
@@ -805,88 +967,470 @@
             </div>
             <span class="bom-card-name">Limit Switch</span>
           </div>
-
           <div class="bom-separator">Ya montado</div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
-              <img src="imgs/mg996r.png" alt="Servo">
+              <img src="imgs/mg996r.png" alt="Servos">
               <span class="bom-card-qty">2×</span>
             </div>
             <span class="bom-card-name">Servos<br>MG996R</span>
           </div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
-              <img src="imgs/nema17.png" alt="Motor">
+              <img src="imgs/nema17.png" alt="Motores">
               <span class="bom-card-qty">5×</span>
             </div>
             <span class="bom-card-name">Motores<br>Nema 17</span>
           </div>
-
           <div class="bom-card ghost">
             <div class="bom-card-img">
-              <img src="imgs/vslot_wheel.png" alt="Llanta">
+              <img src="imgs/vslot_wheel.png" alt="Llantas">
               <span class="bom-card-qty">10×</span>
             </div>
             <span class="bom-card-name">Llantas<br>V-Slot</span>
           </div>
-
-          <div class="bom-card ghost">
-            <div class="bom-card-img">
-              <img src="imgs/perfil2020.png" alt="Perfil">
-              <span class="bom-card-qty">3×</span>
-            </div>
-            <span class="bom-card-name">Perfiles<br>2020</span>
-          </div>
-
         </div>
       </aside>
 
       <div class="imagen-paso">
-        <div class="placeholder-img">
-          <span>🖼️</span>
-          <strong style="color:var(--texto);">Vista isométrica — Robot completo</strong>
-          <span style="font-size:0.8rem; max-width:280px;">
-            Ensamble completo <span class="highlight-tag ghost-suave">ghost</span> ·
-            Limit switches en extremos <span class="highlight-tag">highlight</span>
-          </span>
-        </div>
+        <img src="imgs/Gantry_Steps/Eleventh_Step.png" alt="G11 — Limit switches">
       </div>
-
     </div>
 
     <div class="paso-notas">
-
-      <h3 style="color:#f87171; margin-bottom:0.8rem;">Instalación de Limit Switches</h3>
       <ol class="pasos">
-        <li><div>Posicione cada <span class="highlight-tag">Limit Switch</span> en el extremo "home" de su eje: uno en el límite del eje X y otro en el límite del eje Z.</div></li>
-        <li><div>Fije el sensor usando las tuercas T M4 del Paso 1. El actuador debe quedar alineado con la pestaña del carro.</div></li>
-        <li><div>Mueva el carro manualmente hasta el sensor y verifique que el actuador se presione antes del tope mecánico. Ajuste si el gap es mayor a 2 mm.</div></li>
+        <li><div>Posicione cada <span class="highlight-tag">Limit Switch</span> en el extremo "home" de su eje: uno en límite X y otro en límite Z.</div></li>
+        <li><div>Fije el sensor usando las tuercas T M4 del frame. El actuador debe quedar alineado con la pestaña del carro.</div></li>
+        <li><div>Mueva el carro manualmente hasta el sensor. El actuador debe presionarse <em>antes</em> del tope mecánico. Gap máximo permitido: <strong>2 mm</strong>.</div></li>
       </ol>
+    </div>
+  </section>
 
-      <h3 style="color:#f87171; margin:1.5rem 0 0.8rem;">Lista de Verificación Mecánica</h3>
-
-      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Frame:</strong> Todos los perfiles en escuadra (90°). Sin holgura en uniones. Tuercas T bien distribuidas.</div></div>
-      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Carros:</strong> Desplazamiento suave en toda la longitud de los ejes X y Z sin vibración ni punto duro.</div></div>
-      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Bandas GT2:</strong> Tensión uniforme (≈ 2 mm de deflexión al centro). Sin dientes saltados en las poleas.</div></div>
-      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Motores:</strong> Ejes alineados con poleas. Sin juego axial ni radial. Tornillos M3 a 0.8 N·m.</div></div>
-      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Gripper:</strong> Ambas garras articulan libremente entre 0° y 180°. Servos centrados a 90°. Sin colisiones.</div></div>
-      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Limit Switches:</strong> Actuador activa el sensor antes del tope mecánico en ambos ejes.</div></div>
-
-      <div class="alerta-ensamble" style="margin-top:1.5rem; border-left-color:#22c55e;">
-        <span>🚀</span>
-        <div>El ensamble mecánico está completo. Continúe con el <strong>Manual de Ensamble Electrónico</strong> para el cableado, y posteriormente con el <strong>Manual de Usuario SIGAB</strong> para la configuración del software.</div>
+  <!-- ══════════════════════════════════════════
+       G★ — Finale Gantry
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble paso-finale" id="gantry-finale">
+    <div class="paso-header">
+      <span class="paso-numero" style="color:#22c55e; border-color:#22c55e; font-size:2.8rem;">G★</span>
+      <div>
+        <h2 class="paso-titulo">Gantry Completo — Verificación Final</h2>
+        <p class="paso-subtitulo">Inspección integral del gantry antes de integrar al sistema SIGAB completo.</p>
       </div>
-
     </div>
 
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">✅ Checklist Gantry</div>
+        <div class="bom-grid">
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/perfil2020.png" alt="Frame">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Frame<br>2020</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/vslot_wheel.png" alt="Llantas">
+              <span class="bom-card-qty">10×</span>
+            </div>
+            <span class="bom-card-name">Llantas<br>V-Slot</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/gt2Belt.png" alt="Bandas">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Bandas<br>GT2</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/nema17.png" alt="Motores">
+              <span class="bom-card-qty">5×</span>
+            </div>
+            <span class="bom-card-name">Motores<br>NEMA 17</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/mg996r.png" alt="Servos">
+              <span class="bom-card-qty">2×</span>
+            </div>
+            <span class="bom-card-name">Servos<br>MG996R</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <span class="bom-emoji">🔘</span>
+              <span class="bom-card-qty">2×</span>
+            </div>
+            <span class="bom-card-name">Limit<br>Switches</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="imagen-paso">
+        <img src="imgs/Gantry_Steps/Finale.png" alt="Gantry completo">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Frame:</strong> Todos los perfiles en escuadra (90°). Sin holgura en uniones. Tuercas T bien distribuidas.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Carros:</strong> Desplazamiento suave en toda la longitud de los ejes X y Z. Sin vibración ni punto duro.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Bandas GT2:</strong> Tensión uniforme (≈ 2 mm de deflexión). Sin dientes saltados en las poleas.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Motores:</strong> Ejes alineados con poleas. Sin juego axial ni radial. Tornillos M3 a 0.8 N·m.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Gripper:</strong> Ambas garras articulan libremente entre 0° y 180°. Servos centrados a 90°.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Limit Switches:</strong> Actuador activa el sensor antes del tope mecánico en ambos ejes.</div></div>
+      <div class="alerta-ensamble" style="margin-top:1.5rem; border-left-color:#22c55e;">
+        <span>🚀</span>
+        <div>El Gantry está mecánicamente completo. Continúe con la <strong>Sección 2 — Ensamblaje General</strong>.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SEPARADOR ENTRE SECCIONES
+  ═══════════════════════════════════════════════ -->
+  <div class="divider" style="margin: 4rem 0;"></div>
+
+  <!-- ══════════════════════════════════════════════
+       MACRO SECCIÓN 2: ENSAMBLAJE GENERAL
+  ═══════════════════════════════════════════════ -->
+  <div class="macro-seccion-header" id="seccion-full">
+    <div class="macro-seccion-num">02</div>
+    <div>
+      <h2 class="macro-seccion-titulo">Ensamblaje General</h2>
+      <p class="macro-seccion-sub">5 pasos · Integración del gantry al sistema completo SIGAB</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       A01 — Integración del Gantry al Sistema
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="full-01">
+    <div class="paso-header">
+      <span class="paso-numero">A01</span>
+      <div>
+        <h2 class="paso-titulo">Integración del Gantry al Sistema</h2>
+        <p class="paso-subtitulo">Montaje del gantry completo sobre la estructura de soporte general del SIGAB.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — A01</div>
+        <div class="bom-grid">
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/perfil2020.png" alt="Perfiles soporte">
+              <span class="bom-card-qty">4×</span>
+            </div>
+            <span class="bom-card-name">Perfil 2020<br>soportes</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/T_Nut.png" alt="Tuerca T M4">
+              <span class="bom-card-qty">8×</span>
+            </div>
+            <span class="bom-card-name">Tuerca T<br>M4</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/Nut.png" alt="Tuerca M4">
+              <span class="bom-card-qty">8×</span>
+            </div>
+            <span class="bom-card-name">Tuerca M4</span>
+          </div>
+          <div class="bom-separator">Gantry listo</div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/nema17.png" alt="Motores">
+              <span class="bom-card-qty">5×</span>
+            </div>
+            <span class="bom-card-name">Motores<br>Nema 17</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/gt2Belt.png" alt="Bandas">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Bandas<br>GT2</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="imagen-paso">
+        <img src="imgs/Full_Assem/First_Step.png" alt="A01 — Integración del gantry">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Pre-cargue las <span class="highlight-tag">8× Tuercas T M4</span> en los perfiles de soporte antes de montar el gantry encima.</div></li>
+        <li><div>Posicione el gantry sobre los soportes y verifique la alineación horizontal con nivel de burbuja.</div></li>
+        <li><div>Fije con las <span class="highlight-tag">8× Tuercas M4</span> en patrón diagonal. Torque: <strong>1.5 N·m</strong>.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       A02 — Montaje de Componentes Externos
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="full-02">
+    <div class="paso-header">
+      <span class="paso-numero">A02</span>
+      <div>
+        <h2 class="paso-titulo">Montaje de Componentes Externos</h2>
+        <p class="paso-subtitulo">Fijación de soportes electrónicos y canaletas de cableado al frame general.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — A02</div>
+        <div class="bom-grid">
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/Inserts.png" alt="Insert M4">
+              <span class="bom-card-qty">8×</span>
+            </div>
+            <span class="bom-card-name">Insert M4<br>(soportes)</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/T_Nut.png" alt="Tuerca T M4">
+              <span class="bom-card-qty">6×</span>
+            </div>
+            <span class="bom-card-name">Tuerca T<br>M4</span>
+          </div>
+          <div class="bom-separator">Ya montado</div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/perfil2020.png" alt="Frame">
+              <span class="bom-card-qty">7×</span>
+            </div>
+            <span class="bom-card-name">Frame<br>completo</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="imagen-paso">
+        <img src="imgs/Full_Assem/Second_Step.png" alt="A02 — Componentes externos">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Instale los <span class="highlight-tag">8× Inserts M4</span> en las piezas impresas de soporte electrónico con soldador a 220 °C.</div></li>
+        <li><div>Fije los soportes al frame usando las <span class="highlight-tag">6× Tuercas T M4</span> restantes en las ranuras del perfil.</div></li>
+        <li><div>Reserve espacio para las canaletas de cableado según el plano de distribución del Manual Electrónico.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       A03 — Fijación de Subconjuntos
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="full-03">
+    <div class="paso-header">
+      <span class="paso-numero">A03</span>
+      <div>
+        <h2 class="paso-titulo">Fijación de Subconjuntos</h2>
+        <p class="paso-subtitulo">Integración y anclaje definitivo de todos los subconjuntos mecánicos al frame general.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Piezas — A03</div>
+        <div class="bom-grid">
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/threeeigth_bolt.png" alt="Tornillo 3/8">
+              <span class="bom-card-qty">4×</span>
+            </div>
+            <span class="bom-card-name">Tornillo 3/8<br>(anclaje)</span>
+          </div>
+          <div class="bom-card activo">
+            <div class="bom-card-img">
+              <img src="imgs/Inserts.png" alt="Insert M4">
+              <span class="bom-card-qty">4×</span>
+            </div>
+            <span class="bom-card-name">Insert M4<br>(anclaje)</span>
+          </div>
+          <div class="bom-separator">Ya montado</div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/nema17.png" alt="Motores">
+              <span class="bom-card-qty">5×</span>
+            </div>
+            <span class="bom-card-name">Motores<br>NEMA 17</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/mg996r.png" alt="Servos">
+              <span class="bom-card-qty">2×</span>
+            </div>
+            <span class="bom-card-name">Servos<br>MG996R</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="imagen-paso">
+        <img src="imgs/Full_Assem/Third_Step.png" alt="A03 — Fijación de subconjuntos">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Instale los <span class="highlight-tag">4× Inserts M4</span> en los puntos de anclaje principal a 220 °C.</div></li>
+        <li><div>Ancle el gantry al bastidor con los <span class="highlight-tag">4× Tornillos 3/8</span>. Apriete en patrón cruzado.</div></li>
+        <li><div>Verifique que todos los subconjuntos (frame, carros, transmisión, motores, gripper) quedan correctamente posicionados sin interferencias.</div></li>
+        <li><div>Mueva los carros manualmente en toda su extensión y confirme ausencia de colisiones con soportes o canaletas.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       A04 — Ajuste y Verificación de Conjuntos
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble" id="full-04">
+    <div class="paso-header">
+      <span class="paso-numero">A04</span>
+      <div>
+        <h2 class="paso-titulo">Ajuste y Verificación de Conjuntos</h2>
+        <p class="paso-subtitulo">Revisión global del sistema mecánico: tensión de bandas, holguras, alineación y torques finales.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">📦 Verificación — A04</div>
+        <div class="bom-grid">
+          <div class="bom-separator">Sistema completo</div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/gt2Belt.png" alt="Bandas">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Bandas<br>GT2</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/vslot_wheel.png" alt="Llantas">
+              <span class="bom-card-qty">10×</span>
+            </div>
+            <span class="bom-card-name">Llantas<br>V-Slot</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/nema17.png" alt="Motores">
+              <span class="bom-card-qty">5×</span>
+            </div>
+            <span class="bom-card-name">Motores<br>NEMA 17</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/mg996r.png" alt="Servos">
+              <span class="bom-card-qty">2×</span>
+            </div>
+            <span class="bom-card-name">Servos<br>MG996R</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="imagen-paso">
+        <img src="imgs/Full_Assem/Fourth_Step.png" alt="A04 — Ajuste y verificación">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <ol class="pasos">
+        <li><div>Re-tensione las <span class="highlight-tag">3× Bandas GT2</span> si fue necesario mover el sistema durante la integración. Deflexión objetivo: ≈ 2 mm.</div></li>
+        <li><div>Mueva cada eje manualmente en toda su extensión. Confirme ausencia de puntos duros, vibración o ruido anormal.</div></li>
+        <li><div>Verifique que todos los tornillos estén a torque final. Ningún elemento debe quedar flojo.</div></li>
+        <li><div>Accione el gripper manualmente entre 0° y 180° y confirme que no hay colisiones en la posición final de integración.</div></li>
+        <li><div>Documente cualquier ajuste realizado en la hoja de seguimiento de manufactura.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       A★ — Finale General
+  ══════════════════════════════════════════════ -->
+  <section class="paso-ensamble paso-finale" id="full-finale">
+    <div class="paso-header">
+      <span class="paso-numero" style="color:#22c55e; border-color:#22c55e; font-size:2.8rem;">A★</span>
+      <div>
+        <h2 class="paso-titulo">Ensamble Completo SIGAB — Verificación Final</h2>
+        <p class="paso-subtitulo">El robot de almacén automatizado está mecánicamente completo y listo para ensamble electrónico.</p>
+      </div>
+    </div>
+
+    <div class="paso-body">
+      <aside class="bom">
+        <div class="bom-titulo">✅ Checklist Final</div>
+        <div class="bom-grid">
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/perfil2020.png" alt="Frame">
+              <span class="bom-card-qty">7×</span>
+            </div>
+            <span class="bom-card-name">Frame<br>2020</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/nema17.png" alt="Motores">
+              <span class="bom-card-qty">5×</span>
+            </div>
+            <span class="bom-card-name">Motores<br>NEMA 17</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/gt2Belt.png" alt="Bandas">
+              <span class="bom-card-qty">3×</span>
+            </div>
+            <span class="bom-card-name">Bandas<br>GT2</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <img src="imgs/mg996r.png" alt="Servos">
+              <span class="bom-card-qty">2×</span>
+            </div>
+            <span class="bom-card-name">Servos<br>MG996R</span>
+          </div>
+          <div class="bom-card ghost">
+            <div class="bom-card-img">
+              <span class="bom-emoji">🔘</span>
+              <span class="bom-card-qty">2×</span>
+            </div>
+            <span class="bom-card-name">Limit<br>Switches</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="imagen-paso">
+        <img src="imgs/Full_Assem/FInal_Assem.png" alt="Ensamble completo SIGAB">
+      </div>
+    </div>
+
+    <div class="paso-notas">
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Frame general:</strong> Escuadra y nivelación verificadas. Perfiles de soporte fijos al bastidor.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Guías lineales:</strong> Carros deslizan suavemente en todos los ejes. Sin punto duro ni vibración.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Transmisión GT2:</strong> Bandas a tensión correcta. Sin dientes saltados en las poleas.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Motores:</strong> NEMA 17 estándar y Cake alineados. Tornillos M3 a 0.8 N·m.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Gripper:</strong> Servos MG996R centrados a 90°. Garras articulan sin colisiones.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Sensores:</strong> Limit switches activan antes del tope mecánico en ambos ejes.</div></div>
+      <div class="caja caja-ok"><span class="icono">✅</span><div><strong>Integración:</strong> Sin interferencias entre subconjuntos en todo el rango de movimiento.</div></div>
+      <div class="alerta-ensamble" style="margin-top:1.5rem; border-left-color:#22c55e;">
+        <span>🚀</span>
+        <div>Ensamble mecánico completo. Continúe con el <strong>Manual de Ensamble Electrónico</strong> para cableado, y posteriormente con el <strong>Manual de Usuario SIGAB</strong> para la configuración del software.</div>
+      </div>
+    </div>
   </section>
 
 </div><!-- /contenedor -->
 
 <footer>
-  <p><strong>DSI | SIGAB</strong> — Manual de Ensamble Mecánico v1.0</p>
+  <p><strong>DSI | SIGAB</strong> — Manual de Ensamble Mecánico v2.0</p>
   <p>Departamento de Sistemas e Informática &nbsp;·&nbsp; Abril 2026</p>
   <p style="margin-top:0.5rem; font-size:0.78rem; color:#6b7280;">
     Documento de uso interno. Para soporte, contacte al responsable de manufactura.
