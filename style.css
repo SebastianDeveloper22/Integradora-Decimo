@@ -1255,6 +1255,264 @@ input:checked + .slider:before {
 }
 
 /* ==========================================
+   CORTES DE TURNO — Cards visuales
+   ========================================== */
+.cortes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.corte-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.corte-card:hover {
+    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+}
+
+.corte-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-surface-hover);
+    border-bottom: 1px solid var(--border-color);
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.corte-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.97rem;
+    color: var(--text-main);
+}
+
+.corte-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.corte-card-fecha {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.corte-card-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.corte-section-title {
+    margin: 0 0 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+/* Tabla de inventario dentro de la card */
+.corte-inv-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.corte-inv-tabla th {
+    background: var(--bg-surface-hover);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.corte-inv-tabla th:nth-child(3),
+.corte-inv-tabla th:nth-child(4) { text-align: center; }
+
+.corte-inv-tabla td {
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    vertical-align: middle;
+}
+
+.corte-inv-tabla td:nth-child(3),
+.corte-inv-tabla td:nth-child(4) { text-align: center; }
+
+.corte-inv-tabla tbody tr:last-child td { border-bottom: none; }
+
+.corte-inv-bin {
+    color: var(--text-muted);
+    font-family: monospace;
+    font-size: 0.83rem;
+}
+
+.corte-inv-stock {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.corte-inv-stock.s-ok   { color: #16a34a; }
+.corte-inv-stock.s-low  { color: #d97706; }
+.corte-inv-stock.s-zero { color: #dc2626; }
+
+.corte-inv-area {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+
+/* Lista de órdenes */
+.corte-ordenes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.corte-orden-item {
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    gap: 6px;
+    align-items: baseline;
+    font-size: 0.88rem;
+    color: var(--text-main);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.corte-orden-item:last-child { border-bottom: none; }
+
+.corte-orden-num {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.corte-orden-hora {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.corte-sin-actividad {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.88rem;
+    margin: 0;
+}
+
+.corte-card-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: var(--bg-surface-hover);
+}
+
+.btn-corte-foto {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-corte-foto:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+.corte-legacy-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    word-break: break-word;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ── Modal de fotografía / impresión ── */
+.modal-corte-foto-box {
+    background: var(--bg-surface);
+    border-radius: 12px;
+    max-width: 820px;
+    width: 96%;
+    max-height: 92vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+}
+
+#modal-corte-foto-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+/* La card dentro del modal no tiene hover ni borde, se ve "limpia" */
+#modal-corte-foto-content .corte-card {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+#modal-corte-foto-content .corte-card:hover {
+    box-shadow: none;
+}
+
+.modal-corte-foto-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-surface-hover);
+    flex-shrink: 0;
+}
+
+/* ── Print: solo muestra el modal de corte ── */
+@media print {
+    body > *:not(#modal-corte-foto) { display: none !important; }
+    #modal-corte-foto {
+        position: static !important;
+        background: transparent !important;
+        display: flex !important;
+    }
+    .modal-corte-foto-box {
+        max-height: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .modal-corte-foto-actions { display: none !important; }
+    .corte-card-footer { display: none !important; }
+}
+
+/* ==========================================
    SCROLL PARA EL INVENTARIO
    ========================================== */
 

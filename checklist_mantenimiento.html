@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checklist de Mantenimiento — SIGAB DSI</title>
+  <link rel="stylesheet" href="manual_usuario.css" />
+  <style>
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .mant-card {
+      background: var(--fondo2);
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mant-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--rojo-oscuro);
+    }
+
+    .mant-card-header .icono-rutina {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .mant-card-header h3 {
+      margin: 0;
+      color: var(--rojo-claro);
+      font-size: 1.1rem;
+      line-height: 1.3;
+    }
+
+    .mant-card-header .frecuencia {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      font-weight: 400;
+      display: block;
+      margin-top: 0.2rem;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+    }
+
+    .checklist input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 2px solid var(--rojo);
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      margin-top: 2px;
+      transition: background 0.2s, border-color 0.2s;
+      position: relative;
+    }
+
+    .checklist input[type="checkbox"]:checked {
+      background: var(--rojo);
+      border-color: var(--rojo);
+    }
+
+    .checklist input[type="checkbox"]:checked::after {
+      content: "✓";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .checklist label {
+      font-size: 0.88rem;
+      color: #d1d5db;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .checklist label .detalle {
+      display: block;
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-top: 0.2rem;
+    }
+
+    .checklist input[type="checkbox"]:checked + label {
+      color: #6b7280;
+      text-decoration: line-through;
+    }
+
+    .checklist input[type="checkbox"]:checked + label .detalle {
+      text-decoration: line-through;
+    }
+
+    .btn-reset {
+      align-self: flex-end;
+      background: transparent;
+      border: 1px solid var(--borde);
+      color: #9ca3af;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-reset:hover {
+      border-color: var(--rojo-claro);
+      color: var(--rojo-claro);
+    }
+
+    .progreso-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: auto;
+    }
+
+    .progreso-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--borde);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progreso-fill {
+      height: 100%;
+      background: var(--rojo);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progreso-texto {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      white-space: nowrap;
+      min-width: 40px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     PORTADA
+═══════════════════════════════════════════════ -->
+<div class="portada">
+  <div class="logo-circle">
+    <span>DSI</span>
+  </div>
+  <h1>SIGAB</h1>
+  <p class="subtitulo">Sistema de Gestión y Almacenaje de Bines</p>
+  <div class="linea"></div>
+  <p style="color:#d1d5db; max-width:520px; font-size:1rem;">
+    Checklist de Mantenimiento — Guía de rutinas preventivas para asegurar
+    la operación continua y segura del robot de almacén automatizado.
+  </p>
+  <p class="version">Versión 1.0 &nbsp;·&nbsp; Abril 2026</p>
+</div>
+
+<div class="contenedor">
+
+  <!-- ADVERTENCIA DE SEGURIDAD -->
+  <div class="caja caja-error" style="margin-bottom:2rem;">
+    <span class="icono">⚠️</span>
+    <div>
+      <strong>PELIGRO:</strong> Apagar y desenergizar la fuente principal antes de cualquier ajuste mecánico o limpieza.
+    </div>
+  </div>
+
+  <!-- TARJETAS DE MANTENIMIENTO -->
+  <div class="cards-grid">
+
+    <!-- TARJETA 1: Rutina Semanal -->
+    <div class="mant-card">
+      <div class="mant-card-header">
+        <span class="icono-rutina">🔧</span>
+        <h3>
+          Rutina Semanal
+          <span class="frecuencia">Mecánica Básica</span>
+        </h3>
+      </div>
+
+      <ul class="checklist" id="lista-semanal">
+        <li>
+          <input type="checkbox" id="s1" />
+          <label for="s1">
+            Limpiar rieles de aluminio 2020 y llantas V-Slot
+            <span class="detalle">Usar paño limpio y alcohol isopropílico para quitar polvo.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="s2" />
+          <label for="s2">
+            Verificar tensión de bandas GT2 en ejes X y Z
+            <span class="detalle">Revisar al tacto y ajustar con llaves Allen estándar; no debe haber juego.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="s3" />
+          <label for="s3">
+            Inspeccionar Limit Switches de "Home"
+            <span class="detalle">Comprobar sonido de 'clic' físico al presionarlos y revisar que los cables no estén flojos.</span>
+          </label>
+        </li>
+      </ul>
+
+      <div class="progreso-wrap">
+        <div class="progreso-bar">
+          <div class="progreso-fill" id="fill-semanal"></div>
+        </div>
+        <span class="progreso-texto" id="txt-semanal">0 / 3</span>
+      </div>
+      <button class="btn-reset" data-lista="lista-semanal" data-fill="fill-semanal" data-txt="txt-semanal" data-total="3">Reiniciar</button>
+    </div>
+
+    <!-- TARJETA 2: Rutina Mensual -->
+    <div class="mant-card">
+      <div class="mant-card-header">
+        <span class="icono-rutina">⚙️</span>
+        <h3>
+          Rutina Mensual
+          <span class="frecuencia">Ajuste y Control</span>
+        </h3>
+      </div>
+
+      <ul class="checklist" id="lista-mensual">
+        <li>
+          <input type="checkbox" id="m1" />
+          <label for="m1">
+            Reapretar tornillería general
+            <span class="detalle">Usar llaves Allen. Enfocarse en soportes de motores Nema 17, tuercas de rodamientos y piezas 3D.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="m2" />
+          <label for="m2">
+            Revisar punto neutral de Servos MG996R en la pinza
+            <span class="detalle">Si la pinza se mueve sola en reposo, conectar laptop y ajustar potenciómetro interno con desarmador de cruz de precisión.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="m3" />
+          <label for="m3">
+            Inspección de Módulo RFID RC522
+            <span class="detalle">Limpiar superficie de la antena, revisar firmeza de los jumpers SPI y probar lectura con tarjeta maestra.</span>
+          </label>
+        </li>
+      </ul>
+
+      <div class="progreso-wrap">
+        <div class="progreso-bar">
+          <div class="progreso-fill" id="fill-mensual"></div>
+        </div>
+        <span class="progreso-texto" id="txt-mensual">0 / 3</span>
+      </div>
+      <button class="btn-reset" data-lista="lista-mensual" data-fill="fill-mensual" data-txt="txt-mensual" data-total="3">Reiniciar</button>
+    </div>
+
+    <!-- TARJETA 3: Rutina Trimestral -->
+    <div class="mant-card">
+      <div class="mant-card-header">
+        <span class="icono-rutina">🖥️</span>
+        <h3>
+          Rutina Trimestral
+          <span class="frecuencia">Electrónica y Software</span>
+        </h3>
+      </div>
+
+      <ul class="checklist" id="lista-trimestral">
+        <li>
+          <input type="checkbox" id="t1" />
+          <label for="t1">
+            Revisión térmica y limpieza de electrónica
+            <span class="detalle">Limpiar polvo de la placa SKR y ESP32 con aire comprimido. Los disipadores deben estar libres de obstrucciones.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="t2" />
+          <label for="t2">
+            Inspección de fatiga en cableado
+            <span class="detalle">Revisar cables que viajan por los ejes móviles. Buscar cables pelados y reemplazar cinchos plásticos rotos.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="t3" />
+          <label for="t3">
+            Respaldo del Sistema Strapi
+            <span class="detalle">Desde la PC administrativa, exportar la base de datos de inventario y los logs de cortes de turno.</span>
+          </label>
+        </li>
+      </ul>
+
+      <div class="progreso-wrap">
+        <div class="progreso-bar">
+          <div class="progreso-fill" id="fill-trimestral"></div>
+        </div>
+        <span class="progreso-texto" id="txt-trimestral">0 / 3</span>
+      </div>
+      <button class="btn-reset" data-lista="lista-trimestral" data-fill="fill-trimestral" data-txt="txt-trimestral" data-total="3">Reiniciar</button>
+    </div>
+
+  </div><!-- /cards-grid -->
+
+</div><!-- /contenedor -->
+
+<script>
+  function actualizarProgreso(listaId, fillId, txtId, total) {
+    const lista = document.getElementById(listaId);
+    const fill  = document.getElementById(fillId);
+    const txt   = document.getElementById(txtId);
+    const marcados = lista.querySelectorAll('input[type="checkbox"]:checked').length;
+    fill.style.width = ((marcados / total) * 100) + '%';
+    txt.textContent  = marcados + ' / ' + total;
+  }
+
+  document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      const lista = this.closest('.mant-card');
+      const btn   = lista.querySelector('.btn-reset');
+      actualizarProgreso(btn.dataset.lista, btn.dataset.fill, btn.dataset.txt, parseInt(btn.dataset.total));
+    });
+  });
+
+  document.querySelectorAll('.btn-reset').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const lista = document.getElementById(this.dataset.lista);
+      lista.querySelectorAll('input[type="checkbox"]').forEach(function(cb) { cb.checked = false; });
+      actualizarProgreso(this.dataset.lista, this.dataset.fill, this.dataset.txt, parseInt(this.dataset.total));
+    });
+  });
+</script>
+
+<!-- ══ BOTÓN EXPORTAR PDF ══ -->
+<style>
+  #btn-pdf {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: #dc2626;
+    color: #fff;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(220,38,38,0.45);
+    transition: background .15s, transform .1s, box-shadow .15s;
+    letter-spacing: 0.01em;
+  }
+  #btn-pdf:hover  { background: #b91c1c; box-shadow: 0 6px 24px rgba(220,38,38,0.55); transform: translateY(-1px); }
+  #btn-pdf:active { transform: translateY(0); }
+  #btn-pdf svg    { flex-shrink: 0; }
+
+  @media print {
+    #btn-pdf { display: none !important; }
+  }
+</style>
+
+<button id="btn-pdf" onclick="window.print()" title="Exportar a PDF">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="12" y1="18" x2="12" y2="12"/>
+    <line x1="9" y1="15" x2="15" y2="15"/>
+  </svg>
+  Exportar PDF
+</button>
+
+</body>
+</html>

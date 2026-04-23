@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLP Simulator — Activity Relationships</title>
+  <link rel="stylesheet" href="activity_slp.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside id="sidebar">
+
+    <header id="sb-header">
+      <div id="sb-logo">SLP</div>
+      <div id="sb-titles">
+        <p id="sb-title">Layout Simulator</p>
+        <p id="sb-sub">Activity Relationships</p>
+      </div>
+      <button id="btn-reset" title="Restart physics simulation">↺</button>
+    </header>
+
+    <!-- Score total -->
+    <section class="sb-card">
+      <h3 class="sc-label">Layout Score</h3>
+      <div id="score-display">
+        <span id="score-val" class="s-neutral">—</span>
+        <span id="score-unit">pts</span>
+      </div>
+      <div id="score-bar-wrap">
+        <div id="score-bar-track">
+          <div id="score-bar-fill"></div>
+        </div>
+        <div id="score-bar-labels">
+          <span>Worst</span><span>Best</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Desglose -->
+    <section class="sb-card" id="sc-breakdown">
+      <h3 class="sc-label">Score Breakdown</h3>
+      <div class="bd-formula">
+        <code>Score = Σ(relations) + Σ(crossings)</code>
+      </div>
+      <div class="bd-row bd-pos">
+        <span class="bd-icon">+</span>
+        <div class="bd-body">
+          <span class="bd-lbl">A/E/I close (good proximity)</span>
+          <span class="bd-val" id="bd-pos">+0.0</span>
+        </div>
+      </div>
+      <div class="bd-row bd-neg">
+        <span class="bd-icon">−</span>
+        <div class="bd-body">
+          <span class="bd-lbl">A/E far · X close</span>
+          <span class="bd-val" id="bd-neg">0.0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cruces -->
+    <section class="sb-card">
+      <h3 class="sc-label">Relation Crossings</h3>
+      <div id="cross-display">
+        <span id="cross-val" class="c-zero">—</span>
+        <span id="cross-unit">crossings</span>
+      </div>
+      <button id="btn-optimize" title="Arrange nodes to minimize line crossings">
+        ⊞ Minimize Crossings
+      </button>
+    </section>
+
+    <!-- Filtros -->
+    <section class="sb-card">
+      <h3 class="sc-label">Visible Relations</h3>
+      <div id="filter-row">
+        <label class="chip chip-A"><input type="checkbox" id="chkA" checked>A</label>
+        <label class="chip chip-E"><input type="checkbox" id="chkE" checked>E</label>
+        <label class="chip chip-I"><input type="checkbox" id="chkI" checked>I</label>
+        <label class="chip chip-O"><input type="checkbox" id="chkO" checked>O</label>
+        <label class="chip chip-X"><input type="checkbox" id="chkX" checked>X</label>
+        <label class="chip chip-U"><input type="checkbox" id="chkU">U</label>
+      </div>
+      <div id="legend">
+        <div class="leg-row"><div class="leg-line" style="background:#C84848;height:3px"></div><span>A — Absolutely necessary</span></div>
+        <div class="leg-row"><div class="leg-line" style="background:#C97C2A;height:2.5px"></div><span>E — Especially important</span></div>
+        <div class="leg-row"><div class="leg-line" style="background:#4A9860;height:2px"></div><span>I — Important</span></div>
+        <div class="leg-row"><div class="leg-line" style="background:#5294C8;height:1.5px"></div><span>O — Ordinary</span></div>
+        <div class="leg-row"><div class="leg-line leg-x-dash"></div><span>X — Not desirable</span></div>
+        <div class="leg-row"><div class="leg-line" style="background:#444;height:1px;opacity:.6"></div><span>U — Unimportant</span></div>
+      </div>
+    </section>
+
+    <!-- Zonas -->
+    <section class="sb-card">
+      <h3 class="sc-label">Functional Zones</h3>
+      <div id="zone-legend">
+        <div class="zone-row"><div class="zone-dot" style="background:#1e4d8c"></div><span>Production (1,2,3,4,5,7,10)</span></div>
+        <div class="zone-row"><div class="zone-dot" style="background:#8a4a00"></div><span>Logistics (6,17)</span></div>
+        <div class="zone-row"><div class="zone-dot" style="background:#145a2a"></div><span>Administrative (9,11,12,14,15)</span></div>
+        <div class="zone-row"><div class="zone-dot" style="background:#6d1a9e"></div><span>Services (16)</span></div>
+        <div class="zone-row"><div class="zone-dot" style="background:#4a4a2a"></div><span>Sec. / Free (8,13)</span></div>
+      </div>
+    </section>
+
+    <!-- Tabla de puntajes -->
+    <section class="sb-card sb-grow">
+      <h3 class="sc-label">Score by Area</h3>
+      <div id="tbl-scroll">
+        <table id="area-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Area</th>
+              <th title="Static SLP score (A=4,E=3,I=2,O=1,X=-1)">SLP</th>
+              <th title="Dynamic score by current position">Pos.</th>
+              <th title="Line crossings involving this area">✕</th>
+            </tr>
+          </thead>
+          <tbody id="area-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Rutas y Flujos de Movimiento -->
+    <section class="sb-card">
+      <h3 class="sc-label">Visualizar Rutas</h3>
+      <div class="route-filters">
+        <button class="route-toggle rt-mat"   id="btn-route-mat">
+          <span class="route-dot" style="background:#C97C2A"></span>
+          <span class="route-btn-body">
+            <span class="route-btn-title">Flujo de Materiales</span>
+            <span class="route-btn-seq">17→6→7→3→4→5→6</span>
+          </span>
+        </button>
+        <button class="route-toggle rt-maint" id="btn-route-maint">
+          <span class="route-dot" style="background:#5294C8"></span>
+          <span class="route-btn-body">
+            <span class="route-btn-title">Mantenimiento</span>
+            <span class="route-btn-seq">1→10→{2, 3, 4}</span>
+          </span>
+        </button>
+        <button class="route-toggle rt-admin" id="btn-route-admin">
+          <span class="route-dot" style="background:#4A9860"></span>
+          <span class="route-btn-body">
+            <span class="route-btn-title">Administrativo / Visitas</span>
+            <span class="route-btn-seq">14→{9, 11, 12}→16</span>
+          </span>
+        </button>
+        <button class="route-toggle rt-evac"  id="btn-route-evac">
+          <span class="route-dot" style="background:#C84848"></span>
+          <span class="route-btn-body">
+            <span class="route-btn-title">Evacuación</span>
+            <span class="route-btn-seq">Prod.→⚠8 | Admin→⚠13</span>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <footer id="sb-footer">
+      <span>↔ Drag nodes to optimize the layout</span>
+    </footer>
+
+  </aside>
+  <!-- ══════════════ FIN SIDEBAR ══════════════ -->
+
+  <!-- ══════════════ CANVAS ══════════════ -->
+  <main id="canvas-area">
+    <canvas id="c"></canvas>
+    <div id="tooltip"></div>
+    <div id="physics-badge">⚙ Simulating physics…</div>
+    <div id="optimize-badge">⊞ Minimizing crossings…</div>
+  </main>
+
+</div><!-- #app -->
+<script src="activity_slp.js"></script>
+</body>
+</html>

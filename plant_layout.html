@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLP Simulator — Plant Layout</title>
+  <link rel="stylesheet" href="activity_slp.css">
+  <style>
+    /* ── Plant-layout-specific overrides ── */
+    #plant-area {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    /* ── Tab navigation ── */
+    .pl-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      padding: 0 16px;
+      background: var(--sb-bg);
+    }
+    .pl-tab-btn {
+      padding: 9px 18px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      font: 12px var(--font);
+      letter-spacing: .02em;
+      margin-bottom: -1px;
+      transition: color .15s, border-color .15s;
+    }
+    .pl-tab-btn:hover { color: var(--text); }
+    .pl-tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+
+    /* ── Tab panels ── */
+    .pl-tab-panel {
+      display: none;
+      flex: 1;
+      overflow: auto;
+      min-height: 0;
+    }
+    .pl-tab-panel.active { display: flex; }
+
+    /* ── Floor plan panel ── */
+    #tab-floor {
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px;
+    }
+    .pl-svg-wrap {
+      width: 100%;
+      max-width: 860px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+    #croquis { width: 100%; display: block; }
+    .area-room { cursor: pointer; }
+    .area-room rect { transition: filter 0.15s; }
+    .area-room:hover rect { filter: brightness(1.3); }
+
+    /* ── Tooltip ── */
+    #tt-plant {
+      position: fixed;
+      background: #1c2840;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 11.5px;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #c8d8ea;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .1s;
+      z-index: 999;
+      white-space: nowrap;
+      box-shadow: 0 6px 24px rgba(0,0,0,.55);
+      line-height: 1.6;
+    }
+    #tt-plant strong { color: #fff; font-size: 12px; }
+    #tt-plant .tt-zone { color: #6a82a0; font-size: 10px; margin-top: 1px; }
+
+    /* Fix 3-col table alignment */
+    #area-table thead th:nth-child(3) { text-align: left !important; }
+    .td-zone {
+      display: flex; align-items: center; gap: 5px;
+      white-space: nowrap; color: var(--text-dim); font-size: 10.5px;
+    }
+    .td-zone-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0; border: 1px solid rgba(255,255,255,.18);
+    }
+
+    /* ══════════════════════════════════
+       MUTHER HALF-MATRIX DIAGRAM
+       ══════════════════════════════════ */
+    #tab-muther {
+      flex-direction: column;
+      padding: 0;
+    }
+    .muther-wrap {
+      overflow: auto;
+      padding: 20px 20px 28px;
+      flex: 1;
+    }
+    .muther-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-head);
+      margin: 0 0 14px;
+      letter-spacing: .03em;
+    }
+    .muther-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .ml-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 10.5px; color: var(--text-dim);
+    }
+    .ml-swatch {
+      width: 14px; height: 14px; border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700;
+    }
+
+    /* ── Table base ── */
+    .muther-table {
+      border-collapse: separate;
+      border-spacing: 2px;
+      font-family: var(--font);
+    }
+
+    /* Column headers — rotated */
+    .muther-table th.col-hd {
+      width: 30px;
+      padding: 0 2px;
+      vertical-align: bottom;
+      text-align: center;
+    }
+    .col-hd-inner {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      display: block;
+      font-size: 9px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 88px;
+      padding: 2px 0;
+    }
+    .col-hd-inner strong {
+      color: var(--text);
+      font-size: 10px;
+    }
+
+    /* Row headers */
+    .muther-table td.row-hd {
+      text-align: right;
+      padding: 2px 8px 2px 0;
+      color: var(--text-dim);
+      font-size: 10px;
+      white-space: nowrap;
+      min-width: 130px;
+      vertical-align: middle;
+    }
+    .muther-table th.corner-hd {
+      min-width: 130px;
+      padding: 0;
+    }
+
+    /* All data cells */
+    .muther-table td.m-cell {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 3px;
+      cursor: default;
+    }
+
+    /* Lower triangle — invisible spacer */
+    td.m-lower { background: rgba(255,255,255,0.012); }
+
+    /* Diagonal — zone colour */
+    td.m-diag {
+      font-size: 11px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    /* Relationship cell colours */
+    td.m-A { background: #b91c1c; color: #ffffff; }
+    td.m-E { background: #c2410c; color: #ffffff; }
+    td.m-I { background: #15803d; color: #ffffff; }
+    td.m-O { background: #1d4ed8; color: #ffffff; }
+    td.m-X {
+      background: #111827;
+      color: #d1d5db;
+      outline: 1px dashed #6b7280;
+      outline-offset: -3px;
+    }
+    td.m-U { background: rgba(255,255,255,.06); color: #6b7280; font-size: 10px; }
+
+    /* Hover highlight */
+    .muther-table td.m-cell:not(.m-lower):not(.m-diag):hover {
+      filter: brightness(1.35);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside id="sidebar">
+
+    <header id="sb-header">
+      <div id="sb-logo">SLP</div>
+      <div id="sb-titles">
+        <p id="sb-title">Layout Simulator</p>
+        <p id="sb-sub">Plant Layout</p>
+      </div>
+    </header>
+
+    <!-- Zonas Funcionales -->
+    <section class="sb-card">
+      <h3 class="sc-label">Functional Zones</h3>
+      <div id="zone-legend">
+        <div class="zone-row"><div class="zone-dot" style="background:#1e4d8c"></div><span>Production (1,2,3,4,5,7,10)</span></div>
+        <div class="zone-row"><div class="zone-dot" style="background:#7a3f00"></div><span>Logistics (6,17)</span></div>
+        <div class="zone-row"><div class="zone-dot" style="background:#0e4a22"></div><span>Administrative (9,11,12,14,15)</span></div>
+        <div class="zone-row"><div class="zone-dot" style="background:#5a1280"></div><span>Services (16)</span></div>
+        <div class="zone-row"><div class="zone-dot" style="background:#3a3a18"></div><span>Sec./Free (8,13)</span></div>
+      </div>
+    </section>
+
+    <!-- Tabla de Áreas -->
+    <section class="sb-card sb-grow">
+      <h3 class="sc-label">Areas</h3>
+      <div id="tbl-scroll">
+        <table id="area-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Area</th>
+              <th>Zone</th>
+            </tr>
+          </thead>
+          <tbody id="area-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Rutas y Flujos de Movimiento -->
+    <section class="sb-card">
+      <h3 class="sc-label">Visualize Routes</h3>
+      <div class="route-filters">
+        <button class="route-toggle rt-mat"   id="btn-route-mat"   onclick="toggleRoute('mat')">
+          <span class="route-dot" style="background:#C97C2A"></span>
+          <span class="route-btn-body">
+            <span class="route-btn-title">Material Flow</span>
+            <span class="route-btn-seq">17→6→7→3→4→5→6</span>
+          </span>
+        </button>
+        <button class="route-toggle rt-maint" id="btn-route-maint" onclick="toggleRoute('maint')">
+          <span class="route-dot" style="background:#5294C8"></span>
+          <span class="route-btn-body">
+            <span class="route-btn-title">Maintenance</span>
+            <span class="route-btn-seq">1→10→{2, 3, 4}</span>
+          </span>
+        </button>
+        <button class="route-toggle rt-admin" id="btn-route-admin" onclick="toggleRoute('admin')">
+          <span class="route-dot" style="background:#4A9860"></span>
+          <span class="route-btn-body">
+            <span class="route-btn-title">Administrative / Visits</span>
+            <span class="route-btn-seq">14→{9, 11, 12}→16</span>
+          </span>
+        </button>
+        <button class="route-toggle rt-evac"  id="btn-route-evac"  onclick="toggleRoute('evac')">
+          <span class="route-dot" style="background:#C84848"></span>
+          <span class="route-btn-body">
+            <span class="route-btn-title">Evacuation</span>
+            <span class="route-btn-seq">Prod.→⚠8 | Admin→⚠13</span>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <footer id="sb-footer">
+      <span>↔ Hover over an area for more info</span>
+    </footer>
+
+  </aside>
+  <!-- ══════════════ FIN SIDEBAR ══════════════ -->
+
+  <!-- ══════════════ PLANTA ══════════════ -->
+  <main id="plant-area">
+
+    <!-- Tab navigation -->
+    <div class="pl-tabs">
+      <button class="pl-tab-btn active" data-tab="floor">Floor Plan</button>
+      <button class="pl-tab-btn" data-tab="muther">Muther Chart</button>
+    </div>
+
+    <!-- Tab: Floor Plan -->
+    <div id="tab-floor" class="pl-tab-panel active">
+    <div class="pl-svg-wrap">
+      <!-- viewBox 720×510 preserves exact original layout -->
+      <svg id="croquis" viewBox="0 0 720 510" role="img" xmlns="http://www.w3.org/2000/svg">
+        <title>SLP Layout — Industrial Plant (17 areas)</title>
+        <desc>Proposed distribution of 17 areas according to the SLP analysis.</desc>
+
+        <!-- ══ OUTER WALL ══ -->
+        <rect x="14" y="14" width="692" height="468" rx="5"
+              fill="none" stroke="#3a4a5a" stroke-width="2"/>
+
+        <!-- ══ ZONE BACKGROUND OVERLAYS ══ -->
+        <!-- Logistics -->
+        <rect x="15" y="15" width="499" height="90" rx="3"
+              fill="rgba(122,63,0,0.06)" stroke="rgba(184,96,16,0.22)"
+              stroke-width="1" stroke-dasharray="5 4"/>
+        <text x="20" y="27" font-size="8" fill="rgba(184,96,16,0.55)"
+              font-family="'Inter',system-ui,sans-serif" font-weight="700"
+              letter-spacing="0.09em">LOGISTICS</text>
+
+        <!-- Production -->
+        <rect x="15" y="107" width="499" height="288" rx="3"
+              fill="rgba(30,77,140,0.06)" stroke="rgba(45,106,184,0.20)"
+              stroke-width="1" stroke-dasharray="6 5"/>
+        <text x="20" y="120" font-size="8" fill="rgba(45,106,184,0.60)"
+              font-family="'Inter',system-ui,sans-serif" font-weight="700"
+              letter-spacing="0.09em">PRODUCTION</text>
+
+        <!-- Admin -->
+        <rect x="516" y="73" width="188" height="330" rx="3"
+              fill="rgba(14,74,34,0.06)" stroke="rgba(26,120,56,0.22)"
+              stroke-width="1" stroke-dasharray="6 5"/>
+        <text x="520" y="86" font-size="8" fill="rgba(26,120,56,0.60)"
+              font-family="'Inter',system-ui,sans-serif" font-weight="700"
+              letter-spacing="0.09em">ADMINISTRATION</text>
+
+        <!-- ══ ROW 1 — LOGISTICS ══ -->
+
+        <!-- 17: Carga y Descarga -->
+        <g class="area-room" data-id="17">
+          <rect x="15" y="15" width="132" height="90" fill="#7a3f00" stroke="#b86010" stroke-width="1" rx="2"/>
+          <text font-size="10" font-weight="600" fill="#f0c070"
+                text-anchor="middle" font-family="'Inter',system-ui,sans-serif" x="81" y="53">17. Loading &</text>
+          <text font-size="10" font-weight="600" fill="#f0c070"
+                text-anchor="middle" font-family="'Inter',system-ui,sans-serif" x="81" y="67">Unloading</text>
+        </g>
+
+        <!-- 6: Almacén -->
+        <g class="area-room" data-id="6">
+          <rect x="149" y="15" width="164" height="90" fill="#7a3f00" stroke="#b86010" stroke-width="1" rx="2"/>
+          <text font-size="11" font-weight="600" fill="#f0c070"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="231" y="60">6. Warehouse</text>
+        </g>
+
+        <!-- 13: Punto de Reunión (top-right) -->
+        <g class="area-room" data-id="13">
+          <rect x="516" y="15" width="188" height="56" fill="#3a3a18" stroke="#6a6a30" stroke-width="1" rx="2"/>
+          <text font-size="10.5" font-weight="600" fill="#d4d470"
+                text-anchor="middle" font-family="'Inter',system-ui,sans-serif" x="610" y="38">13. Meeting</text>
+          <text font-size="10.5" font-weight="600" fill="#d4d470"
+                text-anchor="middle" font-family="'Inter',system-ui,sans-serif" x="610" y="53">Point</text>
+        </g>
+
+        <!-- ══ ROW 2 ══ -->
+
+        <!-- 2: Maq. Convencional / Soldadura (tall, rows 2+3) -->
+        <g class="area-room" data-id="2">
+          <rect x="15" y="107" width="132" height="162" fill="#1e4d8c" stroke="#2d6ab8" stroke-width="1" rx="2"/>
+          <text font-size="9.5" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" font-family="'Inter',system-ui,sans-serif" x="81" y="180">2. Conv. Mach./</text>
+          <text font-size="9.5" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" font-family="'Inter',system-ui,sans-serif" x="81" y="193">Welding</text>
+        </g>
+
+        <!-- 10: Automatización -->
+        <g class="area-room" data-id="10">
+          <rect x="149" y="107" width="164" height="78" fill="#1e4d8c" stroke="#2d6ab8" stroke-width="1" rx="2"/>
+          <text font-size="10.5" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="231" y="146">10. Automation</text>
+        </g>
+
+        <!-- 4: Ensamble -->
+        <g class="area-room" data-id="4">
+          <rect x="315" y="107" width="118" height="78" fill="#1e4d8c" stroke="#2d6ab8" stroke-width="1" rx="2"/>
+          <text font-size="11" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="374" y="146">4. Assembly</text>
+        </g>
+
+        <!-- 5: Calidad -->
+        <g class="area-room" data-id="5">
+          <rect x="435" y="107" width="78" height="78" fill="#1e4d8c" stroke="#2d6ab8" stroke-width="1" rx="2"/>
+          <text font-size="10" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="474" y="140">5.</text>
+          <text font-size="10" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="474" y="154">Quality</text>
+        </g>
+
+        <!-- 14: Recepción -->
+        <g class="area-room" data-id="14">
+          <rect x="516" y="73" width="90" height="68" fill="#0e4a22" stroke="#1a7838" stroke-width="1" rx="2"/>
+          <text font-size="10" font-weight="600" fill="#7ae8a0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="561" y="107">14. Reception</text>
+        </g>
+
+        <!-- 12: Sala de Juntas -->
+        <g class="area-room" data-id="12">
+          <rect x="608" y="73" width="96" height="68" fill="#0e4a22" stroke="#1a7838" stroke-width="1" rx="2"/>
+          <text font-size="10" font-weight="600" fill="#7ae8a0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="656" y="107">12. Meeting Room</text>
+        </g>
+
+        <!-- ══ ROW 3 ══ -->
+
+        <!-- 1: Mantenimiento (left, rows 3+4) -->
+        <g class="area-room" data-id="1">
+          <rect x="15" y="271" width="132" height="124" fill="#1e4d8c" stroke="#2d6ab8" stroke-width="1" rx="2"/>
+          <text font-size="10.5" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="81" y="333">1. Maint.</text>
+        </g>
+
+        <!-- 3: Maquinado CNC -->
+        <g class="area-room" data-id="3">
+          <rect x="149" y="187" width="284" height="108" fill="#1e4d8c" stroke="#2d6ab8" stroke-width="1" rx="2"/>
+          <text font-size="11.5" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="291" y="241">3. CNC Machining </text>
+        </g>
+
+        <!-- 8: Zona Libre (rows 3+4) -->
+        <g class="area-room" data-id="8">
+          <rect x="435" y="187" width="78" height="208" fill="#3a3a18" stroke="#6a6a30" stroke-width="1" rx="2"/>
+          <text font-size="10" font-weight="600" fill="#d4d470"
+                text-anchor="middle" font-family="'Inter',system-ui,sans-serif" x="474" y="281">8. Free</text>
+          <text font-size="10" font-weight="600" fill="#d4d470"
+                text-anchor="middle" font-family="'Inter',system-ui,sans-serif" x="474" y="295">Zone</text>
+        </g>
+
+        <!-- 9: Oficinas (rows 2–4) -->
+        <g class="area-room" data-id="9">
+          <rect x="516" y="143" width="188" height="152" fill="#0e4a22" stroke="#1a7838" stroke-width="1" rx="2"/>
+          <text font-size="12" font-weight="600" fill="#7ae8a0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="610" y="219">9. Office</text>
+        </g>
+
+        <!-- ══ ROW 4 — CORTE + SERVICES ══ -->
+
+        <!-- 7: Corte -->
+        <g class="area-room" data-id="7">
+          <rect x="149" y="297" width="284" height="100" fill="#1e4d8c" stroke="#2d6ab8" stroke-width="1" rx="2"/>
+          <text font-size="12" font-weight="600" fill="#9dccf0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="291" y="347">7. Cutting</text>
+        </g>
+
+        <!-- 11: Ventas -->
+        <g class="area-room" data-id="11">
+          <rect x="516" y="297" width="92" height="104" fill="#0e4a22" stroke="#1a7838" stroke-width="1" rx="2"/>
+          <text font-size="10.5" font-weight="600" fill="#7ae8a0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="562" y="349">11. Selling Dpt.</text>
+        </g>
+
+        <!-- 15: RRHH -->
+        <g class="area-room" data-id="15">
+          <rect x="610" y="297" width="92" height="50" fill="#0e4a22" stroke="#1a7838" stroke-width="1" rx="2"/>
+          <text font-size="10" font-weight="600" fill="#7ae8a0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="656" y="322">15. RRHH</text>
+        </g>
+
+        <!-- 16: Baños -->
+        <g class="area-room" data-id="16">
+          <rect x="610" y="349" width="92" height="52" fill="#5a1280" stroke="#8a28c0" stroke-width="1" rx="2"/>
+          <text font-size="10" font-weight="600" fill="#d0a0f0"
+                text-anchor="middle" dominant-baseline="central"
+                font-family="'Inter',system-ui,sans-serif" x="656" y="375">16. Restrooms</text>
+        </g>
+
+        <!-- ══ CORRIDOR / BOTTOM STRIP ══ -->
+        <rect x="15" y="399" width="498" height="80" rx="2"
+              fill="rgba(255,255,255,0.025)" stroke="rgba(120,145,170,0.22)"
+              stroke-width="1" stroke-dasharray="6 5"/>
+        <text font-size="9" fill="rgba(130,150,170,0.5)"
+              text-anchor="middle" dominant-baseline="central"
+              font-family="'Inter',system-ui,sans-serif" x="264" y="439">— Corridor / Main Hall —</text>
+
+
+        <!-- ══ ROUTE OVERLAYS ══ -->
+        <defs>
+          <marker id="ar-mat"   viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#C97C2A"/>
+          </marker>
+          <marker id="ar-maint" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#5294C8"/>
+          </marker>
+          <marker id="ar-admin" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#4A9860"/>
+          </marker>
+          <marker id="ar-evac"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#C84848"/>
+          </marker>
+          <filter id="route-glow" x="0" y="0" width="720" height="510" filterUnits="userSpaceOnUse">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- ── Route 1 · Flujo de Materiales (orange) ─────────────────────
+             Secuencia: 17 → 6 → 7 → 3 → 4 → 5 → 6
+             Badges at segment midpoints show step order (1–5 + ↩ return)  -->
+        <g id="route-mat" style="display:none">
+          <line x1="81"  y1="60"  x2="231" y2="60"  stroke="#C97C2A" stroke-width="2.8" class="rs" marker-end="url(#ar-mat)"/>
+          <line x1="231" y1="60"  x2="291" y2="347" stroke="#C97C2A" stroke-width="2.8" class="rs" marker-end="url(#ar-mat)"/>
+          <line x1="291" y1="347" x2="291" y2="241" stroke="#C97C2A" stroke-width="2.8" class="rs" marker-end="url(#ar-mat)"/>
+          <line x1="291" y1="241" x2="374" y2="146" stroke="#C97C2A" stroke-width="2.8" class="rs" marker-end="url(#ar-mat)"/>
+          <line x1="374" y1="146" x2="474" y2="146" stroke="#C97C2A" stroke-width="2.8" class="rs" marker-end="url(#ar-mat)"/>
+          <!-- Return arc — lighter/dashed to distinguish from main flow -->
+          <line x1="474" y1="146" x2="231" y2="60"  stroke="#C97C2A" stroke-width="2" stroke-opacity=".50" stroke-dasharray="5 7" class="rs" marker-end="url(#ar-mat)"/>
+          <!-- Step badges: dark pill with orange number at each segment midpoint -->
+          <g font-family="'Inter',system-ui,sans-serif" font-weight="800" text-anchor="middle" dominant-baseline="central">
+            <circle cx="156" cy="60"  r="10" fill="rgba(6,10,20,.93)" stroke="#C97C2A" stroke-width="2"/>
+            <text   x="156" y="60"   font-size="10" fill="#C97C2A">1</text>
+            <circle cx="261" cy="204" r="10" fill="rgba(6,10,20,.93)" stroke="#C97C2A" stroke-width="2"/>
+            <text   x="261" y="204"  font-size="10" fill="#C97C2A">2</text>
+            <circle cx="291" cy="294" r="10" fill="rgba(6,10,20,.93)" stroke="#C97C2A" stroke-width="2"/>
+            <text   x="291" y="294"  font-size="10" fill="#C97C2A">3</text>
+            <circle cx="332" cy="194" r="10" fill="rgba(6,10,20,.93)" stroke="#C97C2A" stroke-width="2"/>
+            <text   x="332" y="194"  font-size="10" fill="#C97C2A">4</text>
+            <circle cx="424" cy="146" r="10" fill="rgba(6,10,20,.93)" stroke="#C97C2A" stroke-width="2"/>
+            <text   x="424" y="146"  font-size="10" fill="#C97C2A">5</text>
+            <!-- Return badge — dashed border to match the arc style -->
+            <circle cx="352" cy="103" r="10" fill="rgba(6,10,20,.80)" stroke="#C97C2A" stroke-width="1.5" stroke-dasharray="3 2" stroke-opacity=".65"/>
+            <text   x="352" y="104"  font-size="13" fill="#C97C2A" opacity=".70">↩</text>
+          </g>
+        </g>
+
+        <!-- ── Route 2 · Mantenimiento (blue) ──────────────────────────────
+             Secuencia: 1 → 10 → { 2, 3, 4 }
+             Badge "1" on main leg; badge "2" on each parallel branch        -->
+        <g id="route-maint" style="display:none">
+          <!-- Main leg: Maintenance → Automation (hub) -->
+          <line x1="81"  y1="333" x2="231" y2="146" stroke="#5294C8" stroke-width="2.8" class="rs" marker-end="url(#ar-maint)"/>
+          <!-- Fan-out branches from Automation hub -->
+          <line x1="231" y1="146" x2="81"  y2="188" stroke="#5294C8" stroke-width="2.4" class="rs" marker-end="url(#ar-maint)"/>
+          <line x1="231" y1="146" x2="291" y2="241" stroke="#5294C8" stroke-width="2.4" class="rs" marker-end="url(#ar-maint)"/>
+          <line x1="231" y1="146" x2="374" y2="146" stroke="#5294C8" stroke-width="2.4" class="rs" marker-end="url(#ar-maint)"/>
+          <!-- Hub marker: small ring at node 10 (231,146) to highlight the fork -->
+          <circle cx="231" cy="146" r="7" fill="none" stroke="#5294C8" stroke-width="2" stroke-opacity=".7"/>
+          <!-- Step badges -->
+          <g font-family="'Inter',system-ui,sans-serif" font-weight="800" text-anchor="middle" dominant-baseline="central">
+            <circle cx="156" cy="240" r="10" fill="rgba(6,10,20,.93)" stroke="#5294C8" stroke-width="2"/>
+            <text   x="156" y="240"  font-size="10" fill="#5294C8">1</text>
+            <!-- All three branches are step 2 (parallel dispatch) -->
+            <circle cx="156" cy="167" r="10" fill="rgba(6,10,20,.93)" stroke="#5294C8" stroke-width="2"/>
+            <text   x="156" y="167"  font-size="10" fill="#5294C8">2</text>
+            <circle cx="261" cy="194" r="10" fill="rgba(6,10,20,.93)" stroke="#5294C8" stroke-width="2"/>
+            <text   x="261" y="194"  font-size="10" fill="#5294C8">2</text>
+            <circle cx="303" cy="146" r="10" fill="rgba(6,10,20,.93)" stroke="#5294C8" stroke-width="2"/>
+            <text   x="303" y="146"  font-size="10" fill="#5294C8">2</text>
+          </g>
+        </g>
+
+        <!-- ── Route 3 · Administrativo / Visitas (green) ──────────────────
+             Secuencia: 14 → { 9, 11, 12 } → 16
+             Badge "1" on Reception fan-out; badge "2" on convergence to Restrooms -->
+        <g id="route-admin" style="display:none">
+          <!-- Fan-out from Reception (14) -->
+          <line x1="561" y1="107" x2="562" y2="349" stroke="#4A9860" stroke-width="2.8" class="rs" marker-end="url(#ar-admin)"/>
+          <line x1="561" y1="107" x2="656" y2="107" stroke="#4A9860" stroke-width="2.8" class="rs" marker-end="url(#ar-admin)"/>
+          <line x1="561" y1="107" x2="610" y2="219" stroke="#4A9860" stroke-width="2.8" class="rs" marker-end="url(#ar-admin)"/>
+          <!-- Convergence to Restrooms (16) -->
+          <line x1="562" y1="349" x2="656" y2="375" stroke="#4A9860" stroke-width="2.4" class="rs" marker-end="url(#ar-admin)"/>
+          <line x1="656" y1="107" x2="656" y2="375" stroke="#4A9860" stroke-width="2.4" class="rs" marker-end="url(#ar-admin)"/>
+          <line x1="610" y1="219" x2="656" y2="375" stroke="#4A9860" stroke-width="2.4" class="rs" marker-end="url(#ar-admin)"/>
+          <!-- Hub marker at node 14 (561,107) -->
+          <circle cx="561" cy="107" r="7" fill="none" stroke="#4A9860" stroke-width="2" stroke-opacity=".7"/>
+          <!-- Step badges -->
+          <g font-family="'Inter',system-ui,sans-serif" font-weight="800" text-anchor="middle" dominant-baseline="central">
+            <!-- Fan-out badges (step 1) at midpoints of 14→{11,12,9} -->
+            <circle cx="562" cy="228" r="10" fill="rgba(6,10,20,.93)" stroke="#4A9860" stroke-width="2"/>
+            <text   x="562" y="228"  font-size="10" fill="#4A9860">1</text>
+            <circle cx="609" cy="107" r="10" fill="rgba(6,10,20,.93)" stroke="#4A9860" stroke-width="2"/>
+            <text   x="609" y="107"  font-size="10" fill="#4A9860">1</text>
+            <circle cx="586" cy="163" r="10" fill="rgba(6,10,20,.93)" stroke="#4A9860" stroke-width="2"/>
+            <text   x="586" y="163"  font-size="10" fill="#4A9860">1</text>
+            <!-- Convergence badges (step 2) at midpoints of {11,12,9}→16 -->
+            <circle cx="609" cy="362" r="10" fill="rgba(6,10,20,.93)" stroke="#4A9860" stroke-width="2"/>
+            <text   x="609" y="362"  font-size="10" fill="#4A9860">2</text>
+            <circle cx="656" cy="241" r="10" fill="rgba(6,10,20,.93)" stroke="#4A9860" stroke-width="2"/>
+            <text   x="656" y="241"  font-size="10" fill="#4A9860">2</text>
+            <circle cx="633" cy="297" r="10" fill="rgba(6,10,20,.93)" stroke="#4A9860" stroke-width="2"/>
+            <text   x="633" y="297"  font-size="10" fill="#4A9860">2</text>
+          </g>
+        </g>
+
+        <!-- ── Route 4 · Evacuación (red) ─────────────────────────────────
+             Prod (1,2,3,4,5,7,10) → Zona Segura 8
+             Admin (9,11,12,14,15) → Punto de Reunión 13
+             Pulsing rings mark the two assembly points               -->
+        <g id="route-evac" style="display:none">
+          <!-- Production → Free Zone (8) -->
+          <line x1="81"  y1="333" x2="474" y2="291" stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="81"  y1="188" x2="474" y2="291" stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="291" y1="241" x2="474" y2="291" stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="374" y1="146" x2="474" y2="291" stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="474" y1="146" x2="474" y2="291" stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="291" y1="347" x2="474" y2="291" stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="231" y1="146" x2="474" y2="291" stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <!-- Admin → Meeting Point (13) -->
+          <line x1="610" y1="219" x2="610" y2="43"  stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="562" y1="349" x2="610" y2="43"  stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="656" y1="107" x2="610" y2="43"  stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="561" y1="107" x2="610" y2="43"  stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <line x1="656" y1="322" x2="610" y2="43"  stroke="#C84848" stroke-width="2" class="rs-slow" marker-end="url(#ar-evac)"/>
+          <!-- ▼ Pulsing assembly-point rings — outer ring expands, inner stays fixed -->
+          <!-- Assembly 1: Free Zone (8) at (474, 291) -->
+          <circle cx="474" cy="291" r="18" fill="rgba(200,72,72,.08)" stroke="#C84848" stroke-width="2.5">
+            <animate attributeName="r"       values="14;34;14" dur="1.8s" repeatCount="indefinite" calcMode="ease-in-out"/>
+            <animate attributeName="opacity" values=".8;.07;.8"  dur="1.8s" repeatCount="indefinite" calcMode="ease-in-out"/>
+          </circle>
+          <circle cx="474" cy="291" r="12" fill="rgba(200,72,72,.18)" stroke="#C84848" stroke-width="2"/>
+          <text x="474" y="291" font-family="'Inter',system-ui,sans-serif" font-size="11"
+                font-weight="900" text-anchor="middle" dominant-baseline="central" fill="#C84848">⚠</text>
+          <!-- Assembly 2: Meeting Point (13) at (610, 43) -->
+          <circle cx="610" cy="43" r="15" fill="rgba(200,72,72,.08)" stroke="#C84848" stroke-width="2.5">
+            <animate attributeName="r"       values="12;28;12" dur="1.8s" repeatCount="indefinite" calcMode="ease-in-out"/>
+            <animate attributeName="opacity" values=".8;.07;.8"  dur="1.8s" repeatCount="indefinite" calcMode="ease-in-out"/>
+          </circle>
+          <circle cx="610" cy="43" r="10" fill="rgba(200,72,72,.18)" stroke="#C84848" stroke-width="2"/>
+          <text x="610" y="43" font-family="'Inter',system-ui,sans-serif" font-size="10"
+                font-weight="900" text-anchor="middle" dominant-baseline="central" fill="#C84848">⚠</text>
+        </g>
+
+      </svg>
+    </div><!-- .pl-svg-wrap -->
+    </div><!-- #tab-floor -->
+
+    <!-- Tab: Muther Chart -->
+    <div id="tab-muther" class="pl-tab-panel">
+      <div class="muther-wrap">
+        <p class="muther-title">Relationship Chart — Muther Half-Matrix (17 Areas)</p>
+        <div class="muther-legend" id="muther-legend"></div>
+        <div id="muther-container"></div>
+      </div>
+    </div><!-- #tab-muther -->
+
+    <div id="tt-plant"></div>
+  </main>
+  <!-- ══════════════ FIN PLANTA ══════════════ -->
+
+</div><!-- #app -->
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════
+   DATA
+   ═══════════════════════════════════ */
+const AREAS = [
+  { id:1,  name:'Maintenance',          slp:22, zone:'PROD'  },
+  { id:2,  name:'Machining/Welding',   slp:25, zone:'PROD'  },
+  { id:3,  name:'CNC Machining',          slp:26, zone:'PROD'  },
+  { id:4,  name:'Assembly',               slp:28, zone:'PROD'  },
+  { id:5,  name:'Quality',                slp:21, zone:'PROD'  },
+  { id:6,  name:'Storage',                slp:26, zone:'LOG'   },
+  { id:7,  name:'Cutting',                  slp:22, zone:'PROD'  },
+  { id:8,  name:'Free Zone',             slp:4,  zone:'SEG'   },
+  { id:9,  name:'Office',               slp:23, zone:'ADMIN' },
+  { id:10, name:'Automation',         slp:22, zone:'PROD'  },
+  { id:11, name:'Selling Dpt.',                 slp:16, zone:'ADMIN' },
+  { id:12, name:'Meeting Room',         slp:14, zone:'ADMIN' },
+  { id:13, name:'Meeting Point',       slp:17, zone:'SEG'   },
+  { id:14, name:'Reception',              slp:13, zone:'ADMIN' },
+  { id:15, name:'RRHH',       slp:13, zone:'ADMIN' },
+  { id:16, name:'Restrooms',                  slp:19, zone:'SERV'  },
+  { id:17, name:'Loading & Unloading',       slp:21, zone:'LOG'   },
+];
+
+const ZONES = {
+  PROD:  { fill:'#1e4d8c', stroke:'#2d6ab8', text:'#9dccf0', label:'Production'    },
+  LOG:   { fill:'#7a3f00', stroke:'#b86010', text:'#f0c070', label:'Logistics'      },
+  ADMIN: { fill:'#0e4a22', stroke:'#1a7838', text:'#7ae8a0', label:'Administrative' },
+  SERV:  { fill:'#5a1280', stroke:'#8a28c0', text:'#d0a0f0', label:'Services'      },
+  SEG:   { fill:'#3a3a18', stroke:'#6a6a30', text:'#d4d470', label:'Free Segments'     },
+};
+
+/* ═══════════════════════════════════
+   BUILD SIDEBAR TABLE
+   ═══════════════════════════════════ */
+(function buildTable() {
+  const tbody = document.getElementById('area-tbody');
+  AREAS.forEach((area, i) => {
+    const zone = ZONES[area.zone];
+    const tr = document.createElement('tr');
+    tr.id = `row-${i}`;
+    tr.innerHTML =
+      `<td class="td-id">${area.id}</td>` +
+      `<td class="td-name">${area.name}</td>` +
+      `<td><div class="td-zone">` +
+        `<span class="td-zone-dot" style="background:${zone.fill}"></span>` +
+        `<span>${zone.label}</span>` +
+      `</div></td>`;
+    tbody.appendChild(tr);
+  });
+})();
+
+/* ═══════════════════════════════════
+   TOOLTIP + HOVER INTERACTIONS
+   ═══════════════════════════════════ */
+const tt    = document.getElementById('tt-plant');
+const rooms = document.querySelectorAll('.area-room');
+
+/* Build a quick lookup: data-id → AREAS entry index */
+const areaById = {};
+AREAS.forEach((a, i) => { areaById[a.id] = i; });
+
+let lastHighlightedRow = null;
+
+function clearRowHighlight() {
+  if (lastHighlightedRow) {
+    lastHighlightedRow.classList.remove('row-drag');
+    lastHighlightedRow = null;
+  }
+}
+
+function highlightRow(idx) {
+  clearRowHighlight();
+  const row = document.getElementById(`row-${idx}`);
+  if (row) {
+    row.classList.add('row-drag');
+    lastHighlightedRow = row;
+  }
+}
+
+/* Single mousemove listener on the SVG wrapper for performance */
+document.getElementById('croquis').addEventListener('mousemove', function(e) {
+  /* Walk up from the target to find an .area-room group */
+  let el = e.target;
+  while (el && el !== this) {
+    if (el.classList && el.classList.contains('area-room')) break;
+    el = el.parentElement;
+  }
+
+  if (!el || el === this) {
+    tt.style.opacity = '0';
+    clearRowHighlight();
+    return;
+  }
+
+  const id   = parseInt(el.getAttribute('data-id'), 10);
+  const idx  = areaById[id];
+  if (idx === undefined) return;
+
+  const area = AREAS[idx];
+  const zone = ZONES[area.zone];
+
+  /* Tooltip content */
+  tt.innerHTML =
+    `<strong>${area.id}. ${area.name}</strong>` +
+    `<div class="tt-zone">${zone.label}</div>` +
+    `<div style="margin-top:4px;font-size:10.5px;color:#6a82a0">` +
+      `SLP: <span style="color:#c8d8ea;font-weight:600">${area.slp} pts</span>` +
+    `</div>`;
+
+  /* Position tooltip near cursor, keep on screen */
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let tx = e.clientX + 14, ty = e.clientY - 8;
+  tt.style.opacity = '0.01'; /* momentarily visible to measure */
+  const tw = tt.offsetWidth  || 160;
+  const th = tt.offsetHeight || 70;
+  if (tx + tw + 6 > vw) tx = e.clientX - tw - 14;
+  if (ty + th + 6 > vh) ty = e.clientY - th - 8;
+  tt.style.left    = tx + 'px';
+  tt.style.top     = ty + 'px';
+  tt.style.opacity = '1';
+
+  /* Highlight sidebar row */
+  highlightRow(idx);
+});
+
+document.getElementById('croquis').addEventListener('mouseleave', function() {
+  tt.style.opacity = '0';
+  clearRowHighlight();
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   MUTHER HALF-MATRIX  — relationship data (upper triangle)
+   Same rules as activity_slp.js:
+   · U→X : Admin(9,11,12,14,15) vs noise/traffic(2,17)
+   · U→O : Restroom(16) and Meeting Point(13) vs any previous U
+   ═══════════════════════════════════════════════════════════════ */
+const TRIANGLE = [
+  /* i=0  Area 1  vs 2-17 */
+  'I','I','I','O','E','I','U','O','A','U','U','O','U','U','O','E',
+  /* i=1  Area 2  vs 3-17  — Admin nodes get X */
+  'E','A','I','E','A','U','X','I','X','X','O','X','X','O','E',
+  /* i=2  Area 3  vs 4-17 */
+  'A','I','E','A','U','U','E','U','U','O','U','U','O','E',
+  /* i=3  Area 4  vs 5-17 */
+  'A','A','I','U','O','E','U','U','O','U','U','O','I',
+  /* i=4  Area 5  vs 6-17 */
+  'E','I','U','I','I','U','U','O','U','U','O','O',
+  /* i=5  Area 6  vs 7-17  — Mtg.Pt.(j=12) and Restroom(j=15) get O */
+  'E','U','O','I','U','U','O','U','U','O','A',
+  /* i=6  Area 7  vs 8-17 */
+  'U','U','O','U','U','O','U','U','O','I',
+  /* i=7  Area 8  vs 9-17 */
+  'U','U','U','U','E','U','U','O','U',
+  /* i=8  Area 9  vs 10-17 */
+  'I','A','E','O','I','E','I','O',
+  /* i=9  Area 10 vs 11-17 */
+  'U','U','O','U','U','O','O',
+  /* i=10 Area 11 vs 12-17  — Loading(j=16) gets X */
+  'A','O','E','I','I','X',
+  /* i=11 Area 12 vs 13-17  — Loading(j=16) gets X */
+  'O','I','I','I','X',
+  /* i=12 Area 13 vs 14-17 */
+  'O','O','O','O',
+  /* i=13 Area 14 vs 15-17  — Loading(j=16) gets X */
+  'E','I','X',
+  /* i=14 Area 15 vs 16-17  — Loading(j=16) gets X */
+  'I','X',
+  /* i=15 Area 16 vs 17     — Restroom gets O */
+  'O',
+];
+
+function getRelation(i, j) {
+  if (i === j) return '-';
+  if (i > j) { const t = i; i = j; j = t; }
+  return TRIANGLE[i * 17 - (i * (i + 1) >> 1) + j - i - 1];
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUILD MUTHER DIAGRAM
+   ═══════════════════════════════════════════════════════════════ */
+(function buildMuther() {
+  /* Legend */
+  const LEGEND = [
+    { code:'A', bg:'#b91c1c', text:'#ffffff', label:'A — Absolutely necessary'  },
+    { code:'E', bg:'#c2410c', text:'#ffffff', label:'E — Especially important'  },
+    { code:'I', bg:'#15803d', text:'#ffffff', label:'I — Important'              },
+    { code:'O', bg:'#1d4ed8', text:'#ffffff', label:'O — Ordinary closeness'     },
+    { code:'X', bg:'#111827', text:'#d1d5db', label:'X — Not desirable'          },
+    { code:'U', bg:'rgba(255,255,255,.06)', text:'#6b7280', label:'U — Unimportant' },
+  ];
+  const lgWrap = document.getElementById('muther-legend');
+  LEGEND.forEach(l => {
+    const div = document.createElement('div');
+    div.className = 'ml-item';
+    div.innerHTML =
+      `<span class="ml-swatch" style="background:${l.bg};color:${l.text}">${l.code}</span>` +
+      `<span>${l.label}</span>`;
+    lgWrap.appendChild(div);
+  });
+
+  const container = document.getElementById('muther-container');
+  const table = document.createElement('table');
+  table.className = 'muther-table';
+
+  /* ── Column header row ── */
+  const thead = document.createElement('thead');
+  const hrow  = document.createElement('tr');
+
+  /* Corner placeholder */
+  const corner = document.createElement('th');
+  corner.className = 'corner-hd';
+  hrow.appendChild(corner);
+
+  /* One header per area */
+  for (let j = 0; j < 17; j++) {
+    const th = document.createElement('th');
+    th.className = 'col-hd';
+    const inner = document.createElement('span');
+    inner.className = 'col-hd-inner';
+    inner.innerHTML = `<strong>${AREAS[j].id}</strong><br>${AREAS[j].name}`;
+    th.appendChild(inner);
+    hrow.appendChild(th);
+  }
+  thead.appendChild(hrow);
+  table.appendChild(thead);
+
+  /* ── Body rows ── */
+  const tbody = document.createElement('tbody');
+  for (let i = 0; i < 17; i++) {
+    const tr = document.createElement('tr');
+
+    /* Row header: area name */
+    const rh = document.createElement('td');
+    rh.className = 'row-hd';
+    rh.textContent = `${AREAS[i].id}. ${AREAS[i].name}`;
+    tr.appendChild(rh);
+
+    for (let j = 0; j < 17; j++) {
+      const td = document.createElement('td');
+      td.className = 'm-cell';
+
+      if (j < i) {
+        /* Lower triangle — blank */
+        td.classList.add('m-lower');
+      } else if (j === i) {
+        /* Diagonal — zone colour */
+        td.classList.add('m-diag');
+        const zone = ZONES[AREAS[i].zone];
+        td.style.background = zone.fill;
+        td.style.color       = zone.text;
+        td.textContent       = AREAS[i].id;
+        td.title             = `${AREAS[i].id}. ${AREAS[i].name} (${zone.label})`;
+      } else {
+        /* Upper triangle — relationship */
+        const code = getRelation(i, j);
+        td.classList.add(`m-${code}`);
+        td.textContent = code;
+        td.title = `${AREAS[i].name} ↔ ${AREAS[j].name}: ${code}`;
+      }
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+  container.appendChild(table);
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   TAB SWITCHING
+   ═══════════════════════════════════════════════════════════════ */
+document.querySelectorAll('.pl-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    document.querySelectorAll('.pl-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.pl-tab-panel').forEach(p =>
+      p.classList.toggle('active', p.id === 'tab-' + target)
+    );
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   ROUTE TOGGLES
+   ═══════════════════════════════════════════════════════════════ */
+function toggleRoute(type) {
+  const btn  = document.getElementById('btn-route-' + type);
+  const grp  = document.getElementById('route-' + type);
+  const on   = btn.classList.toggle('active');
+  grp.style.display = on ? '' : 'none';
+}
+</script>
+</body>
+</html>

@@ -209,9 +209,152 @@ code {
 
 /* ── PRINT ── */
 @media print {
-  body { background: #fff; color: #111; }
-  .portada { background: #111 !important; color: #fff; }
-  a { color: inherit; }
+  /* Reset de layout para impresión */
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    margin: 0;
+    padding: 0;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  /* Ocultar elementos no imprimibles */
+  nav,
+  button,
+  .btn-mock,
+  .bom-separator,
+  .flujo-arrow,
+  footer {
+    display: none !important;
+  }
+
+  /* Portada: mantener fondo oscuro para impresión */
+  .portada {
+    background: #111 !important;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Contenedor principal */
+  .contenedor {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* ── Evitar cortes dentro de contenedores importantes ── */
+  .card,
+  .bom-card,
+  .bom-general-card,
+  .bom,
+  .mockup,
+  .caja,
+  .caja-warn,
+  .caja-error,
+  .caja-info,
+  .caja-ok,
+  .alerta-ensamble,
+  .macro-seccion-header,
+  .termino,
+  .flujo,
+  .grid-2,
+  table,
+  img,
+  figure,
+  .imagen-paso,
+  .paso-body,
+  .paso-ensamble {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Evitar cortes dentro de filas y celdas de tabla */
+  tr,
+  td,
+  th {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Evitar cortes dentro de ítems de lista */
+  li,
+  .pasos li {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Evitar cortes dentro de bloques de código */
+  code,
+  pre {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* ── Evitar encabezados huérfanos al final de página ── */
+  h1, h2, h3, h4,
+  h2.seccion-titulo,
+  .paso-titulo,
+  .macro-seccion-titulo,
+  .bom-titulo {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Mantener encabezados con el contenido siguiente */
+  h1, h2, h3, h4 {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Secciones: permitir salto antes pero nunca dejar el título solo */
+  section {
+    page-break-before: auto;
+  }
+
+  /* Índice en su propia página */
+  .indice {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* Color de enlaces */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Cajas informativas: fondos pastel legibles en PDF */
+  .caja {
+    color: #111 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .caja-info {
+    background: #dbeafe !important;
+    border-left-color: #2563eb !important;
+  }
+  .caja-warn {
+    background: #fef9c3 !important;
+    border-left-color: #d97706 !important;
+  }
+  .caja-error {
+    background: #fee2e2 !important;
+    border-left-color: #dc2626 !important;
+  }
+  .caja-ok {
+    background: #dcfce7 !important;
+    border-left-color: #16a34a !important;
+  }
+
+  /* Texto dentro de las cajas también oscuro */
+  .caja p,
+  .caja span,
+  .caja strong,
+  .caja b {
+    color: #111 !important;
+  }
 }
 
 /* ── DIVIDER ── */

@@ -738,5 +738,49 @@
   </p>
 </footer>
 
+
+<!-- ══ BOTÓN EXPORTAR PDF ══ -->
+<style>
+  #btn-pdf {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: #dc2626;
+    color: #fff;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(220,38,38,0.45);
+    transition: background .15s, transform .1s, box-shadow .15s;
+    letter-spacing: 0.01em;
+  }
+  #btn-pdf:hover  { background: #b91c1c; box-shadow: 0 6px 24px rgba(220,38,38,0.55); transform: translateY(-1px); }
+  #btn-pdf:active { transform: translateY(0); }
+  #btn-pdf svg    { flex-shrink: 0; }
+
+  @media print {
+    #btn-pdf { display: none !important; }
+  }
+</style>
+
+<button id="btn-pdf" onclick="window.print()" title="Exportar a PDF">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="12" y1="18" x2="12" y2="12"/>
+    <line x1="9" y1="15" x2="15" y2="15"/>
+  </svg>
+  Exportar PDF
+</button>
+
 </body>
 </html>

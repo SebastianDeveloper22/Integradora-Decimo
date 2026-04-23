@@ -4,7 +4,7 @@
 (function () {
     "use strict";
 
-    const STRAPI_BASE = "http://192.168.1.32:1337";
+    const STRAPI_BASE = "http://172.20.108.129:1337";
     const STRAPI_URL  = STRAPI_BASE + "/api";
     const Carlitos    = "http://192.168.1.140/";
 
@@ -48,6 +48,11 @@
     const customModalMessage = document.getElementById("custom-modal-message");
     const btnCustomCancel    = document.getElementById("btn-custom-cancel");
     const btnCustomOk        = document.getElementById("btn-custom-ok");
+    // Modal corte foto
+    const modalCorteFoto        = document.getElementById("modal-corte-foto");
+    const modalCorteFotoContent = document.getElementById("modal-corte-foto-content");
+    const btnCerrarCorteFoto    = document.getElementById("btn-cerrar-corte-foto");
+    const btnPrintCorte         = document.getElementById("btn-print-corte");
     // Admin DOM
     const adminLblUsuario    = document.getElementById("admin-lbl-usuario");
     const btnAdminVolver     = document.getElementById("btn-admin-volver");
@@ -769,10 +774,9 @@
 
     async function generarCorte(corte, ahora) {
         try {
-            // Calcular rango: desde corte anterior hasta ahora
+            // Rango: desde corte anterior hasta ahora
             var desde = new Date(ahora);
             desde.setHours(corte.prevHora, 0, 0, 0);
-            // Si la hora de inicio es mayor que la actual, es del día anterior
             if (corte.prevHora >= corte.hora) {
                 desde.setDate(desde.getDate() - 1);
             }
@@ -782,29 +786,39 @@
                 + "&filters[createdAt][$lte]=" + encodeURIComponent(ahora.toISOString())
                 + "&pagination[pageSize]=200";
 
-            var data   = await fetchJSON(urlOrdenes);
-            var ordenes = data.data || [];
+            var dataOrdenes = await fetchJSON(urlOrdenes);
+            var ordenes = dataOrdenes.data || [];
 
-            var resumen;
-            if (ordenes.length === 0) {
-                resumen = "Sin órdenes registradas en este turno.";
-            } else {
-                resumen = ordenes.map(function (o) {
+            // Snapshot del inventario actual
+            var dataInv = await fetchJSON(STRAPI_URL + "/inventarios?pagination[pageSize]=200");
+            var inventario = (dataInv.data || []).map(function (item) {
+                var a = getAttributes(item);
+                return {
+                    n: a.Nombre      || "—",
+                    b: a.Codigo_Bin  || "—",
+                    s: Number(a.Cantidad) || 0,
+                    a: a.Area_Permitida  || "Almacén",
+                };
+            });
+
+            var payload = {
+                v: 2,
+                label: corte.label,
+                oc: ordenes.length,
+                ordenes: ordenes.map(function (o) {
                     var a = getAttributes(o);
-                    return (a.Usuario_Solicitante || "?") + " solicitó "
-                        + (a.Cantidad_Pedida || 1) + "x "
-                        + (a.Item_Nombre || a.Bin_Solicitado || "?")
-                        + " [" + (a.Bin_Solicitado || "") + "]"
-                        + " — " + formatearFecha(o.createdAt || a.createdAt);
-                }).join(" | ");
-            }
+                    return {
+                        u: a.Usuario_Solicitante || "?",
+                        q: a.Cantidad_Pedida     || 1,
+                        i: a.Item_Nombre         || a.Bin_Solicitado || "?",
+                        b: a.Bin_Solicitado      || "",
+                        t: o.createdAt           || a.createdAt,
+                    };
+                }),
+                inventario: inventario,
+            };
 
-            registrarLog(
-                "CORTE DE TURNO — " + corte.label + " — " + ordenes.length + " orden(es). Detalle: " + resumen,
-                "corte",
-                corte.turno
-            );
-
+            registrarLog(JSON.stringify(payload), "corte", corte.turno);
             console.log("✅ Corte de turno generado:", corte.turno);
         } catch (e) {
             console.error("Error generando corte:", e);
@@ -1032,43 +1046,291 @@
                 return;
             }
 
-            const tabla = document.createElement("table");
-            tabla.className = "admin-tabla";
+            var lista = document.createElement("div");
+            lista.className = "cortes-lista";
 
-            const thead = tabla.createTHead();
-            var trHead  = thead.insertRow();
-            ["Fecha / Hora", "Turno", "Resumen del Turno"].forEach(function (txt) {
-                var th = document.createElement("th");
-                th.textContent = txt;
-                trHead.appendChild(th);
-            });
-
-            const tbody = tabla.createTBody();
             logs.forEach(function (log) {
-                const attr = getAttributes(log);
-                var tr = tbody.insertRow();
-
-                var tdFecha = tr.insertCell();
-                tdFecha.textContent = formatearFecha(log.createdAt || attr.createdAt);
-                tdFecha.className   = "admin-td-muted";
-
-                var tdTurno = tr.insertCell();
-                var turnoSpan = document.createElement("span");
-                turnoSpan.className   = "log-tag log-tag--corte";
-                turnoSpan.textContent = attr.Turno || "—";
-                tdTurno.appendChild(turnoSpan);
-
-                var tdResumen = tr.insertCell();
-                tdResumen.className   = "admin-td-resumen";
-                tdResumen.textContent = attr.Accion || "—";
+                var card = construirCorteCard(log);
+                lista.appendChild(card);
             });
 
             adminCorContainer.innerHTML = "";
-            adminCorContainer.appendChild(tabla);
+            adminCorContainer.appendChild(lista);
+
+            // Delegar clicks en botones "Fotografiar"
+            lista.addEventListener("click", function (e) {
+                var btn = e.target.closest(".btn-corte-foto");
+                if (!btn) return;
+                var card = btn.closest(".corte-card");
+                abrirFotoCorte(card);
+            });
 
         } catch (error) {
             console.error("Error cargando logs corte:", error);
             adminCorContainer.innerHTML = "<p class='accent-text'>Error al cargar cortes.</p>";
+        }
+    }
+
+    function construirCorteCard(log) {
+        var attr  = getAttributes(log);
+        var fecha = formatearFecha(log.createdAt || attr.createdAt);
+        var turno = attr.Turno || "—";
+
+        var datos = null;
+        try { datos = JSON.parse(attr.Accion || ""); } catch (e) {}
+
+        var card = document.createElement("div");
+        card.className = "corte-card";
+
+        if (datos && datos.v === 2) {
+            // ── Encabezado ──
+            var header = document.createElement("div");
+            header.className = "corte-card-header";
+            header.innerHTML =
+                '<div class="corte-card-title">🕐 CORTE DE TURNO &mdash; ' + escapeHtml(datos.label) + '</div>' +
+                '<div class="corte-card-meta">' +
+                    '<span class="log-tag log-tag--corte">' + escapeHtml(turno) + '</span>' +
+                    '<span class="corte-card-fecha">' + escapeHtml(fecha) + '</span>' +
+                '</div>';
+            card.appendChild(header);
+
+            // ── Cuerpo ──
+            var body = document.createElement("div");
+            body.className = "corte-card-body";
+
+            // Sección inventario
+            var secInv = document.createElement("div");
+            secInv.innerHTML = '<h4 class="corte-section-title">📦 Inventario al cierre del turno</h4>';
+            secInv.appendChild(construirTablaInventario(datos.inventario || []));
+            body.appendChild(secInv);
+
+            // Sección órdenes
+            var secOrd = document.createElement("div");
+            secOrd.innerHTML = '<h4 class="corte-section-title">📋 Órdenes del turno (' + (datos.oc || 0) + ')</h4>';
+            secOrd.appendChild(construirListaOrdenes(datos.ordenes || []));
+            body.appendChild(secOrd);
+
+            card.appendChild(body);
+
+            // ── Footer ──
+            var footer = document.createElement("div");
+            footer.className = "corte-card-footer";
+            footer.innerHTML = '<button class="btn-corte-foto">📷 Ver para fotografiar</button>';
+            card.appendChild(footer);
+
+        } else {
+            // Formato legado (texto plano)
+            var headerLeg = document.createElement("div");
+            headerLeg.className = "corte-card-header";
+            headerLeg.innerHTML =
+                '<div class="corte-card-meta">' +
+                    '<span class="log-tag log-tag--corte">' + escapeHtml(turno) + '</span>' +
+                    '<span class="corte-card-fecha">' + escapeHtml(fecha) + '</span>' +
+                '</div>';
+            card.appendChild(headerLeg);
+
+            var bodyLeg = document.createElement("div");
+            bodyLeg.className = "corte-card-body";
+            var p = document.createElement("p");
+            p.className   = "corte-legacy-text";
+            p.textContent = attr.Accion || "—";
+            bodyLeg.appendChild(p);
+            card.appendChild(bodyLeg);
+        }
+
+        return card;
+    }
+
+    function construirTablaInventario(items) {
+        if (!items.length) {
+            var p = document.createElement("p");
+            p.className   = "corte-sin-actividad";
+            p.textContent = "Sin datos de inventario.";
+            return p;
+        }
+
+        var tabla = document.createElement("table");
+        tabla.className = "corte-inv-tabla";
+
+        var thead = tabla.createTHead();
+        var trH   = thead.insertRow();
+        ["Material", "Bin", "Área", "Stock"].forEach(function (txt) {
+            var th = document.createElement("th");
+            th.textContent = txt;
+            trH.appendChild(th);
+        });
+
+        var tbody = tabla.createTBody();
+        items.forEach(function (item) {
+            var tr = tbody.insertRow();
+
+            var tdN = tr.insertCell();
+            tdN.textContent = item.n || "—";
+
+            var tdB = tr.insertCell();
+            tdB.className   = "corte-inv-bin";
+            tdB.textContent = item.b || "—";
+
+            var tdA = tr.insertCell();
+            tdA.className   = "corte-inv-area";
+            tdA.textContent = item.a || "—";
+
+            var tdS     = tr.insertCell();
+            var stock   = Number(item.s) || 0;
+            var cls     = stock <= 0 ? "s-zero" : stock <= 3 ? "s-low" : "s-ok";
+            tdS.innerHTML = '<span class="corte-inv-stock ' + cls + '">' + stock + '</span>';
+        });
+
+        return tabla;
+    }
+
+    function construirListaOrdenes(ordenes) {
+        if (!ordenes.length) {
+            var p = document.createElement("p");
+            p.className   = "corte-sin-actividad";
+            p.textContent = "Sin órdenes registradas en este turno.";
+            return p;
+        }
+
+        var lista = document.createElement("div");
+        lista.className = "corte-ordenes-lista";
+
+        ordenes.forEach(function (o, idx) {
+            var item = document.createElement("div");
+            item.className = "corte-orden-item";
+
+            var hora = o.t ? formatearFecha(o.t) : "—";
+            item.innerHTML =
+                '<span class="corte-orden-num">' + (idx + 1) + '.</span>' +
+                '<span><strong>' + escapeHtml(o.u || "?") + '</strong> solicitó ' +
+                    '<strong>' + escapeHtml(String(o.q || 1)) + 'x</strong> ' +
+                    escapeHtml(o.i || "?") +
+                    (o.b ? ' <span class="corte-inv-bin">[' + escapeHtml(o.b) + ']</span>' : '') +
+                '</span>' +
+                '<span class="corte-orden-hora">' + escapeHtml(hora) + '</span>';
+
+            lista.appendChild(item);
+        });
+
+        return lista;
+    }
+
+    function abrirFotoCorte(card) {
+        var clon = card.cloneNode(true);
+        // Quitar el footer (botón "fotografiar") del clon
+        var footer = clon.querySelector(".corte-card-footer");
+        if (footer) footer.remove();
+
+        modalCorteFotoContent.innerHTML = "";
+        modalCorteFotoContent.appendChild(clon);
+        modalCorteFoto.classList.remove("hidden");
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
+    // ==========================================
+    // 8. CORTE DE TURNO — DEMO
+    // ==========================================
+
+    var DEMO_USUARIOS = [
+        "Carlos Paz", "Andres Ramirez", "Sebastian Arellano", "Aaron Mendoza",
+        "Pablo Soria", "Daniel Barbosa", "Gustavo Rodriguez", "Omar Mora",
+    ];
+
+    var DEMO_TURNOS = [
+        { turno: "Manana", label: "Mañana (hasta 8:00 AM)",   prevHora: 18, hora: 8  },
+        { turno: "Tarde",  label: "Tarde (8:00 AM - 2:00 PM)", prevHora: 8,  hora: 14 },
+        { turno: "Noche",  label: "Noche (2:00 PM - 6:00 PM)", prevHora: 14, hora: 18 },
+    ];
+
+    async function generarCorteDemo() {
+        var btn = document.getElementById("btn-demo-corte");
+        if (btn) { btn.disabled = true; btn.textContent = "Generando..."; }
+
+        try {
+            // Traer inventario real para usar nombres y bins auténticos
+            var dataInv = await fetchJSON(STRAPI_URL + "/inventarios?pagination[pageSize]=200");
+            var itemsReales = dataInv.data || [];
+
+            // Snapshot con cantidades aleatorias
+            var inventario = itemsReales.map(function (item) {
+                var a = getAttributes(item);
+                return {
+                    n: a.Nombre       || "Material",
+                    b: a.Codigo_Bin   || "—",
+                    s: Math.floor(Math.random() * 180) + 5,   // 5–184
+                    a: a.Area_Permitida || "Almacén",
+                };
+            });
+
+            // Si no hay items reales, usar materiales ficticios de demo
+            if (!inventario.length) {
+                inventario = [
+                    { n: "Tornillo M5 x 20",       b: "A-01", s: 142, a: "Producción" },
+                    { n: "Tornillo M8 x 30",        b: "A-02", s:  58, a: "Producción" },
+                    { n: "Tuerca M5",               b: "A-03", s: 210, a: "Producción" },
+                    { n: "Tuerca M8",               b: "A-04", s:  93, a: "Producción" },
+                    { n: "Arandela plana 5mm",      b: "B-01", s: 320, a: "Producción" },
+                    { n: "Arandela de presión 8mm", b: "B-02", s: 175, a: "Producción" },
+                    { n: "Perno hexagonal M10",     b: "B-03", s:  44, a: "Mantenimiento" },
+                    { n: "Remache aluminio 4mm",    b: "C-01", s:   2, a: "Producción" },
+                    { n: "Banda de hule 10mm",      b: "C-02", s:  11, a: "Mantenimiento" },
+                    { n: "Cinta aislante",           b: "D-01", s:   0, a: "Mantenimiento" },
+                    { n: "Guante de látex (par)",   b: "D-02", s:  30, a: "Seguridad" },
+                    { n: "Llave allen 4mm",          b: "E-01", s:   8, a: "Mantenimiento" },
+                ];
+            }
+
+            // Generar órdenes aleatorias (3–9)
+            var numOrdenes = Math.floor(Math.random() * 7) + 3;
+            var ahora      = new Date();
+            var ordenes    = [];
+
+            for (var i = 0; i < numOrdenes; i++) {
+                var item  = inventario[Math.floor(Math.random() * inventario.length)];
+                var user  = DEMO_USUARIOS[Math.floor(Math.random() * DEMO_USUARIOS.length)];
+                var cant  = Math.floor(Math.random() * 9) + 1;
+                // Hora dentro del turno (últimas ~6 horas)
+                var offsetMin = Math.floor(Math.random() * 360);
+                var tOrden    = new Date(ahora.getTime() - offsetMin * 60000);
+
+                ordenes.push({
+                    u: user,
+                    q: cant,
+                    i: item.n,
+                    b: item.b,
+                    t: tOrden.toISOString(),
+                });
+            }
+
+            // Elegir un turno aleatorio
+            var defCorte = DEMO_TURNOS[Math.floor(Math.random() * DEMO_TURNOS.length)];
+
+            var payload = {
+                v: 2,
+                label:      defCorte.label,
+                oc:         ordenes.length,
+                ordenes:    ordenes,
+                inventario: inventario,
+            };
+
+            registrarLog(JSON.stringify(payload), "corte", defCorte.turno);
+
+            // Esperar un momento para que Strapi procese y luego recargar
+            setTimeout(function () {
+                cargarLogsCorte();
+                if (btn) { btn.disabled = false; btn.textContent = "🎲 Generar demo"; }
+            }, 900);
+
+        } catch (e) {
+            console.error("Error generando corte demo:", e);
+            if (btn) { btn.disabled = false; btn.textContent = "🎲 Generar demo"; }
         }
     }
 
@@ -1119,6 +1381,24 @@
     if (btnAdminReloadInv) btnAdminReloadInv.addEventListener("click", cargarInventarioAdmin);
     if (btnAdminReloadAct) btnAdminReloadAct.addEventListener("click", cargarLogsActividad);
     if (btnAdminReloadCor) btnAdminReloadCor.addEventListener("click", cargarLogsCorte);
+
+    var btnDemoCorte = document.getElementById("btn-demo-corte");
+    if (btnDemoCorte) btnDemoCorte.addEventListener("click", generarCorteDemo);
+
+    // Modal corte foto
+    if (btnCerrarCorteFoto) btnCerrarCorteFoto.addEventListener("click", function () {
+        modalCorteFoto.classList.add("hidden");
+        modalCorteFotoContent.innerHTML = "";
+    });
+    if (btnPrintCorte) btnPrintCorte.addEventListener("click", function () {
+        window.print();
+    });
+    if (modalCorteFoto) modalCorteFoto.addEventListener("click", function (e) {
+        if (e.target === modalCorteFoto) {
+            modalCorteFoto.classList.add("hidden");
+            modalCorteFotoContent.innerHTML = "";
+        }
+    });
 
     modalAyuda.addEventListener("keydown", function (e) {
         if (e.key === "Escape") cerrarModalAyuda();

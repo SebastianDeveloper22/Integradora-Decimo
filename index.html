@@ -123,7 +123,10 @@
             <div id="admin-cortes" class="admin-tab-content hidden" role="tabpanel" aria-labelledby="tab-cortes">
                 <div class="admin-section-header">
                     <p class="admin-section-desc">Resúmenes generados automáticamente a las 8:00 AM, 2:00 PM y 6:00 PM.</p>
-                    <button id="btn-admin-reload-cor" class="btn-outline">↺ Recargar</button>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button id="btn-demo-corte" class="btn-outline">🎲 Generar demo</button>
+                        <button id="btn-admin-reload-cor" class="btn-outline">↺ Recargar</button>
+                    </div>
                 </div>
                 <div id="admin-cor-container">
                     <p class="accent-text">Cargando cortes...</p>
@@ -132,6 +135,17 @@
         </section>
 
     </main>
+
+    <!-- MODAL: Corte de Turno (para fotografiar) -->
+    <div id="modal-corte-foto" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-corte-foto-titulo">
+        <div class="modal-corte-foto-box">
+            <div id="modal-corte-foto-content"></div>
+            <div class="modal-corte-foto-actions">
+                <button id="btn-print-corte" class="btn-outline">🖨️ Imprimir</button>
+                <button id="btn-cerrar-corte-foto" class="btn-outline">✕ Cerrar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL: Solicitar Asistencia -->
     <div id="modal-ayuda" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-ayuda-titulo">
