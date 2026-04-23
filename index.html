@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="DSI - Sistema de Almacenamiento y Recuperación Automatizado (AS/RS)">
-    <link rel="icon" href="imgs/DSI Logo.png" type="image/png">
+    <link rel="icon" href="imgs/relacion.png" type="image/png">
     <title>DSI | SIGAB</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -18,7 +18,7 @@
         <div class="status-container">
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="checkbox-theme">
-                    <input type="checkbox" id="checkbox-theme" aria-label="Cambiar tema claro/oscuro" />
+                    <input type="checkbox" id="checkbox-theme" role="switch" aria-checked="false" aria-label="Cambiar tema claro/oscuro" />
                     <div class="slider round"><span class="icon-sun">☀</span><span class="icon-moon">🌙</span></div>
                 </label>
             </div>
@@ -63,8 +63,8 @@
                 </div>
                 <div class="user-panel-actions">
                     <button id="btn-ir-admin" class="btn-outline btn-admin-access hidden">⚙ Panel Admin</button>
-                    <a href="manual_usuario.html" target="_blank" class="btn-outline" style="text-decoration:none;">📖 Manual de Usuario</a>
-                    <a href="manual_ensamble.html" target="_blank" class="btn-outline" style="text-decoration:none;">📖 Manual de Ensamble</a>
+                    <a href="manual_usuario.html" target="_blank" rel="noopener noreferrer" class="btn-outline btn-link">📖 Manual de Usuario</a>
+                    <a href="manual_ensamble.html" target="_blank" rel="noopener noreferrer" class="btn-outline btn-link">📖 Manual de Ensamble</a>
                     <button id="btn-logout" class="btn-outline">Cerrar Sesión</button>
                 </div>
             </div>
@@ -92,9 +92,9 @@
 
             <!-- Tabs de navegación -->
             <nav class="admin-tabs" role="tablist" aria-label="Secciones del panel">
-                <button class="admin-tab active" id="tab-inventario" role="tab" aria-selected="true"  aria-controls="admin-inventario">📦 Inventario</button>
-                <button class="admin-tab"        id="tab-actividad"  role="tab" aria-selected="false" aria-controls="admin-actividad">📋 Actividad</button>
-                <button class="admin-tab"        id="tab-cortes"     role="tab" aria-selected="false" aria-controls="admin-cortes">🕐 Cortes de Turno</button>
+                <button class="admin-tab active" id="tab-inventario" role="tab" tabindex="0" aria-selected="true"  aria-controls="admin-inventario">📦 Inventario</button>
+                <button class="admin-tab"        id="tab-actividad"  role="tab" tabindex="-1" aria-selected="false" aria-controls="admin-actividad">📋 Actividad</button>
+                <button class="admin-tab"        id="tab-cortes"     role="tab" tabindex="-1" aria-selected="false" aria-controls="admin-cortes">🕐 Cortes de Turno</button>
             </nav>
 
             <!-- Tab: Inventario -->
@@ -187,6 +187,8 @@
         </div>
     </div>
 
+    <script src="asset-fallback.js"></script>
+    <script src="app-config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -4,9 +4,10 @@
 (function () {
     "use strict";
 
-    const STRAPI_BASE = "http://172.20.108.129:1337";
+    const runtimeConfig = window.SIGAB_CONFIG || {};
+    const STRAPI_BASE = runtimeConfig.STRAPI_BASE || "http://172.20.108.129:1337";
     const STRAPI_URL  = STRAPI_BASE + "/api";
-    const Carlitos    = "http://192.168.1.140/";
+    const Carlitos    = runtimeConfig.CNC_BASE || "http://192.168.1.140/";
 
     // --- Estado ---
     let usuarioActual     = null;
@@ -62,6 +63,11 @@
     const adminInvContainer  = document.getElementById("admin-inv-container");
     const adminActContainer  = document.getElementById("admin-act-container");
     const adminCorContainer  = document.getElementById("admin-cor-container");
+    const adminTabs = Array.from(document.querySelectorAll(".admin-tab"));
+    const modalFocusState = {
+        activeModal: null,
+        previousFocus: null
+    };
 
     // ==========================================
     // UTILIDADES
@@ -73,6 +79,7 @@
             customModalMessage.textContent = mensaje;
             customModalOverlay.classList.remove("hidden");
             customModalOverlay.classList.add("active");
+            abrirModalConFoco(customModalOverlay, btnCustomOk);
 
             if (esConfirmacion) {
                 btnCustomCancel.classList.remove("hidden");
@@ -94,6 +101,49 @@
     function cerrarDialogoCustom() {
         customModalOverlay.classList.remove("active");
         customModalOverlay.classList.add("hidden");
+        cerrarModalConFoco(customModalOverlay);
+    }
+
+    function obtenerElementosEnfocables(contenedor) {
+        if (!contenedor) return [];
+        return Array.from(
+            contenedor.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+        ).filter(function (el) {
+            return !el.disabled && !el.classList.contains("hidden");
+        });
+    }
+
+    function atraparFocoEnModal(e) {
+        if (e.key !== "Tab" || !modalFocusState.activeModal) return;
+        var focusables = obtenerElementosEnfocables(modalFocusState.activeModal);
+        if (!focusables.length) return;
+        var first = focusables[0];
+        var last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    }
+
+    function abrirModalConFoco(modal, focusTarget) {
+        modalFocusState.previousFocus = document.activeElement;
+        modalFocusState.activeModal = modal;
+        var initial = focusTarget || obtenerElementosEnfocables(modal)[0];
+        if (initial) initial.focus();
+        document.addEventListener("keydown", atraparFocoEnModal);
+    }
+
+    function cerrarModalConFoco(modal) {
+        if (modalFocusState.activeModal !== modal) return;
+        modalFocusState.activeModal = null;
+        document.removeEventListener("keydown", atraparFocoEnModal);
+        if (modalFocusState.previousFocus && typeof modalFocusState.previousFocus.focus === "function") {
+            modalFocusState.previousFocus.focus();
+        }
+        modalFocusState.previousFocus = null;
     }
 
     function getAttributes(item) {
@@ -170,7 +220,7 @@
 
         const btn = document.createElement("button");
         btn.className = "btn-item has-image" + (sinStock ? " sin-stock" : "");
-        btn.disabled = sinStock;
+        btn.setAttribute("aria-disabled", sinStock ? "true" : "false");
 
         // Imagen o fallback
         const imagenData = attr.Img || attr.img;
@@ -188,6 +238,8 @@
             img.src = imageUrl.startsWith("http") ? imageUrl : STRAPI_BASE + imageUrl;
             img.alt = attr.Nombre;
             img.className = "item-img";
+            img.loading = "lazy";
+            img.decoding = "async";
             btn.appendChild(img);
         } else {
             const placeholder = document.createElement("div");
@@ -631,11 +683,12 @@
     function abrirModalAyuda() {
         modalAyuda.classList.remove("hidden");
         txtProblema.value = "";
-        txtProblema.focus();
+        abrirModalConFoco(modalAyuda, txtProblema);
     }
 
     function cerrarModalAyuda() {
         modalAyuda.classList.add("hidden");
+        cerrarModalConFoco(modalAyuda);
     }
 
     async function enviarAlerta() {
@@ -846,10 +899,12 @@
             if (t === tabNombre) {
                 tab.classList.add("active");
                 tab.setAttribute("aria-selected", "true");
+                tab.setAttribute("tabindex", "0");
                 content.classList.remove("hidden");
             } else {
                 tab.classList.remove("active");
                 tab.setAttribute("aria-selected", "false");
+                tab.setAttribute("tabindex", "-1");
                 content.classList.add("hidden");
             }
         });
@@ -1224,6 +1279,7 @@
         modalCorteFotoContent.innerHTML = "";
         modalCorteFotoContent.appendChild(clon);
         modalCorteFoto.classList.remove("hidden");
+        abrirModalConFoco(modalCorteFoto, btnPrintCorte);
     }
 
     function escapeHtml(str) {
@@ -1342,10 +1398,12 @@
         if (currentTheme) {
             document.body.classList.add(currentTheme);
             if (currentTheme === "light-theme") checkboxTheme.checked = true;
+            checkboxTheme.setAttribute("aria-checked", checkboxTheme.checked ? "true" : "false");
         }
         checkboxTheme.addEventListener("change", function (e) {
             document.body.classList.toggle("light-theme", e.target.checked);
             localStorage.setItem("theme", e.target.checked ? "light-theme" : "dark-theme");
+            checkboxTheme.setAttribute("aria-checked", e.target.checked ? "true" : "false");
         });
     }
 
@@ -1376,6 +1434,22 @@
         cambiarTabAdmin("cortes");
         cargarLogsCorte();
     });
+    adminTabs.forEach(function (tab, index) {
+        tab.addEventListener("keydown", function (e) {
+            if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) return;
+            e.preventDefault();
+            var targetIndex = index;
+            if (e.key === "ArrowRight") targetIndex = (index + 1) % adminTabs.length;
+            if (e.key === "ArrowLeft") targetIndex = (index - 1 + adminTabs.length) % adminTabs.length;
+            if (e.key === "Home") targetIndex = 0;
+            if (e.key === "End") targetIndex = adminTabs.length - 1;
+            var targetTab = adminTabs[targetIndex];
+            if (targetTab) {
+                targetTab.focus();
+                targetTab.click();
+            }
+        });
+    });
 
     // Botones recargar
     if (btnAdminReloadInv) btnAdminReloadInv.addEventListener("click", cargarInventarioAdmin);
@@ -1389,6 +1463,7 @@
     if (btnCerrarCorteFoto) btnCerrarCorteFoto.addEventListener("click", function () {
         modalCorteFoto.classList.add("hidden");
         modalCorteFotoContent.innerHTML = "";
+        cerrarModalConFoco(modalCorteFoto);
     });
     if (btnPrintCorte) btnPrintCorte.addEventListener("click", function () {
         window.print();
@@ -1397,11 +1472,15 @@
         if (e.target === modalCorteFoto) {
             modalCorteFoto.classList.add("hidden");
             modalCorteFotoContent.innerHTML = "";
+            cerrarModalConFoco(modalCorteFoto);
         }
     });
 
     modalAyuda.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") cerrarModalAyuda();
+        if (e.key === "Escape") {
+            cerrarModalAyuda();
+            cerrarModalConFoco(modalAyuda);
+        }
     });
 
     // ==========================================

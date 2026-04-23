@@ -363,6 +363,14 @@ input:checked + .slider:before {
     100% { left: 100%; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 /* ==========================================
    PANTALLA DASHBOARD
    ========================================== */
@@ -499,6 +507,10 @@ input:checked + .slider:before {
 .btn-outline:hover {
     border-color: var(--text-main);
     color: var(--text-main);
+}
+
+.btn-link {
+    text-decoration: none;
 }
 
 .btn-emergency {
@@ -867,7 +879,7 @@ input:checked + .slider:before {
 /* Estado sin stock: boton deshabilitado */
 .btn-item.sin-stock {
     opacity: 0.45;
-    cursor: not-allowed;
+    cursor: pointer;
     filter: grayscale(60%);
 }
 
@@ -1551,19 +1563,15 @@ input:checked + .slider:before {
 
 /* 1. Congelamos la ventana completa para que no ruede entera */
 body {
-    height: 100vh !important;
-    overflow: hidden !important; /* Mata la barra gigante que llega hasta arriba */
-    display: flex;
-    flex-direction: column; /* Apila el header y el main uno sobre otro */
+    min-height: 100vh;
+    margin: 0;
 }
 
 /* 2. El encabezado negro se queda naturalmente arriba. 
       Le damos el scroll EXCLUSIVAMENTE al contenedor de abajo */
 main, .app-container, #screen-dashboard {
-    flex: 1; /* Absorbe todo el espacio que sobra debajo del header */
-    overflow-y: auto !important; /* ¡La barra nace a partir de aquí! */
     overflow-x: hidden;
-    padding-bottom: 40px; /* Espacio para que el botón no pegue al fondo */
+    padding-bottom: 40px;
 }
 
 /* ==========================================
@@ -1572,10 +1580,7 @@ main, .app-container, #screen-dashboard {
 
 /* 1. Limpiamos el desastre del flexbox y dejamos que el body fluya natural */
 body {
-    height: auto !important;
     min-height: 100vh;
-    overflow-y: auto !important; 
-    display: block !important; /* Matamos el flexbox que causaba el borde negro */
     margin: 0;
 }
 
@@ -1610,6 +1615,19 @@ body.light-theme::-webkit-scrollbar-thumb {
 }
 body.light-theme::-webkit-scrollbar-thumb:hover {
     background: #555555 !important;
+}
+
+/* Correct global scrollbar selectors (legacy malformed selectors are kept above). */
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-surface, #1e1e1e);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary, #f03a47);
+    border-radius: 6px;
+    border: 3px solid var(--bg-surface, #1e1e1e);
 }
 
 /* ==========================================

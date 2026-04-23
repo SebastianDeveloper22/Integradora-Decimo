@@ -7,74 +7,10 @@
    1. DATA
    ════════════════════════════════════════════════════════════ */
 
-const AREAS = [
-  { id:1,  name:'Maintenance',            slp:22, zone:'PROD' },
-  { id:2,  name:'Conv. Mach./Welding',    slp:25, zone:'PROD' },
-  { id:3,  name:'CNC Machining',          slp:26, zone:'PROD' },
-  { id:4,  name:'Assembly',               slp:28, zone:'PROD' },
-  { id:5,  name:'Quality',                slp:21, zone:'PROD' },
-  { id:6,  name:'Warehouse',              slp:26, zone:'LOG'  },
-  { id:7,  name:'Cutting',                slp:22, zone:'PROD' },
-  { id:8,  name:'Free Zone',              slp:4,  zone:'SEG'  },
-  { id:9,  name:'Offices',               slp:23, zone:'ADMIN'},
-  { id:10, name:'Automation',             slp:22, zone:'PROD' },
-  { id:11, name:'Sales',                  slp:16, zone:'ADMIN'},
-  { id:12, name:'Boardroom',              slp:14, zone:'ADMIN'},
-  { id:13, name:'Meeting Point',          slp:17, zone:'SEG'  },
-  { id:14, name:'Reception',              slp:13, zone:'ADMIN'},
-  { id:15, name:'Human Resources',        slp:13, zone:'ADMIN'},
-  { id:16, name:'Restrooms',              slp:19, zone:'SERV' },
-  { id:17, name:'Loading & Unloading',    slp:21, zone:'LOG'  },
-];
-
-/* Zone visual definitions */
-const ZONES = {
-  PROD:  { fill:'#1e4d8c', stroke:'#2d6ab8', text:'#9dccf0', label:'Production'   },
-  LOG:   { fill:'#7a3f00', stroke:'#b86010', text:'#f0c070', label:'Logistics'     },
-  ADMIN: { fill:'#0e4a22', stroke:'#1a7838', text:'#7ae8a0', label:'Administrative'},
-  SERV:  { fill:'#5a1280', stroke:'#8a28c0', text:'#d0a0f0', label:'Services'      },
-  SEG:   { fill:'#3a3a18', stroke:'#6a6a30', text:'#d4d470', label:'Sec./Free'     },
-};
-
-/* Relationship half-matrix — upper triangle, row-major, 136 values.
-   Rules applied vs original Muther table:
-   · U→X : Admin nodes (9,11,12,14,15) paired with noise/traffic (2,17)
-   · U→O : Restroom (16) and Meeting Point (13) vs any area that had U
-   · U→O : Internal admin block pairs (all were already A/E/I, no-op)     */
-const TRIANGLE = [
-  /* i=0  Area 1  vs  2-17 */
-  'I','I','I','O','E','I','U','O','A','U','U','O','U','U','O','E',
-  /* i=1  Area 2  vs  3-17  — Admin nodes get X */
-  'E','A','I','E','A','U','X','I','X','X','O','X','X','O','E',
-  /* i=2  Area 3  vs  4-17 */
-  'A','I','E','A','U','U','E','U','U','O','U','U','O','E',
-  /* i=3  Area 4  vs  5-17 */
-  'A','A','I','U','O','E','U','U','O','U','U','O','I',
-  /* i=4  Area 5  vs  6-17 */
-  'E','I','U','I','I','U','U','O','U','U','O','O',
-  /* i=5  Area 6  vs  7-17  — Mtg.Pt.(12) and Restroom(15) get O */
-  'E','U','O','I','U','U','O','U','U','O','A',
-  /* i=6  Area 7  vs  8-17 */
-  'U','U','O','U','U','O','U','U','O','I',
-  /* i=7  Area 8  vs  9-17 */
-  'U','U','U','U','E','U','U','O','U',
-  /* i=8  Area 9  vs 10-17 */
-  'I','A','E','O','I','E','I','O',
-  /* i=9  Area 10 vs 11-17 */
-  'U','U','O','U','U','O','O',
-  /* i=10 Area 11 vs 12-17  — Loading(16) gets X */
-  'A','O','E','I','I','X',
-  /* i=11 Area 12 vs 13-17  — Loading(16) gets X */
-  'O','I','I','I','X',
-  /* i=12 Area 13 vs 14-17 */
-  'O','O','O','O',
-  /* i=13 Area 14 vs 15-17  — Loading(16) gets X */
-  'E','I','X',
-  /* i=14 Area 15 vs 16-17  — Loading(16) gets X */
-  'I','X',
-  /* i=15 Area 16 vs 17     — Restroom gets O */
-  'O',
-];
+const SLP_DATA = window.SLP_DATA || {};
+const AREAS = SLP_DATA.AREAS || [];
+const ZONES = SLP_DATA.ZONES || {};
+const TRIANGLE = SLP_DATA.TRIANGLE || [];
 
 /* Look up relation for any pair (order-independent) */
 function getRelation(i, j) {
